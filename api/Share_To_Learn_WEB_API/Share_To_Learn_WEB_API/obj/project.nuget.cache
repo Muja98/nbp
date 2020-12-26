@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "ACOEIRxjpSBWxFI59bdmwOiVCkXU2q/o6yqAUBMRqkRTK1lBr2QCNQQzezUrt8eCcvYQzD5o37kWp4vSj55Cxw==",
+  "dgSpecHash": "oUp04XhfhELvElYG+rFyV1Md6QhMkwihC6IGzzj/6uqS6R3yRB76HPPTAChpyVKZ8Qi85q6SxTVVZS550IzJsA==",
   "success": true,
   "projectFilePath": "C:\\Users\\Predrag\\Desktop\\nbp\\api\\Share_To_Learn_WEB_API\\Share_To_Learn_WEB_API\\Share_To_Learn_WEB_API.csproj",
   "expectedPackageFiles": [
@@ -9,6 +9,7 @@
     "C:\\Users\\Predrag\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
     "C:\\Users\\Predrag\\.nuget\\packages\\microsoft.visualbasic\\10.3.0\\microsoft.visualbasic.10.3.0.nupkg.sha512",
     "C:\\Users\\Predrag\\.nuget\\packages\\microsoft.win32.primitives\\4.3.0\\microsoft.win32.primitives.4.3.0.nupkg.sha512",
+    "C:\\Users\\Predrag\\.nuget\\packages\\neo4j.driver\\4.2.0\\neo4j.driver.4.2.0.nupkg.sha512",
     "C:\\Users\\Predrag\\.nuget\\packages\\neo4j.driver.signed\\4.1.1\\neo4j.driver.signed.4.1.1.nupkg.sha512",
     "C:\\Users\\Predrag\\.nuget\\packages\\neo4jclient\\4.0.3\\neo4jclient.4.0.3.nupkg.sha512",
     "C:\\Users\\Predrag\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",

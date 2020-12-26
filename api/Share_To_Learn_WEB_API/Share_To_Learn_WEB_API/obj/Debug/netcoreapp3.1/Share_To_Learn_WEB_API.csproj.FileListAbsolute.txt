@@ -18,13 +18,8 @@ C:\Users\Predrag\Desktop\nbp\api\Share_To_Learn_WEB_API\Share_To_Learn_WEB_API\b
 C:\Users\Predrag\Desktop\nbp\api\Share_To_Learn_WEB_API\Share_To_Learn_WEB_API\bin\Debug\netcoreapp3.1\Share_To_Learn_WEB_API.dll
 C:\Users\Predrag\Desktop\nbp\api\Share_To_Learn_WEB_API\Share_To_Learn_WEB_API\bin\Debug\netcoreapp3.1\Share_To_Learn_WEB_API.pdb
 C:\Users\Predrag\Desktop\nbp\api\Share_To_Learn_WEB_API\Share_To_Learn_WEB_API\bin\Debug\netcoreapp3.1\Neo4j.Driver.dll
-C:\Users\Predrag\Desktop\nbp\api\Share_To_Learn_WEB_API\Share_To_Learn_WEB_API\bin\Debug\netcoreapp3.1\Neo4jClient.dll
-C:\Users\Predrag\Desktop\nbp\api\Share_To_Learn_WEB_API\Share_To_Learn_WEB_API\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
-C:\Users\Predrag\Desktop\nbp\api\Share_To_Learn_WEB_API\Share_To_Learn_WEB_API\obj\Debug\netcoreapp3.1\Share_To_Learn_WEB_API.csprojAssemblyReference.cache
 C:\Users\Predrag\Desktop\nbp\api\Share_To_Learn_WEB_API\Share_To_Learn_WEB_API\obj\Debug\netcoreapp3.1\Share_To_Learn_WEB_API.AssemblyInfoInputs.cache
 C:\Users\Predrag\Desktop\nbp\api\Share_To_Learn_WEB_API\Share_To_Learn_WEB_API\obj\Debug\netcoreapp3.1\Share_To_Learn_WEB_API.AssemblyInfo.cs
-C:\Users\Predrag\Desktop\nbp\api\Share_To_Learn_WEB_API\Share_To_Learn_WEB_API\obj\Debug\netcoreapp3.1\Share_To_Learn_WEB_API.csproj.CoreCompileInputs.cache
-C:\Users\Predrag\Desktop\nbp\api\Share_To_Learn_WEB_API\Share_To_Learn_WEB_API\obj\Debug\netcoreapp3.1\Share_To_Learn_WEB_API.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\Predrag\Desktop\nbp\api\Share_To_Learn_WEB_API\Share_To_Learn_WEB_API\obj\Debug\netcoreapp3.1\Share_To_Learn_WEB_API.RazorTargetAssemblyInfo.cache
 C:\Users\Predrag\Desktop\nbp\api\Share_To_Learn_WEB_API\Share_To_Learn_WEB_API\obj\Debug\netcoreapp3.1\Share_To_Learn_WEB_API.csproj.CopyComplete
 C:\Users\Predrag\Desktop\nbp\api\Share_To_Learn_WEB_API\Share_To_Learn_WEB_API\obj\Debug\netcoreapp3.1\staticwebassets\Share_To_Learn_WEB_API.StaticWebAssets.Manifest.cache
@@ -32,3 +27,8 @@ C:\Users\Predrag\Desktop\nbp\api\Share_To_Learn_WEB_API\Share_To_Learn_WEB_API\o
 C:\Users\Predrag\Desktop\nbp\api\Share_To_Learn_WEB_API\Share_To_Learn_WEB_API\obj\Debug\netcoreapp3.1\Share_To_Learn_WEB_API.dll
 C:\Users\Predrag\Desktop\nbp\api\Share_To_Learn_WEB_API\Share_To_Learn_WEB_API\obj\Debug\netcoreapp3.1\Share_To_Learn_WEB_API.pdb
 C:\Users\Predrag\Desktop\nbp\api\Share_To_Learn_WEB_API\Share_To_Learn_WEB_API\obj\Debug\netcoreapp3.1\Share_To_Learn_WEB_API.genruntimeconfig.cache
+C:\Users\Predrag\Desktop\nbp\api\Share_To_Learn_WEB_API\Share_To_Learn_WEB_API\bin\Debug\netcoreapp3.1\Neo4jClient.dll
+C:\Users\Predrag\Desktop\nbp\api\Share_To_Learn_WEB_API\Share_To_Learn_WEB_API\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+C:\Users\Predrag\Desktop\nbp\api\Share_To_Learn_WEB_API\Share_To_Learn_WEB_API\obj\Debug\netcoreapp3.1\Share_To_Learn_WEB_API.csproj.CoreCompileInputs.cache
+C:\Users\Predrag\Desktop\nbp\api\Share_To_Learn_WEB_API\Share_To_Learn_WEB_API\obj\Debug\netcoreapp3.1\Share_To_Learn_WEB_API.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Predrag\Desktop\nbp\api\Share_To_Learn_WEB_API\Share_To_Learn_WEB_API\obj\Debug\netcoreapp3.1\Share_To_Learn_WEB_API.csprojAssemblyReference.cache

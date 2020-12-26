@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Neo4jClient;
 
 namespace Share_To_Learn_WEB_API
 {
@@ -26,6 +27,9 @@ namespace Share_To_Learn_WEB_API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            var neo4jClient = new GraphClient(new Uri("http://localhost:7474/"), "neo4j", "sharetolearn");
+            neo4jClient.ConnectAsync();
+            services.AddSingleton<IGraphClient>(neo4jClient);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -49,6 +49,24 @@
           "ref/netstandard1.3/_._": {}
         }
       },
+      "Neo4j.Driver/4.2.0": {
+        "type": "package",
+        "dependencies": {
+          "System.Net.NameResolution": "4.3.0",
+          "System.Net.Security": "4.3.2",
+          "System.Net.Sockets": "4.3.0",
+          "System.Runtime.InteropServices.RuntimeInformation": "4.3.0",
+          "System.Runtime.Serialization.Primitives": "4.3.0",
+          "System.Threading.Thread": "4.3.0",
+          "System.ValueTuple": "4.5.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/Neo4j.Driver.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Neo4j.Driver.dll": {}
+        }
+      },
       "Neo4j.Driver.Signed/4.1.1": {
         "type": "package",
         "dependencies": {
@@ -1353,6 +1371,19 @@
         "ref/xamarinmac20/_._",
         "ref/xamarintvos10/_._",
         "ref/xamarinwatchos10/_._"
+      ]
+    },
+    "Neo4j.Driver/4.2.0": {
+      "sha512": "rpD3CENQjwZrvwgYcBu2qr6BiKuWARwnyOfVuTkA7CBSTqYdMOgECPW/uMHtgsSgXn89YIC+hNqyo8dRFf6G+w==",
+      "type": "package",
+      "path": "neo4j.driver/4.2.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard2.0/Neo4j.Driver.dll",
+        "lib/netstandard2.0/Neo4j.Driver.xml",
+        "neo4j.driver.4.2.0.nupkg.sha512",
+        "neo4j.driver.nuspec"
       ]
     },
     "Neo4j.Driver.Signed/4.1.1": {
@@ -4417,6 +4448,7 @@
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
+      "Neo4j.Driver >= 4.2.0",
       "Neo4jClient >= 4.0.3"
     ]
   },
@@ -4457,6 +4489,10 @@
     "frameworks": {
       "netcoreapp3.1": {
         "dependencies": {
+          "Neo4j.Driver": {
+            "target": "Package",
+            "version": "[4.2.0, )"
+          },
           "Neo4jClient": {
             "target": "Package",
             "version": "[4.0.3, )"
