@@ -9,5 +9,9 @@ namespace Share_To_Learn_WEB_API.Services
     public interface ISTLRepository
     {
         Task<IEnumerable<Student>> GetStudents();
+        Task<bool> StudentExists(string email);
+        Task CreateStudent(Student newStudent);
+        Task<bool> CreateNonExistingStudent(Student newStudent);
+        Task<byte[]> GetPassword(string email);
     }
 }
