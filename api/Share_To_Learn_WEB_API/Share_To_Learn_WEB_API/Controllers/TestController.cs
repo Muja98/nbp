@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using Share_To_Learn_WEB_API.Entities;
 using Neo4jClient;
+using Share_To_Learn_WEB_API.Services;
 
 namespace Share_To_Learn_WEB_API.Controllers
 {
@@ -14,40 +15,33 @@ namespace Share_To_Learn_WEB_API.Controllers
     [Route("api/test")]
     public class TestController : ControllerBase
     {
-        private readonly ILogger<TestController> _logger;
-        private readonly IGraphClient _client;
+        private readonly ISTLRepository _repository;
 
-        public TestController(ILogger<TestController> logger, IGraphClient client)
+        public TestController(ISTLRepository repository)
         {
-            _logger = logger;
-            _client = client;
+            _repository = repository;
         }
 
-        [HttpGet]
+        [HttpGet()]
         public async Task<ActionResult> GetStudents()
-        {            
-            var result = await _client.Cypher
-                        .Match(@"(student:Student)")
-                        .Return(student => new
-                        {
-                            Student = student.As<Student>()
-                        }).ResultsAsync;
+        {
+            var result = await _repository.GetStudents();
 
-            _logger.LogInformation("Operation successful");
-
-            return Ok(result);
+            return Ok(result); 
         }
 
         [HttpPost]
         public async Task<ActionResult> CreateStudent([FromBody] Student newstudent)
         {
-            var newStudent = newstudent;
-            await _client.Cypher
-                .Create("(student:Student $newStudent)")
-                .WithParam("newStudent", newStudent)
-                .ExecuteWithoutResultsAsync();
+            //var newStudent = newstudent;
+            //await _client.Cypher
+            //    .Create("(student:Student $newStudent)")
+            //    .WithParam("newStudent", newStudent)
+            //    .ExecuteWithoutResultsAsync();
 
-            return Ok(newStudent);
+            //return Ok(newStudent);
+
+            return Ok();
         }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Neo4jClient;
+using Share_To_Learn_WEB_API.Services;
 
 namespace Share_To_Learn_WEB_API
 {
@@ -30,6 +32,15 @@ namespace Share_To_Learn_WEB_API
             var neo4jClient = new GraphClient(new Uri("http://localhost:7474/"), "neo4j", "sharetolearn");
             neo4jClient.ConnectAsync();
             services.AddSingleton<IGraphClient>(neo4jClient);
+            services.AddScoped<ISTLRepository, STLRepository>();
+            services.AddMvc().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.WriteIndented = true;
+                options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            }).AddMvcOptions(options =>
+            {
+                options.EnableEndpointRouting = false;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
