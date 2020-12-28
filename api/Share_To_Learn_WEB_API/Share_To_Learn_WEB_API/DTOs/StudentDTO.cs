@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Share_To_Learn_WEB_API.Entities
+namespace Share_To_Learn_WEB_API.DTOs
 {
-    public class Student
+    public class StudentDTO
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime DateOfBirth { get; set; }
         public string Email { get; set; }
-        public byte[] Password { get; set; }
+        public string Password { get; set; }
         public string ProfilePicturePath { get; set; }
     }
 }
