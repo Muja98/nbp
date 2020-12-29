@@ -13,9 +13,7 @@ export class ProfileComponent implements OnInit {
   public studentChangeFlag:boolean = false;
 
   constructor() {
-    this.student = new Student();
-    this.handleSetStudent();
-    this.pomStudent = this.student;
+    
    }
   
   handleSetStudent():void
@@ -28,37 +26,44 @@ export class ProfileComponent implements OnInit {
 
     //TODO:Get student from API
   }
+
  
   handleCheckStudent():void
   {
-    if(this.student.firstName !== this.pomStudent.firstName) this.studentChangeFlag = true;
-    else if(this.student.lastName !== this.pomStudent.lastName)  this.studentChangeFlag = true;
-    else if(this.student.dateOfBirth !== this.pomStudent.dateOfBirth)  this.studentChangeFlag = true;
-    else if(this.student.email !== this.pomStudent.email)  this.studentChangeFlag = true;
-    else if(this.student.userName !== this.pomStudent.userName)  this.studentChangeFlag = true;
-    else this.studentChangeFlag = true;
-  }
-  
-  
-  ngOnInit(): void {
+    if(
+        this.student.firstName === this.pomStudent.firstName     &&
+        this.student.lastName === this.pomStudent.lastName       &&
+        this.student.dateOfBirth === this.pomStudent.dateOfBirth &&
+        this.student.email === this.pomStudent.email             &&
+        this.student.userName === this.pomStudent.userName
+      )
+    {
+      this.studentChangeFlag = false
+    }
+ 
+    else {this.studentChangeFlag = true};
    
   }
 
-  OnChanges(){
-    if(this.student.firstName !== this.pomStudent.firstName) this.studentChangeFlag = true;
-    else if(this.student.lastName !== this.pomStudent.lastName)  this.studentChangeFlag = true;
-    else if(this.student.dateOfBirth !== this.pomStudent.dateOfBirth)  this.studentChangeFlag = true;
-    else if(this.student.email !== this.pomStudent.email)  this.studentChangeFlag = true;
-    else if(this.student.userName !== this.pomStudent.userName)  this.studentChangeFlag = true;
-    else this.studentChangeFlag = true;
+  handleEditStudent()
+  {
+    //TODO: implement handleEditStudent
+  }
+
+  
+  ngOnInit(): void {
+    this.student = new Student();
+    this.pomStudent = new Student();
+    this.handleSetStudent();
+    
+    this.pomStudent.firstName = this.student.firstName;
+    this.pomStudent.lastName = this.student.lastName;
+    this.pomStudent.email = this.student.email;
+    this.pomStudent.dateOfBirth = this.student.dateOfBirth;
+    this.pomStudent.email = this.student.email;
+    this.pomStudent.userName = this.student.userName
   }
 
 
-
   
-  
-
-  klikni():void{
-      alert(this.handleCheckStudent())
-  }
 }
