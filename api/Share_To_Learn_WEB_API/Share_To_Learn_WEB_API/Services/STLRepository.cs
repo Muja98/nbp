@@ -74,5 +74,14 @@ namespace Share_To_Learn_WEB_API.Services
             else
                 return null;
         }
-    } 
+
+        public async Task CreateGroup(int ownerId, Group newGroup)
+        {
+            await _client.Cypher
+                    .Match("(owner: Student)")
+                    .WithIdentifier(ownerId.ToString())
+                    .Create("(owner)-[:ADMINISTRATED]->(group:Group {newGroup})")
+                    .ExecuteWithoutResultsAsync();
+        }
+    }   
 }
