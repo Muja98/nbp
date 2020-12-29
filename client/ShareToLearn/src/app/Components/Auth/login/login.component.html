@@ -7,7 +7,7 @@
                     <img height="210px" width="210px" src="/assets/logo.png" class="img-fluid"  alt="img">
                 </div>
                <div class="row  justify-content-center " style="cursor: pointer;">
-                   <p style="text-decoration: underline;">Create an account</p>
+                   <p style="text-decoration: underline;" (click)="handleRegisterRedirect()">Create an account</p>
                </div>
             </div>
             <div class="col-12 col-lg-6 p-5" >
@@ -15,12 +15,12 @@
                     <h1 style="font-weight: 700;">Sign up</h1>
                 </div>
                 <div class="row border-bottom border-dark pt-4">
-                    <i class="fa fa-user" aria-hidden="true"></i>
-                    <input class="loginInput"  placeholder="User Name">
+                    <i class="fa fa-envelope" aria-hidden="true"></i>
+                    <input [(ngModel)]="email" class="loginInput"  placeholder="E-mail">
                 </div>
                 <div class="row border-bottom border-dark pt-4">
-                    <i class="fa fa-envelope" aria-hidden="true"></i>
-                    <input placeholder="E-mail" style="border-width: 0px; border: none; outline: none; position: relative; left: 14px; bottom: 4px;">
+                    <i class="fa fa-lock" aria-hidden="true"></i>
+                    <input [(ngModel)]="password" placeholder="Password" type="password" style="border-width: 0px; border: none; outline: none; position: relative; left: 24px; bottom: 4px;">
                 </div>
                 <div class="row " style="height: 90px;">
                     <div class="form-check d-flex align-items-center">
@@ -31,7 +31,7 @@
                       </div>
                 </div>
                 <div class="row justify-content-start align-items-center pt-2 ">
-                  <div className="" class="loginButton col-6 d-flex justify-content-center align-items-center pt-3 rounded ">
+                  <div (click)="handleDashboardRedirect()" class="loginButton col-6 d-flex justify-content-center align-items-center pt-3 rounded ">
                     <p style="color: white">Log In</p>
                   </div>
                 </div>

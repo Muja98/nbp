@@ -8,22 +8,22 @@
                 </div>
                 <div class="row border-bottom border-dark pt-4">
                     <i class="fa fa-user" aria-hidden="true"></i>
-                    <input class="loginInput"  placeholder="User Name">
+                    <input class="loginInput"  placeholder="User Name" [(ngModel)]="userName">
                 </div>
                 <div class="row border-bottom border-dark pt-4">
                     <i class="fa fa-envelope" aria-hidden="true"></i>
-                    <input placeholder="E-mail" style="border-width: 0px; border: none; outline: none; position: relative; left: 14px; bottom: 4px;">
+                    <input placeholder="E-mail"  style="border-width: 0px; border: none; outline: none; position: relative; left: 14px; bottom: 4px;"  [(ngModel)]="email">
                 </div>
                 <div class="row border-bottom border-dark pt-4">
                     <i class="fa fa-lock" aria-hidden="true"></i>
-                    <input class="loginInput"  placeholder="Password"> 
+                    <input class="loginInput"  placeholder="Password" type="password" [(ngModel)]="password"> 
                 </div>
                 <div class="row border-bottom border-dark pt-4">
                     <i class="fa fa-unlock-alt" aria-hidden="true"></i>
-                    <input class="loginInput"  placeholder="Repeat your password">
+                    <input class="loginInput" type="password"  placeholder="Repeat your password"  [(ngModel)]="rPassword">
                 </div>
                 <div class="row justify-content-center align-items-center pt-5 ">
-                  <div className="" class="loginButton col-6 d-flex justify-content-center align-items-center pt-3 rounded ">
+                  <div (click)="handleDashboardRedirect()" class="loginButton col-6 d-flex justify-content-center align-items-center pt-3 rounded ">
                     <p style="color: white">Register</p>
                   </div>
                 </div>
@@ -33,7 +33,7 @@
                     <img height="210px" width="210px" src="/assets/logo.png" class="img-fluid"  alt="img">
                 </div>
                <div class="row  justify-content-center " style="cursor: pointer;">
-                   <p style="text-decoration: underline;">I'm already member</p>
+                   <p style="text-decoration: underline;" (click)="handleLoginRedirect()">I'm already member</p>
                </div>
             </div>
         </div>

@@ -1,0 +1,9 @@
+.profileInput
+{
+    border-width: 0px; 
+    border: none; 
+    outline: none;
+    position: relative;
+    right: 16px;
+    background-color: transparent;
+}

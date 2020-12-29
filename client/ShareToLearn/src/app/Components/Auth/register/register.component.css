@@ -15,6 +15,7 @@ input:focus {
     position: relative;
     left: 18px;
      bottom: 4px;
+    background-color: transparent;
 }
 
 .loginButton
