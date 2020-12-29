@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Share_To_Learn_WEB_API.Entities;
 using Neo4jClient;
 using Share_To_Learn_WEB_API.DTOs;
+using Neo4jClient.Cypher;
 
 namespace Share_To_Learn_WEB_API.Services
 {
@@ -28,15 +29,18 @@ namespace Share_To_Learn_WEB_API.Services
 
         }
 
-        public async Task<bool> StudentExists(string email)
+        public async Task<StudentDTO> StudentExists(string email)
         {
             var res = await _client.Cypher
                             .Match("(student:Student)")
                             .Where((Student student) => student.Email == email)
-                            .Return<int>("count(student)")
-                            .ResultsAsync;
+                            .Return(() => new StudentDTO
+                            {
+                                Id = Return.As<int>("ID(student)"),
+                                Student = Return.As<Student>("student")
+                            }).ResultsAsync;
 
-            return res.Single() > 0;
+            return res.Single();
         }
 
         public async Task CreateStudent(Student newStudent)
