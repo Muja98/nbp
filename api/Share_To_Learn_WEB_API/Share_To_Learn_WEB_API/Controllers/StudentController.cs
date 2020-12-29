@@ -28,7 +28,7 @@ namespace Share_To_Learn_WEB_API.Controllers
         {
             var result = await _repository.GetStudents();
 
-            return Ok(result); 
+            return Ok(result);
         }
 
         [HttpPost]
@@ -63,7 +63,7 @@ namespace Share_To_Learn_WEB_API.Controllers
         {
             string savedPwd = await _repository.GetPassword(userCredentials.Email);
             byte[] savedPwdBytes = Convert.FromBase64String(savedPwd);
-            if (savedPwd!=null)
+            if (savedPwd != null)
             {
                 byte[] saltBytes = savedPwdBytes.Skip(savedPwdBytes.Length - 32).ToArray();
                 byte[] hashedPwdBytes = savedPwdBytes.Take(savedPwdBytes.Length - 32).ToArray();
@@ -85,6 +85,20 @@ namespace Share_To_Learn_WEB_API.Controllers
             else
                 return BadRequest("Non-existent email");
         }
+
+        [HttpPut("{studentId}")]
+        public async Task<ActionResult> UpdateStudent(int studentId, Student updatedStudent)
+        {
+            bool res = await _repository.StudentExists(studentId);
+
+            if (!res)
+                return BadRequest("Student doesnt exist!");
+
+            await _repository.UpdateStudent(studentId, updatedStudent);
+            return Ok(updatedStudent);
+        }
+
+
     }
 }
 
