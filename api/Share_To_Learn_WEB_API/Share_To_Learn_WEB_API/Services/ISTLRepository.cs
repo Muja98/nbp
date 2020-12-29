@@ -13,5 +13,6 @@ namespace Share_To_Learn_WEB_API.Services
         Task CreateStudent(Student newStudent);
         Task<bool> CreateNonExistingStudent(Student newStudent);
         Task<string> GetPassword(string email);
+        Task CreateGroup(int ownerId, Group newGroup);
     }
 }
