@@ -14,11 +14,11 @@ namespace Share_To_Learn_WEB_API.Controllers
 {
     [ApiController]
     [Route("api/test")]
-    public class TestController : ControllerBase
+    public class StudentController : ControllerBase
     {
         private readonly ISTLRepository _repository;
 
-        public TestController(ISTLRepository repository)
+        public StudentController(ISTLRepository repository)
         {
             _repository = repository;
         }
@@ -32,7 +32,7 @@ namespace Share_To_Learn_WEB_API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateStudent([FromBody] StudentDTO newStudent)
+        public async Task<ActionResult> CreateStudent([FromBody] Student newStudent)
         {
             //odvojiti u posebnu funkciju, najbolje u neki servis za autentifikaciju
             //----------------------------------------------------------
@@ -47,20 +47,11 @@ namespace Share_To_Learn_WEB_API.Controllers
             byte[] hashPlusSalt = new byte[hash.Length + salt.Length];
             Buffer.BlockCopy(hash, 0, hashPlusSalt, 0, hash.Length);
             Buffer.BlockCopy(salt, 0, hashPlusSalt, hash.Length, salt.Length);
-            newStudent.Password = System.Text.Encoding.UTF8.GetString(hashPlusSalt);
+            newStudent.Password = Convert.ToBase64String(hashPlusSalt);
             //----------------------------------------------------------
-            Student student = new Student
-            {
-                FirstName = newStudent.FirstName,
-                LastName = newStudent.LastName,
-                DateOfBirth = newStudent.DateOfBirth,
-                Email = newStudent.Email,
-                ProfilePicturePath = newStudent.ProfilePicturePath,
-                Password = hashPlusSalt
-            };
 
 
-            if (await _repository.CreateNonExistingStudent(student))
+            if (await _repository.CreateNonExistingStudent(newStudent))
                 return Ok();
             else
                 return BadRequest("Email taken");
@@ -70,11 +61,12 @@ namespace Share_To_Learn_WEB_API.Controllers
         [Route("login")]
         public async Task<ActionResult> LogUserIn([FromBody] AccountLogInDTO userCredentials)
         {
-            byte[] savedPwd = await _repository.GetPassword(userCredentials.Email);
+            string savedPwd = await _repository.GetPassword(userCredentials.Email);
+            byte[] savedPwdBytes = Convert.FromBase64String(savedPwd);
             if (savedPwd!=null)
             {
-                byte[] saltBytes = savedPwd.Skip(savedPwd.Length - 32).ToArray();
-                byte[] hashedPwdBytes = savedPwd.Take(savedPwd.Length - 32).ToArray();
+                byte[] saltBytes = savedPwdBytes.Skip(savedPwdBytes.Length - 32).ToArray();
+                byte[] hashedPwdBytes = savedPwdBytes.Take(savedPwdBytes.Length - 32).ToArray();
                 string hashedPwdString = System.Text.Encoding.UTF8.GetString(hashedPwdBytes);
 
                 byte[] pwdBytes = System.Text.Encoding.Unicode.GetBytes(userCredentials.Password);

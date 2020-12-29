@@ -61,12 +61,12 @@ namespace Share_To_Learn_WEB_API.Services
             return res.Single();
         }
 
-        public async Task<byte[]> GetPassword(string email)
+        public async Task<string> GetPassword(string email)
         {
             var res = await _client.Cypher
                             .Match("(student:Student)")
                             .Where((Student student) => student.Email == email)
-                            .Return<byte[]>("student.Password")
+                            .Return<string>("student.Password")
                             .ResultsAsync;
 
             if (res.Count() > 0)
