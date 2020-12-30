@@ -1,2 +1,2 @@
-const URL: String =  'http://localhost:4747';
+const URL: String =  'https://localhost:44374';
 export default URL;

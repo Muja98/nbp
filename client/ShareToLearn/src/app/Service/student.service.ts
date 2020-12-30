@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import URL from '../../API/api';
 import {HttpClient} from '@angular/common/http';
+import {JwtHelperService} from '@auth0/angular-jwt';
+import { Router } from '@angular/router';
 
 
 @Injectable({
@@ -10,18 +12,41 @@ import {HttpClient} from '@angular/common/http';
 
 export class StudentService {
 
-  constructor(private http:HttpClient){}
+  constructor(private http:HttpClient, private router:Router){}
 
-  //slobodno menjaj imena funkcijama
   addNewStudent(userName:string, email:string, password:string)
   {
-    //TODO IMPLEMENT addNewStudent
-    //this.http.post(URL+'/habbit',{userName:userName, email:email, password:password} ).subscribe( response=>{} )
+    this.http.post(URL + '/api/student',{FirstName:userName, LastName:userName, Email:email, Password:password}, {observe: 'response'} ).subscribe( 
+      response => {
+        //mozda prepraviti na backend-u da se vraca 200 i kad se unese vec postojeci mail, samo sa nekom porukom o tome
+        if(response['status'] == 200) {
+          var token:any = { accessToken: response['body']['value'] }
+          this.geStudentFromToken(token)
+          this.router.navigate(['/dashboard/main'])
+        }
+      }
+    )
   }
 
   loginStudent(email:string, password:string)
   {
-    //TODO IMPLEMENT loginStudent
+    this.http.post(URL + '/api/student/login', {Email: email, Password: password}, {observe: 'response'}).subscribe(
+      response => {
+        //mozda prepraviti na backend-u da se vraca 200 i kad se unese nepostojeci mail ili pogresna sifra, samo sa nekom porukom o tome
+        if(response['status'] == 200) {
+          var token:any = { accessToken: response['body']['value'] }
+          this.geStudentFromToken(token)
+          this.router.navigate(['/dashboard/main'])
+        }
+      }
+    )
+  }
+
+  geStudentFromToken(token:any)
+  {
+    const helper = new JwtHelperService()
+    const decodedToken = helper.decodeToken(token['accessToken'])
+    localStorage.setItem('user', JSON.stringify(decodedToken))
   }
 
 //PRIMER POST-a
