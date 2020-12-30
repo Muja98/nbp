@@ -27,7 +27,7 @@ namespace Share_To_Learn_WEB_API.Services
 
             return res;
 
-        }
+        } 
 
         public async Task<StudentDTO> StudentExists(string email)
         {
@@ -83,9 +83,57 @@ namespace Share_To_Learn_WEB_API.Services
         {
             await _client.Cypher
                     .Match("(owner: Student)")
-                    .WithIdentifier(ownerId.ToString())
-                    .Create("(owner)-[:ADMINISTRATED]->(group:Group {newGroup})")
+                    .Where("ID(owner) = $ownerId")
+                    .WithParam("ownerId", ownerId)
+                    .Create("(owner)-[:ADMINISTRATED]->(group:Group $newGroup)")
+                    .WithParam("newGroup", newGroup)
                     .ExecuteWithoutResultsAsync();
+        }
+
+        public async Task UpdateGroup(int groupId, Group updatedGroup)
+        {
+             await _client.Cypher
+                .Match("(group: Group)")
+                .Where("ID(group) = $groupId")
+                .WithParam("groupId", groupId)
+                .Set("group = $updatedGroup")
+                .WithParam("updatedGroup", updatedGroup)
+                .ExecuteWithoutResultsAsync();
+        }
+
+        public async Task UpdateStudent(int studentId, Student updatedStudent)
+        {
+            await _client.Cypher
+                .Match("(student: Student)")
+                .Where("ID(student) = $studentId")
+                .WithParam("studentId", studentId)
+                .Set("student = $updatedStudent")
+                .WithParam("updatedStudent", updatedStudent)
+                .ExecuteWithoutResultsAsync();
+        }
+
+        public async Task<bool> StudentExists(int studentId)
+        {
+            var res = await _client.Cypher
+                .Match("(student:Student)")
+                .Where("ID(student) = $studentId")
+                .WithParam("studentId", studentId)
+                .Return<int>("count(student)")
+                .ResultsAsync;
+
+            return res.Single() > 0;
+        }
+
+        public async Task<bool> GroupExists(int groupId)
+        {
+            var res = await _client.Cypher
+                .Match("(group: Group)")
+                .Where("ID(group) = $groupId")
+                .WithParam("groupId", groupId)
+                .Return<int>("count(group)")
+                .ResultsAsync;
+
+            return res.Single() > 0;
         }
     }   
 }

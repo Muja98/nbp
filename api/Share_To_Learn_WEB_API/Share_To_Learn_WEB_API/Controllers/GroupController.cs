@@ -21,10 +21,24 @@ namespace Share_To_Learn_WEB_API.Controllers
         }
 
         [HttpPost]
+        [Route("{ownerId}")]
         public async Task<ActionResult> CreateGroup(int ownerId, Group newGroup)
         {
             await _repository.CreateGroup(ownerId, newGroup);
-            return Ok(newGroup);
+            return Ok();
+        }
+
+        [HttpPut]
+        [Route("{groupId}")]
+        public async Task<ActionResult> UpdateGroup(int groupId, Group newGroup)
+        {
+            bool res = await _repository.GroupExists(groupId);
+
+            if (!res)
+                return BadRequest("Group doesnt exist!");
+
+            await _repository.UpdateGroup(groupId, newGroup);
+            return Ok();
         }
     }
 }
