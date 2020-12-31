@@ -135,5 +135,57 @@ namespace Share_To_Learn_WEB_API.Services
 
             return res.Single() > 0;
         }
+
+        public async Task<IEnumerable<GroupDTO>> GetGroupsPage(string filters, string orderBy, int from, int to)
+        {
+            if(string.IsNullOrEmpty(filters))
+            {
+                var a = await _client.Cypher
+                        .Match("(g:Group)")
+                        .Return(() => new GroupDTO {
+                            Id = Return.As<int>("ID(g)"),
+                            Group = Return.As<Group>("g")
+                        })
+                        .OrderBy(orderBy).Skip(from).Limit(to).ResultsAsync;
+                return a;
+            }
+            else
+            { 
+                var a = await _client.Cypher
+                        .Match("(g:Group)")
+                        .Where(filters)
+                        .Return(() => new GroupDTO
+                        {
+                            Id = Return.As<int>("ID(g)"),
+                            Group = Return.As<Group>("g")
+                        })
+                        .OrderBy(orderBy).Skip(from).Limit(to).ResultsAsync;
+                return a;
+            }
+        }
+
+        public Task<IEnumerable<GroupDTO>> GetGroupsPageDesc(string filters, string orderBy, int from, int to)
+        {
+            if (string.IsNullOrEmpty(filters))
+            {
+                return _client.Cypher
+                        .Match("(g:Group)")
+                        .OrderByDescending(orderBy)
+                        .Return(() => new GroupDTO
+                        {
+                            Id = Return.As<int>("ID(g)"),
+                            Group = Return.As<Group>("g")
+                        }).OrderByDescending(orderBy).Skip(from).Limit(to).ResultsAsync;
+            }
+            else
+                return _client.Cypher
+                        .Match("(g:Group)")
+                        .Where(filters)
+                        .Return(() => new GroupDTO
+                        {
+                            Id = Return.As<int>("ID(g)"),
+                            Group = Return.As<Group>("g")
+                        }).OrderByDescending(orderBy).Skip(from).Limit(to).ResultsAsync;
+        }
     }   
 }

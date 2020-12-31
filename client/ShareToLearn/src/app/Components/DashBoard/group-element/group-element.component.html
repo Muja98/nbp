@@ -1,0 +1,22 @@
+<div class="card mb-3" style="max-width: 540px;">
+    <div class="row g-0">
+        <div class="col-md-4">
+            <img  alt="...">
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">{{ group.group.name }}</h5>
+                <button type="button" class="btn btn-outline-primary" 
+                    (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed"
+                    aria-controls="collapseExample" style="margin-bottom: 10px;">
+                    Toggle description
+                </button>
+                <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed" >
+                    <p class="card-text">{{ group.group.description }}</p>
+                </div>
+                <div class="card-text" style="padding-top: 10px;"><small class="text-muted">Field: {{ group.group.field }}</small></div>
+                <div class="card-text"><small class="text-muted">Owner: "Petar"</small></div>
+            </div>
+        </div>
+    </div>
+</div>
