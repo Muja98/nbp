@@ -19,7 +19,7 @@ namespace Share_To_Learn_WEB_API.Services
 
         public async Task<IEnumerable<Student>> GetStudents()
         {
-            var res =   await _client.Cypher
+            var res = await _client.Cypher
                         .Match(@"(student:Student)")
                         .Return(student => student.As<Student>
                      ()).ResultsAsync;
@@ -82,6 +82,41 @@ namespace Share_To_Learn_WEB_API.Services
                     .WithIdentifier(ownerId.ToString())
                     .Create("(owner)-[:ADMINISTRATED]->(group:Group {newGroup})")
                     .ExecuteWithoutResultsAsync();
+        }
+
+        public async Task<bool> CheckIfStudentIsMemberOfAGroup(int studentId, int groupId)
+        {
+            var res = await _client.Cypher
+                            .Match("(st:Student),(gr:Group)")
+                            //.Where((Student st) => st.Email == email)
+                            //.AndWhere((Group gr) => gr.Name == groupName)
+                            .Where("id(st)={" + studentId.ToString()+"}")
+                            .AndWhere("id(gr)={"+groupId.ToString()+"}")
+                            .Return(st => st.As<Student>())
+                            .ResultsAsync;
+            //TODO: change email and name to ID
+            return res.Count() == 0;
+        }
+
+        public async Task AddStudentToGroup(int studentId, int groupId)
+        {
+            await _client.Cypher
+                             .Match("(st:Student),(gr:Group)")
+                             .Where("id(st)={studentId}")
+                             .AndWhere("id(gr)={groupId}")
+                             .Create("(st)-[:Member]->(gr)")
+                             .ExecuteWithoutResultsAsync();
+        }
+
+        public async Task RemoveStudentFromGroup(int studentId, int groupId)
+        {
+            await _client.Cypher
+                            .Match("(st:Student),(gr:Group)")
+                            .Match("(st)-[r:Member]-(gr)")
+                            .Where("id(st)={studentId}")
+                            .AndWhere("id(gr)={groupId}")
+                            .Delete("r")
+                            .ExecuteWithoutResultsAsync();
         }
     }   
 }

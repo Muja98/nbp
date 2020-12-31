@@ -26,5 +26,26 @@ namespace Share_To_Learn_WEB_API.Controllers
             await _repository.CreateGroup(ownerId, newGroup);
             return Ok(newGroup);
         }
+
+        [HttpPost]
+        [Route("student/{studentId}/group/{groupId}")]
+        public async Task<ActionResult> JoinGroup(int studentId, int groupId)
+        {
+            bool check = await _repository.CheckIfStudentIsMemberOfAGroup(studentId, groupId);
+            if (check)
+            {
+                await _repository.AddStudentToGroup(studentId, groupId);
+                return Ok();
+            }
+            else return BadRequest("Student is already member of this group");
+        }
+
+        [HttpDelete]
+        [Route("delete/student/{studentId}/group/{groupId}")]
+        public async Task<IActionResult> UnJoinGroup(int studentId, int groupId)
+        {
+            await _repository.RemoveStudentFromGroup(studentId, groupId);
+            return Ok();
+        }
     }
 }

@@ -29,7 +29,7 @@ namespace Share_To_Learn_WEB_API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            var neo4jClient = new GraphClient(new Uri("http://localhost:7474/"), "neo4j", "sharetolearn");
+            var neo4jClient = new GraphClient(new Uri("http://localhost:7474/"), "neo4j", "Genius1998");
             neo4jClient.ConnectAsync();
             services.AddSingleton<IGraphClient>(neo4jClient);
             services.AddScoped<ISTLRepository, STLRepository>();
