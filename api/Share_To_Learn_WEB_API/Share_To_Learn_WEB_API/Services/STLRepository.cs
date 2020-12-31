@@ -90,18 +90,18 @@ namespace Share_To_Learn_WEB_API.Services
                     .ExecuteWithoutResultsAsync();
         }
 
-<<<<<<< HEAD
+
         public async Task<bool> CheckIfStudentIsMemberOfAGroup(int studentId, int groupId)
         {
             var res = await _client.Cypher
-                            .Match("(st:Student),(gr:Group)")
-                            //.Where((Student st) => st.Email == email)
-                            //.AndWhere((Group gr) => gr.Name == groupName)
-                            .Where("id(st)={" + studentId.ToString()+"}")
-                            .AndWhere("id(gr)={"+groupId.ToString()+"}")
+
+                            .Match("(st:Student)-[MEMBER]-(gr:Group)")
+                            .Where("ID(st) = $studentId")
+                            .WithParam("studentId", studentId)
+                            .AndWhere("ID(gr) = $groupId")
+                            .WithParam("groupId", groupId)
                             .Return(st => st.As<Student>())
                             .ResultsAsync;
-            //TODO: change email and name to ID
             return res.Count() == 0;
         }
 
@@ -109,8 +109,10 @@ namespace Share_To_Learn_WEB_API.Services
         {
             await _client.Cypher
                              .Match("(st:Student),(gr:Group)")
-                             .Where("id(st)={studentId}")
-                             .AndWhere("id(gr)={groupId}")
+                             .Where("ID(st) = $studentId")
+                             .WithParam("studentId", studentId)
+                             .AndWhere("ID(gr) = $groupId")
+                             .WithParam("groupId", groupId)
                              .Create("(st)-[:Member]->(gr)")
                              .ExecuteWithoutResultsAsync();
         }
@@ -120,11 +122,14 @@ namespace Share_To_Learn_WEB_API.Services
             await _client.Cypher
                             .Match("(st:Student),(gr:Group)")
                             .Match("(st)-[r:Member]-(gr)")
-                            .Where("id(st)={studentId}")
-                            .AndWhere("id(gr)={groupId}")
+                            .Where("ID(st) = $studentId")
+                            .WithParam("studentId", studentId)
+                            .AndWhere("ID(gr) = $groupId")
+                            .WithParam("groupId", groupId)
                             .Delete("r")
                             .ExecuteWithoutResultsAsync();
-=======
+        }
+
         public async Task UpdateGroup(int groupId, Group updatedGroup)
         {
              await _client.Cypher
@@ -221,7 +226,7 @@ namespace Share_To_Learn_WEB_API.Services
                             Id = Return.As<int>("ID(g)"),
                             Group = Return.As<Group>("g")
                         }).OrderByDescending(orderBy).Skip(from).Limit(to).ResultsAsync;
->>>>>>> b373b6f3559430752762214ef943ddc7fa393ef8
+
         }
     }   
 }
