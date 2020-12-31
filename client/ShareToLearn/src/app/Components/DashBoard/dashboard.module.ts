@@ -6,9 +6,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { GroupElementComponent } from './group-element/group-element.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
-  declarations: [MainPageComponent,DashboardComponent, ProfileComponent],
+  declarations: [MainPageComponent,DashboardComponent, ProfileComponent, GroupElementComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -17,7 +19,8 @@ import { FormsModule } from '@angular/forms';
       {path:'dashboard', component:DashboardComponent, children:[
         {path:'main',component:MainPageComponent},
         {path:'profile',component:ProfileComponent}
-      ]}])
+      ]}]),
+      NgbModule
 
    
 
