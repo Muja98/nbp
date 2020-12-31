@@ -1,7 +1,10 @@
-export class Student
+export class Group
 {
     id:number = 0;
-    field:string = "";
-    name:string = "";
+    group:any = {
+        field: "",
+        name: "",
+        description: ""
+    }
     constructor(){}
 }
