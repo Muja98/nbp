@@ -113,7 +113,7 @@ namespace Share_To_Learn_WEB_API.Services
                              .WithParam("studentId", studentId)
                              .AndWhere("ID(gr) = $groupId")
                              .WithParam("groupId", groupId)
-                             .Create("(st)-[:Member]->(gr)")
+                             .Create("(st)-[:MEMBER]->(gr)")
                              .ExecuteWithoutResultsAsync();
         }
 
@@ -121,7 +121,7 @@ namespace Share_To_Learn_WEB_API.Services
         {
             await _client.Cypher
                             .Match("(st:Student),(gr:Group)")
-                            .Match("(st)-[r:Member]-(gr)")
+                            .Match("(st)-[r:MEMBER]-(gr)")
                             .Where("ID(st) = $studentId")
                             .WithParam("studentId", studentId)
                             .AndWhere("ID(gr) = $groupId")
