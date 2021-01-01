@@ -1,3 +1,5 @@
+import { PostComponent } from './post/post.component';
+import { GroupComponent } from './group/group.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { ProfileComponent } from './profile/profile.component';
 import { DashboardComponent } from './dashboard.component';
@@ -11,7 +13,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CreateGroupComponent } from './create-group/create-group.component';
 
 @NgModule({
-  declarations: [MainPageComponent,DashboardComponent, ProfileComponent, GroupElementComponent, CreateGroupComponent],
+  declarations: [MainPageComponent,DashboardComponent, ProfileComponent, GroupElementComponent, GroupComponent, PostComponent, CreateGroupComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -20,6 +22,7 @@ import { CreateGroupComponent } from './create-group/create-group.component';
       {path:'dashboard', component:DashboardComponent, children:[
         {path:'main',component:MainPageComponent},
         {path:'profile',component:ProfileComponent},
+        {path:'group/:idGroup', component:GroupComponent},
         {path:'create-group',component:CreateGroupComponent}
       ]}]),
       NgbModule
