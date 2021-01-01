@@ -10,7 +10,7 @@ using Neo4jClient.Cypher;
 namespace Share_To_Learn_WEB_API.Services
 {
     public class STLRepository : ISTLRepository
-    {
+    {  
         private readonly IGraphClient _client;
 
         public STLRepository(IGraphClient client)
@@ -85,11 +85,10 @@ namespace Share_To_Learn_WEB_API.Services
                     .Match("(owner: Student)")
                     .Where("ID(owner) = $ownerId")
                     .WithParam("ownerId", ownerId)
-                    .Create("(owner)-[:ADMINISTRATED]->(group:Group $newGroup)")
+                    .Create("(owner)-[:OWNER]->(group:Group $newGroup)")
                     .WithParam("newGroup", newGroup)
                     .ExecuteWithoutResultsAsync();
         }
-
 
         public async Task<bool> CheckIfStudentIsMemberOfAGroup(int studentId, int groupId)
         {
@@ -184,7 +183,8 @@ namespace Share_To_Learn_WEB_API.Services
                         .Match("(g:Group)")
                         .Return(() => new GroupDTO {
                             Id = Return.As<int>("ID(g)"),
-                            Group = Return.As<Group>("g")
+                            Group = Return.As<Group>("g"),
+                            Student = Return.As<Student>("st")
                         })
                         .OrderBy(orderBy).Skip(from).Limit(to).ResultsAsync;
                 return a;
@@ -197,7 +197,8 @@ namespace Share_To_Learn_WEB_API.Services
                         .Return(() => new GroupDTO
                         {
                             Id = Return.As<int>("ID(g)"),
-                            Group = Return.As<Group>("g")
+                            Group = Return.As<Group>("g"),
+                            Student = Return.As<Student>("st")
                         })
                         .OrderBy(orderBy).Skip(from).Limit(to).ResultsAsync;
                 return a;
@@ -227,6 +228,40 @@ namespace Share_To_Learn_WEB_API.Services
                             Group = Return.As<Group>("g")
                         }).OrderByDescending(orderBy).Skip(from).Limit(to).ResultsAsync;
 
+        }
+
+        public async Task<IEnumerable<GroupDTO>> GetMemberships(int studentId)
+        {
+            var result = await _client.Cypher
+                            .Match("(st)-[r:Member]-(g), (ow)-[rel:OWNER]-(g)")
+                            .Where("ID(st) = $studentId")
+                            .WithParam("studentId", studentId)
+                            .Return(() => new GroupDTO
+                            {
+                                Id = Return.As<int>("ID(g)"),
+                                Group = Return.As<Group>("g"),
+                                Student = Return.As<Student>("ow")
+                            })
+                            .ResultsAsync;
+
+            return result;
+        }
+
+        public async Task<IEnumerable<GroupDTO>> GetOwnerships(int studentId)
+        {
+            var result = await _client.Cypher
+                .Match("(st)-[r:OWNER]-(g)")
+                .Where("ID(st) = $studentId")
+                .WithParam("studentId", studentId)
+                .Return(() => new GroupDTO
+                {
+                    Id = Return.As<int>("ID(g)"),
+                    Group = Return.As<Group>("g"),
+                    Student = Return.As<Student>("st")
+                })
+                .ResultsAsync;
+
+            return result;
         }
     }   
 }

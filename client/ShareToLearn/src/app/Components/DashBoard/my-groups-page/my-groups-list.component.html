@@ -1,0 +1,22 @@
+<div class="d-flex justify-content-around">
+    <div> 
+        <div class="card">
+            <div class="card-header">
+                <h5>Owner</h5>
+              </div>
+        </div>      
+        <div class="card mb-3" style="max-width: 540px;" *ngFor='let group of ownerships'>
+            <app-group-element  [group]='group' [showMore]='false'></app-group-element>
+        </div>
+    </div>
+    <div>
+        <div class="card">
+            <div class="card-header">
+                <h5>Member</h5>
+            </div>
+        </div>      
+        <div class="card mb-3" style="max-width: 540px;" *ngFor='let group of memberships'>
+            <app-group-element  [group]='group' [showMore]='false'></app-group-element>
+        </div>
+    </div>
+</div>

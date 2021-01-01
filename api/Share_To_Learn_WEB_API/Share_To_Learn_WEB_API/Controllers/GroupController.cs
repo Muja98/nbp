@@ -86,5 +86,24 @@ namespace Share_To_Learn_WEB_API.Controllers
             await _repository.RemoveStudentFromGroup(studentId, groupId);
             return Ok();
         }
+
+        [HttpGet]
+        [Route("student/{studentId}/memberships")]
+        public async Task<ActionResult> GetMyMemberships(int studentId)
+        {
+            if (!await _repository.StudentExists(studentId))
+                return Ok("Student doesnt exists");
+
+            var result = await _repository.GetMemberships(studentId);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("student/{studentId}/ownerships")]
+        public async Task<ActionResult> GetMyOwnerships(int studentId)
+        {
+            var result = await _repository.GetOwnerships(studentId);
+            return Ok(result);
+        }
     }
 }

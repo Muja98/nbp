@@ -27,5 +27,8 @@ namespace Share_To_Learn_WEB_API.Services
         Task<IEnumerable<GroupDTO>> GetGroupsPage(string filters, string orderBy, int from, int to);
         Task<IEnumerable<GroupDTO>> GetGroupsPageDesc(string filters, string orderBy, int from, int to);
 
+        Task<IEnumerable<GroupDTO>> GetMemberships(int studentId);
+        Task<IEnumerable<GroupDTO>> GetOwnerships(int studentId);
+
     }
 }

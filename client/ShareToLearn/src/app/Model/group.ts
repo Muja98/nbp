@@ -6,5 +6,11 @@ export class Group
         name: "",
         description: ""
     }
+    student:any = {
+        firstName: "",
+        lastName: "",
+        dateOfBirth: "",
+        email: "",
+    }
     constructor(){}
 }
