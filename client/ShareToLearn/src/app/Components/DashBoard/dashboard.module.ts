@@ -8,9 +8,10 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { GroupElementComponent } from './group-element/group-element.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CreateGroupComponent } from './create-group/create-group.component';
 
 @NgModule({
-  declarations: [MainPageComponent,DashboardComponent, ProfileComponent, GroupElementComponent],
+  declarations: [MainPageComponent,DashboardComponent, ProfileComponent, GroupElementComponent, CreateGroupComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -18,7 +19,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     RouterModule.forRoot([
       {path:'dashboard', component:DashboardComponent, children:[
         {path:'main',component:MainPageComponent},
-        {path:'profile',component:ProfileComponent}
+        {path:'profile',component:ProfileComponent},
+        {path:'create-group',component:CreateGroupComponent}
       ]}]),
       NgbModule
 
