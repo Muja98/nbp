@@ -27,7 +27,7 @@ namespace Share_To_Learn_WEB_API.Services
 
             return res;
 
-        } 
+        }
 
         public async Task<StudentDTO> StudentExists(string email)
         {
@@ -132,13 +132,13 @@ namespace Share_To_Learn_WEB_API.Services
 
         public async Task UpdateGroup(int groupId, Group updatedGroup)
         {
-             await _client.Cypher
-                .Match("(group: Group)")
-                .Where("ID(group) = $groupId")
-                .WithParam("groupId", groupId)
-                .Set("group = $updatedGroup")
-                .WithParam("updatedGroup", updatedGroup)
-                .ExecuteWithoutResultsAsync();
+            await _client.Cypher
+               .Match("(group: Group)")
+               .Where("ID(group) = $groupId")
+               .WithParam("groupId", groupId)
+               .Set("group = $updatedGroup")
+               .WithParam("updatedGroup", updatedGroup)
+               .ExecuteWithoutResultsAsync();
         }
 
         public async Task UpdateStudent(int studentId, Student updatedStudent)
@@ -178,11 +178,12 @@ namespace Share_To_Learn_WEB_API.Services
 
         public async Task<IEnumerable<GroupDTO>> GetGroupsPage(string filters, string orderBy, int from, int to)
         {
-            if(string.IsNullOrEmpty(filters))
+            if (string.IsNullOrEmpty(filters))
             {
                 var a = await _client.Cypher
                         .Match("(g:Group)")
-                        .Return(() => new GroupDTO {
+                        .Return(() => new GroupDTO
+                        {
                             Id = Return.As<int>("ID(g)"),
                             Group = Return.As<Group>("g")
                         })
@@ -190,7 +191,7 @@ namespace Share_To_Learn_WEB_API.Services
                 return a;
             }
             else
-            { 
+            {
                 var a = await _client.Cypher
                         .Match("(g:Group)")
                         .Where(filters)
@@ -227,6 +228,7 @@ namespace Share_To_Learn_WEB_API.Services
                             Group = Return.As<Group>("g")
                         }).OrderByDescending(orderBy).Skip(from).Limit(to).ResultsAsync;
 
+
         }
-    }   
+
 }
