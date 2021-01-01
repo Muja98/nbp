@@ -176,57 +176,40 @@ namespace Share_To_Learn_WEB_API.Services
             return res.Single() > 0;
         }
 
-        public async Task<IEnumerable<GroupDTO>> GetGroupsPage(string filters, string orderBy, int from, int to)
+        public async Task<IEnumerable<GroupDTO>> GetGroupsPage(string filters, string userFilter, string orderBy, bool descending, int from, int to)
         {
-            if(string.IsNullOrEmpty(filters))
+            var a = _client.Cypher
+                        .Match("(g:Group), (s:Student)")
+                        .Where(userFilter);
+
+            if (!string.IsNullOrEmpty(filters))
+                a = a.AndWhere(filters);
+
+            ICypherFluentQuery<GroupDTO> ret = a.Return(() => new GroupDTO
             {
-                var a = await _client.Cypher
-                        .Match("(g:Group)")
-                        .Return(() => new GroupDTO {
-                            Id = Return.As<int>("ID(g)"),
-                            Group = Return.As<Group>("g")
-                        })
-                        .OrderBy(orderBy).Skip(from).Limit(to).ResultsAsync;
-                return a;
-            }
+                Id = Return.As<int>("ID(g)"),
+                Group = Return.As<Group>("g")
+            });
+
+            if (descending)
+                ret = ret.OrderBy(orderBy);
             else
-            { 
-                var a = await _client.Cypher
-                        .Match("(g:Group)")
-                        .Where(filters)
-                        .Return(() => new GroupDTO
-                        {
-                            Id = Return.As<int>("ID(g)"),
-                            Group = Return.As<Group>("g")
-                        })
-                        .OrderBy(orderBy).Skip(from).Limit(to).ResultsAsync;
-                return a;
-            }
+                ret = ret.OrderByDescending(orderBy);
+
+            return await ret.Skip(from).Limit(to).ResultsAsync;
         }
 
-        public Task<IEnumerable<GroupDTO>> GetGroupsPageDesc(string filters, string orderBy, int from, int to)
+        public async Task<int> GetGroupsCount(string filters, string userFilter)
         {
-            if (string.IsNullOrEmpty(filters))
-            {
-                return _client.Cypher
-                        .Match("(g:Group)")
-                        .OrderByDescending(orderBy)
-                        .Return(() => new GroupDTO
-                        {
-                            Id = Return.As<int>("ID(g)"),
-                            Group = Return.As<Group>("g")
-                        }).OrderByDescending(orderBy).Skip(from).Limit(to).ResultsAsync;
-            }
-            else
-                return _client.Cypher
-                        .Match("(g:Group)")
-                        .Where(filters)
-                        .Return(() => new GroupDTO
-                        {
-                            Id = Return.As<int>("ID(g)"),
-                            Group = Return.As<Group>("g")
-                        }).OrderByDescending(orderBy).Skip(from).Limit(to).ResultsAsync;
+            var a = _client.Cypher
+                        .Match("(g:Group), (s:Student)")
+                        .Where(userFilter);
 
+            if (!string.IsNullOrEmpty(filters))
+                a = a.AndWhere(filters);
+
+            var res = await a.Return<int>("count(g)").ResultsAsync;
+            return res.Single();
         }
     }   
 }
