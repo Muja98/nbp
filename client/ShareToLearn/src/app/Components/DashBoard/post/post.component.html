@@ -1,0 +1,30 @@
+<div class="container-fluid rounded shadow" style="background-color: white;">
+    <div class="row  p-4" style="border-color: whitesmoke;">
+        <div class="col-1  d-flex justify-content-center align-items-center">
+            <img src="/assets/profilePicture.jpg" height="55px" width="55px" class="rounded-circle" alt="profilePicture.jpg">
+        </div>
+        <div class="col  d-flex align-items-center mt-1">
+            <p style="font-size: 20px; font-weight: 500;">
+                Stefan Stamenković
+            </p>
+            <p  style="font-size: 11px; font-weight: 700; position: relative; right: 177px; top: 20px;">
+                21:20 1/1/2020
+            </p>
+        </div>
+    </div>
+    <div class="row justify-content-center ">
+       <div class="col-11 ">
+            <div class="row border-top border-bottom pt-3">
+                <textarea class="w-100 " (keyup)="povecaj($event)" style="cursor:text; min-height: 80px; border-style: none; border-color: transparent; overflow: auto; resize: none;">Drugari da li ima neko da mi posalje uradjene zadatke iz Objektno orijentisano programiranje pls</textarea>
+            </div>
+       </div>
+    </div>
+    <div class="row p-4" >
+        <div class="col-1  d-flex justify-content-center align-items-center pt-1 pb-3" >
+            <img src="/assets/profilePicture.jpg" height="45px" width="45px" class="rounded-circle" alt="profilePicture.jpg">
+        </div>
+        <div class="col" >
+            <textarea class="w-100 pera" (keyup)="povecaj($event)" style="cursor:text;  background-color: #eeeeee; border-radius: 20px;  overflow: hidden;" placeholder="Write a comment..."></textarea>
+        </div>
+    </div>
+</div>
