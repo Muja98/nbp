@@ -15,20 +15,16 @@ namespace Share_To_Learn_WEB_API.Services
         Task<bool> CreateNonExistingStudent(Student newStudent);
         Task<string> GetPassword(string email);
         Task CreateGroup(int ownerId, Group newGroup);
-
         Task<bool> CheckIfStudentIsMemberOfAGroup(int studentId, int groupId);
         Task AddStudentToGroup(int studentId, int groupId);
         Task RemoveStudentFromGroup(int studentId, int groupId);
-
         Task UpdateGroup(int groupId, Group updatedGroup);
         Task UpdateStudent(int studentId, Student updatedStudent);
         Task<bool> StudentExists(int studentId);
         Task<bool> GroupExists(int groupId);
-        Task<IEnumerable<GroupDTO>> GetGroupsPage(string filters, string orderBy, int from, int to);
-        Task<IEnumerable<GroupDTO>> GetGroupsPageDesc(string filters, string orderBy, int from, int to);
-
         Task<IEnumerable<GroupDTO>> GetMemberships(int studentId);
         Task<IEnumerable<GroupDTO>> GetOwnerships(int studentId);
-
+        Task<IEnumerable<GroupDTO>> GetGroupsPage(string filters, string userFilter, string orderBy, bool descending, int from, int to);
+        Task<int> GetGroupsCount(string filters, string userFilter);
     }
 }

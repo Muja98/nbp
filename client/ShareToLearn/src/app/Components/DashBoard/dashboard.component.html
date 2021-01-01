@@ -1,2 +1,24 @@
-<h1>Petar Tebrica</h1>
+<nav class="navbar navbar-expand-md navbar-light bg-primary">
+    <div class="container-fluid">
+      <button 
+        class="navbar-toggler" type="button" [attr.aria-expanded]="!isCollapsed" 
+        aria-controls="navbarTogglerDemo01" aria-expanded="false" 
+        aria-label="Toggle navigation" (click)="isCollapsed = !isCollapsed">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarTogglerDemo01" [(ngbCollapse)]="isCollapsed">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" [ngClass]="isActive(0)" aria-current="page" routerLink="/dashboard/profile">Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" [ngClass]="isActive(1)" routerLink="/dashboard/main">Search groups</a>
+          </li>
+          <!-- <li class="nav-item">
+            <a class="nav-link" [ngClass]="isActive(2)" routerLink="/dashboard/my-groups">My groups</a>
+          </li> -->
+        </ul>
+      </div>
+    </div>
+  </nav>
 <router-outlet></router-outlet>

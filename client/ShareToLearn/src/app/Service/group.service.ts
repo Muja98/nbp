@@ -13,9 +13,11 @@ export class GroupService {
 
   constructor(private http:HttpClient, private router:Router) { }
 
-  getFilteredGroups(params:any)
-  {
-    debugger
+  getFilteredGroups(params:any) {
     return this.http.get<Group[]>(URL + "/api/groups", {'params': params});
+  }
+
+  getFilteredGroupsCount(params:any) {
+    return this.http.get(URL + "/api/groups/group-count", {'params': params})
   }
 }
