@@ -10,9 +10,10 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { GroupElementComponent } from './group-element/group-element.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CreateGroupComponent } from './create-group/create-group.component';
 
 @NgModule({
-  declarations: [MainPageComponent,DashboardComponent, ProfileComponent, GroupElementComponent, GroupComponent, PostComponent],
+  declarations: [MainPageComponent,DashboardComponent, ProfileComponent, GroupElementComponent, GroupComponent, PostComponent, CreateGroupComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -21,7 +22,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
       {path:'dashboard', component:DashboardComponent, children:[
         {path:'main',component:MainPageComponent},
         {path:'profile',component:ProfileComponent},
-        {path:'group/:idGroup', component:GroupComponent}
+        {path:'group/:idGroup', component:GroupComponent},
+        {path:'create-group',component:CreateGroupComponent}
       ]}]),
       NgbModule
 

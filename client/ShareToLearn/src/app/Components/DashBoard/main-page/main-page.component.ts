@@ -67,7 +67,6 @@ export class MainPageComponent implements OnInit {
   private getGroups(params:any, append:boolean):void {
     this.service.getFilteredGroups(params).subscribe(
       result => {
-        debugger
         this.groups = append ? this.groups.concat(result['value']) : result['value']
         const startInd = (this.page - 1) * this.perPage;
         this.groupsToShow = this.groups.slice(startInd, startInd + this.perPage);
