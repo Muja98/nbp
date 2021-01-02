@@ -1,3 +1,4 @@
+import { Student } from './../../../Model/student';
 import { StudentService } from './../../../Service/student.service';
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
@@ -9,16 +10,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RegisterComponent implements OnInit {
 
-  constructor(private router:Router, private service: StudentService) { }
+  user:Student;
+  password:string;
+  rpassword:string;
+  constructor(private router:Router, private service: StudentService) {
+    this.user = new Student();
+   }
 
   ngOnInit(): void {
   }
-  //SERVISI SE UGLAVNOM PISU U POSEBAN FOLDER ALI ZARAD TESTIRANJA OVDE CE BUDU PRIVREMENO
 
-  public userName:string;
-  public email:string;
-  public password:string;
-  public rPassword:string;
+
+
 
   handleLoginRedirect():void{
     this.router.navigate(['/login'])
@@ -26,15 +29,14 @@ export class RegisterComponent implements OnInit {
 
   handleDashboardRedirect():void
   {
-    if(this.password===this.rPassword)
-    {
-      //Svi podaci kad uneses nesto u input se sistematski upisuju u promenljive
-      //ovde se zove servise, a u folder Service se nalazi sama implementacija
-      this.service.addNewStudent(this.userName,this.email,this.password);
-    }
-    else alert("Password don't match!")
+  if(this.password===this.rpassword)
+  {
+    this.service.addNewStudent(this.user,this.password);
+    this.router.navigate(['/dashboard/main'])
+  }
+  else alert("Password don't match!")
    
-    //this.router.navigate(['/dashboard/main'])
+   
   }
 
 }

@@ -1,5 +1,7 @@
+import { Router } from '@angular/router';
+import { StudentService } from './../../../Service/student.service';
 import { Student } from './../../../Model/student';
-import { Component, OnInit, OnChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-profile',
@@ -11,18 +13,24 @@ export class ProfileComponent implements OnInit {
   public student:Student;
   public pomStudent:Student;
   public studentChangeFlag:boolean = false;
+  public tempStudent:any;
 
-  constructor() {
+  constructor(private service:StudentService,private router:Router) {
     
    }
   
   handleSetStudent():void
   {
-    this.student.firstName = "Stefan";
-    this.student.lastName = "Stamenkovic";
-    this.student.email = "stefaneli95@gmail.com";
-    this.student.dateOfBirth = "1998-10-05";
-    this.student.userName = "Muja98"
+    this.tempStudent= this.service.getStudentFromStorage();
+    this.student.id = this.tempStudent.id;
+    this.student.firstName = this.tempStudent.firstName;
+    if(this.student.firstName===this.student.lastName)
+      this.student.lastName = "";
+    else
+      this.student.lastName = this.student.lastName
+    this.student.email = this.tempStudent.email;
+    this.student.dateOfBirth = this.tempStudent.dateOfBirth;
+    this.student.userName = ""
 
     //TODO:Get student from API
   }
@@ -47,7 +55,9 @@ export class ProfileComponent implements OnInit {
 
   handleEditStudent()
   {
-    //TODO: implement handleEditStudent
+      this.service.editStudent(this.student);
+      this.service.logoutStudent();
+      this.router.navigate(['/login'])
   }
 
   

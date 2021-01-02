@@ -4,13 +4,42 @@
             <p>TODO:Menu</p>
         </div>
     </div>
-    <div class="row">
-        <div class="col-8">
-            <app-post></app-post>
-        </div>
+    <div class="row p-0 ">
+        <div class="col-8" style="background-color: white;">
+            <div class="row  p-4" style="border-color: whitesmoke;">
+                <div class="col-1  d-flex justify-content-center align-items-center" style="cursor: pointer;">
+                    <img src="/assets/profilePicture.jpg" height="55px" width="55px" class="rounded-circle" alt="profilePicture.jpg">
+                </div>
+                <div class="col  d-flex align-items-center mt-1">
+                    <p style="font-size: 20px; font-weight: 500; cursor: pointer;">
+                        Stefan Stamenković
+                    </p>
+                    <p  style="font-size: 11px; font-weight: 700; position: relative; right: 177px; top: 20px;">
+                       {{this.todaysDataTime}}
+                    </p>
+                </div>
+            </div>
+            <div class="row justify-content-center ">
+               <div class="col-11 ">
+                    <div class="row border-top border-bottom pt-2 pb-2">
+                        <textarea class="w-100" (keyup)="povecaj($event)" (keyup.enter)="handleAddNewPost()"  [(ngModel)]="newPost.data" style="cursor:text; min-height: 80px; border-style: none; border-color: gray; overflow: auto; resize: none; font-size: 17px;" placeholder="Write something..."></textarea>
+                    </div>
+               </div>
+            </div>
+            <div class="row p-4">
+                <button (click)="handleAddNewPost()" class="btn btn-info">Add new Post</button>
+            </div>
+        </div>  
         <div class="col-2">
             <p>TODO:Group Info</p>
         </div>
+    </div>
+    <div class="row">
+        <div class="col-8">
+            <app-post></app-post>
+            <app-post></app-post>
+        </div>
+        
     </div>
    
 </div>

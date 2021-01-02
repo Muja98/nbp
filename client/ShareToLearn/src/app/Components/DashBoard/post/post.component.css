@@ -7,26 +7,13 @@ textarea {
     -moz-box-shadow: none;
     box-shadow: none;
 
-    resize: none; /*remove the resize handle on the bottom right*/
-   
-  
+    resize: none; 
+    cursor: text;
 }
 
-textarea::placeholder
+.commentTextArea
 {
-    position: relative;
-    left: 10px;
-    top: 10px;
-}
-
-textarea::selection
-{
-    position: relative;
-    left: 10px;
-    top: 10px;
-}
-
-.pera
-{
-    padding-left: 100px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 5px;
 }

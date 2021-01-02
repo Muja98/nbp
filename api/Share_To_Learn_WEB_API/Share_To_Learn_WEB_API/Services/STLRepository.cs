@@ -205,15 +205,11 @@ namespace Share_To_Learn_WEB_API.Services
                         .Match("(g:Group), (s:Student)")
                         .Where(userFilter);
 
-<<<<<<< HEAD
-
-=======
             if (!string.IsNullOrEmpty(filters))
                 a = a.AndWhere(filters);
 
             var res = await a.Return<int>("count(g)").ResultsAsync;
             return res.Single();
->>>>>>> 352915a1844e4318e7c94978753dd6dc5af2142a
         }
     }
 
