@@ -1,1 +1,31 @@
-<p>create-group works!</p>
+<div class="container">
+    <div class="row justify-content-md-center">
+        <div class="col-md-4">
+            <label for="inputGroupName" class="form-label">Group name</label>
+            <input 
+                type="text" class="form-control" 
+                placeholder="Enter a group name..." id="inputGroupName" 
+                [(ngModel)]="groupName" (input)="canCreateCheck()">
+        </div>
+        <div class="col-md-4">
+            <label for="inputGroupField" class="form-label">Field</label>
+            <input 
+                type="text" class="form-control" 
+                placeholder="What is your group about" id="inputGroupField" 
+                [(ngModel)]="groupField" (input)="canCreateCheck()">
+        </div>
+        <div class="col-8 mt-3">
+            <label for="inputGroupDescription" class="form-label">Description</label>
+            <div class="input-group">
+                <textarea 
+                    class="form-control" aria-label="With textarea" 
+                    style="resize: none; font-size: 20px;" placeholder="More details about your group..." 
+                    rows="5" [(ngModel)]="groupDescription" (input)="canCreateCheck()">
+                </textarea>
+            </div>
+        </div>
+        <div class="col-8 mt-3">
+            <button class="btn btn-primary" (click)="handleGroupCreate()" [disabled]="!canCreate">Create</button>
+        </div>
+    </div>
+</div>

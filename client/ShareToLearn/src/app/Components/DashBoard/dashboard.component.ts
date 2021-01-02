@@ -8,7 +8,25 @@ import { Router } from '@angular/router'
 })
 export class DashboardComponent implements OnInit {
   public isCollapsed = true;
-  public navLinks = ['/dashboard/profile', '/dashboard/main' /*, '/dashboard/my-groups'*/]
+  public linkRoot = "/dashboard"
+  public navLinks = [
+    {
+      link:"/profile", 
+      text:"Profile"
+    }, 
+    {
+      link:"/main", 
+      text:"Search groups"
+    }, 
+    {
+      link:"/create-group", 
+      text:"Create group"
+    }/*, 
+    {
+      link:"/my-groups", 
+      text:"My groups"
+    }*/
+  ]
 
   constructor(private router:Router) { }
 
@@ -17,9 +35,8 @@ export class DashboardComponent implements OnInit {
 
   isActive(ind:number):object {
     return {
-      'active': this.router.url == this.navLinks[ind]
+      'active': this.router.url == this.linkRoot + this.navLinks[ind].link
     }
   }
-
 
 }
