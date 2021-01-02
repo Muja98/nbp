@@ -24,7 +24,7 @@ export class CreateGroupComponent implements OnInit {
     this.service.createGroup(this.userId, this.groupName, this.groupField, this.groupDescription).subscribe(
       result => {
         console.log("Created group");
-        this.router.navigate(['/dashboard/main']) //prepraviti u ['/dashboard/my-groups']
+        this.router.navigate(['/dashboard/my-groups'])
       }
     );
   }

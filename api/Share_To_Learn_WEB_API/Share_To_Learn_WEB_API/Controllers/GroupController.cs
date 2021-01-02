@@ -45,7 +45,7 @@ namespace Share_To_Learn_WEB_API.Controllers
         [HttpGet]
         public async Task<ActionResult> GetFilteredGroups([FromQuery] string name, [FromQuery] string field, [FromQuery] bool orderByName, [FromQuery] bool descending, [FromQuery] int from, [FromQuery] int to, [FromQuery] int user)
         {
-            string userFilter = "not (s)-[:MEMBER|:ADMINISTRATED]->(g) and ID(s) = " + user; //zameniti ADMINISTRATED sa ADMINISTRATES
+            string userFilter = "not (s)-[:MEMBER|:OWNER]->(g) and ID(s) = " + user;
             string where1 = (string.IsNullOrEmpty(name) ? "" : ("g.Name = \"" + name + "\"")); 
             string where2 = (string.IsNullOrEmpty(field) ? "" : ("g.Field = \"" + field + "\""));
             string where = "";
@@ -68,7 +68,7 @@ namespace Share_To_Learn_WEB_API.Controllers
         [Route("group-count")]
         public async Task<ActionResult> GetFilteredGroupsCount([FromQuery] string name, [FromQuery] string field, [FromQuery] int user)
         {
-            string userFilter = "not (s)-[:MEMBER|:ADMINISTRATED]->(g) and ID(s) = " + user; //zameniti ADMINISTRATED sa ADMINISTRATES
+            string userFilter = "not (s)-[:MEMBER|:OWNER]->(g) and ID(s) = " + user;
             string where1 = (string.IsNullOrEmpty(name) ? "" : ("g.Name = \"" + name + "\""));
             string where2 = (string.IsNullOrEmpty(field) ? "" : ("g.Field = \"" + field + "\""));
             string where = "";

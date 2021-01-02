@@ -21,11 +21,11 @@ export class DashboardComponent implements OnInit {
     {
       link:"/create-group", 
       text:"Create group"
-    }/*, 
+    }, 
     {
       link:"/my-groups", 
       text:"My groups"
-    }*/
+    }
   ]
 
   constructor(private router:Router) { }

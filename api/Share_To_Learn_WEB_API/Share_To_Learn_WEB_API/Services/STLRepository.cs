@@ -178,7 +178,7 @@ namespace Share_To_Learn_WEB_API.Services
         public async Task<IEnumerable<GroupDTO>> GetGroupsPage(string filters, string userFilter, string orderBy, bool descending, int from, int to)
         {
             var a = _client.Cypher
-                        .Match("(g:Group), (s:Student)")
+                        .Match("(g:Group), (s:Student), (ow)-[:OWNER]-(g)")
                         .Where(userFilter);
 
             if (!string.IsNullOrEmpty(filters))
@@ -187,7 +187,8 @@ namespace Share_To_Learn_WEB_API.Services
             ICypherFluentQuery<GroupDTO> ret = a.Return(() => new GroupDTO
             {
                 Id = Return.As<int>("ID(g)"),
-                Group = Return.As<Group>("g")
+                Group = Return.As<Group>("g"),
+                Student = Return.As<Student>("ow")
             });
 
             if (descending)
@@ -202,7 +203,7 @@ namespace Share_To_Learn_WEB_API.Services
         public async Task<IEnumerable<GroupDTO>> GetMemberships(int studentId)
         {
             var result = await _client.Cypher
-                            .Match("(st)-[r:Member]-(g), (ow)-[rel:OWNER]-(g)")
+                            .Match("(st)-[r:MEMBER]-(g), (ow)-[rel:OWNER]-(g)")
                             .Where("ID(st) = $studentId")
                             .WithParam("studentId", studentId)
                             .Return(() => new GroupDTO
@@ -237,7 +238,7 @@ namespace Share_To_Learn_WEB_API.Services
         public async Task<int> GetGroupsCount(string filters, string userFilter)
         {
             var a = _client.Cypher
-                        .Match("(g:Group), (s:Student)")
+                        .Match("(g:Group), (s:Student), (ow)-[:OWNER]-(g)")
                         .Where(userFilter);
 
             if (!string.IsNullOrEmpty(filters))
