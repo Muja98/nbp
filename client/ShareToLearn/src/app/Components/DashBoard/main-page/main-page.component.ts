@@ -12,7 +12,6 @@ export class MainPageComponent implements OnInit {
   groups:Group[];
   groupsToShow:Group[];
   public isCollapsed = true;
-  public userId = JSON.parse(localStorage.getItem('user'))['id'];
   public groupName:string = "";
   public groupField:string = "";
   public orderByName:boolean = false;
@@ -23,10 +22,12 @@ export class MainPageComponent implements OnInit {
   public previousPage:number;
   public fullNumberOfGroups:number;
   public perPage:number;
+  private userId:string;
 
   constructor(private service: GroupService) {}
 
   ngOnInit(): void {
+    this.userId = JSON.parse(localStorage.getItem('user'))['id'];
     this.page = 1;
     this.previousPage = 1;
     this.perPage = 5;
