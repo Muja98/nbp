@@ -9,7 +9,7 @@
                         </div>
                     </div>
                     <div class="row justify-content-center align-items-center h-25 mr-2 " style="color: white; font-weight: 400; font-size: 24px;">
-                        <input [(ngModel)]="student.firstName"    type="text" style="left:120px; color: whitesmoke; font-size: 28px; font-weight: 500;"  class="profileInput" disabled/>
+                        <input [(ngModel)]="student.FirstName"    type="text" style="left:120px; color: whitesmoke; font-size: 28px; font-weight: 500;"  class="profileInput" disabled/>
                     </div>
                 </div>
                 <div class="col-xl-8 col-lg-12 rounded pt-1 pl-5 pr-5 d-flex  flex-column flex-wrap" style="background-color: white; min-width: 240px; min-height: 400px;">
@@ -19,22 +19,22 @@
                     <div class="row flex-row pt-4" style="font-size:20px;">
                         <div class="col-6" style="min-width: 200px;">            
                             <div class="row" style="font-weight: 500; position: relative; right: 0px;">Name</div>      
-                            <input [(ngModel)]="student.firstName" type="text" (ngModelChange)="handleCheckStudent()"   class="profileInput" placeholder="eq. Peter"/>
+                            <input [(ngModel)]="student.FirstName" type="text" (ngModelChange)="handleCheckStudent()"   class="profileInput" placeholder="eq. Peter"/>
                         </div>
                         <div class="col-6 " style="min-width: 200px;">
                             <div class="row" style="font-weight: 500; position: relative; right: 0px;">Surname</div>
-                            <input [(ngModel)]="student.lastName" type="text" (ngModelChange)="handleCheckStudent()"   class="profileInput" placeholder="eq. Kelner"/>
+                            <input [(ngModel)]="student.LastName" type="text" (ngModelChange)="handleCheckStudent()"   class="profileInput" placeholder="eq. Kelner"/>
                         </div>
                         <!-- https://www.youtube.com/watch?v=GT37p_fNfw8  -->
                     </div>
                     <div class="row pt-5" style="font-size:20px;">
                         <div class="col-6" style="min-width: 200px;">
                             <div class="row" style="font-weight: 500;">Date of Birth</div>
-                            <input [(ngModel)]="student.dateOfBirth" type="date" (ngModelChange)="handleCheckStudent()"   class="profileInput" placeholder="eq. 1.1.1998"/>
+                            <input [(ngModel)]="student.DateOfBirth" type="date" (ngModelChange)="handleCheckStudent()"   class="profileInput" placeholder="eq. 1.1.1998"/>
                         </div>
                         <div class="col-6" style="min-width: 200px;">
                             <div class="row" style="font-weight: 500; position: relative; right: 0px;">E-mail</div>
-                            <input [(ngModel)]="student.email" type="email"  (ngModelChange)="handleCheckStudent()"   class="profileInput" placeholder="eq. student@elfak.rs"/>
+                            <input [(ngModel)]="student.Email" type="email"  (ngModelChange)="handleCheckStudent()"   class="profileInput" placeholder="eq. student@elfak.rs"/>
                         </div>
                     </div>
                     <div *ngIf="studentChangeFlag" class="row pt-5" style="font-size:20px;">

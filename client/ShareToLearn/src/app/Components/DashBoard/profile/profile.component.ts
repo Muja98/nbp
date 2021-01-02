@@ -22,15 +22,13 @@ export class ProfileComponent implements OnInit {
   handleSetStudent():void
   {
     this.tempStudent= this.service.getStudentFromStorage();
-    this.student.id = this.tempStudent.id;
-    this.student.firstName = this.tempStudent.firstName;
-    if(this.student.firstName===this.student.lastName)
-      this.student.lastName = "";
+    this.student.FirstName = this.tempStudent.FirstName;
+    if(this.student.FirstName===this.student.LastName)
+      this.student.LastName = "";
     else
-      this.student.lastName = this.student.lastName
-    this.student.email = this.tempStudent.email;
-    this.student.dateOfBirth = this.tempStudent.dateOfBirth;
-    this.student.userName = ""
+      this.student.LastName = this.student.LastName
+    this.student.Email = this.tempStudent.Email;
+    this.student.DateOfBirth = this.tempStudent.DateOfBirth;
 
     //TODO:Get student from API
   }
@@ -39,11 +37,10 @@ export class ProfileComponent implements OnInit {
   handleCheckStudent():void
   {
     if(
-        this.student.firstName === this.pomStudent.firstName     &&
-        this.student.lastName === this.pomStudent.lastName       &&
-        this.student.dateOfBirth === this.pomStudent.dateOfBirth &&
-        this.student.email === this.pomStudent.email             &&
-        this.student.userName === this.pomStudent.userName
+        this.student.FirstName === this.pomStudent.FirstName     &&
+        this.student.LastName === this.pomStudent.LastName       &&
+        this.student.DateOfBirth === this.pomStudent.DateOfBirth &&
+        this.student.Email === this.pomStudent.Email             
       )
     {
       this.studentChangeFlag = false
@@ -66,12 +63,10 @@ export class ProfileComponent implements OnInit {
     this.pomStudent = new Student();
     this.handleSetStudent();
     
-    this.pomStudent.firstName = this.student.firstName;
-    this.pomStudent.lastName = this.student.lastName;
-    this.pomStudent.email = this.student.email;
-    this.pomStudent.dateOfBirth = this.student.dateOfBirth;
-    this.pomStudent.email = this.student.email;
-    this.pomStudent.userName = this.student.userName
+    this.pomStudent.FirstName = this.student.FirstName;
+    this.pomStudent.LastName = this.student.LastName;
+    this.pomStudent.Email = this.student.Email;
+    this.pomStudent.DateOfBirth = this.student.DateOfBirth;
   }
 
 

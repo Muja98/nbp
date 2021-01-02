@@ -66,7 +66,7 @@ export class StudentService {
 
   editStudent(student:Student)
   {
-    this.http.put(URL+ "/api/student/"+student.id, student ).subscribe((el:any)=>console.log(el))
+    //this.http.put(URL+ "/api/student/"+student.id, student ).subscribe((el:any)=>console.log(el))
   }
 
 
