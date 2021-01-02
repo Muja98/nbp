@@ -22,6 +22,8 @@ namespace Share_To_Learn_WEB_API.Services
         Task UpdateStudent(int studentId, Student updatedStudent);
         Task<bool> StudentExists(int studentId);
         Task<bool> GroupExists(int groupId);
+        Task<IEnumerable<GroupDTO>> GetMemberships(int studentId);
+        Task<IEnumerable<GroupDTO>> GetOwnerships(int studentId);
         Task<IEnumerable<GroupDTO>> GetGroupsPage(string filters, string userFilter, string orderBy, bool descending, int from, int to);
         Task<int> GetGroupsCount(string filters, string userFilter);
     }

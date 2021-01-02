@@ -18,6 +18,10 @@ export class GroupService {
   }
 
   getFilteredGroupsCount(params:any) {
-    return this.http.get(URL + "/api/groups/group-count", {'params': params})
+    return this.http.get(URL + "/api/groups/group-count", {'params': params});
+  }
+
+  createGroup(ownerId:string, name:string, field:string, description:string) {
+    return this.http.post(URL + "/api/groups/" + ownerId, {Name: name, Field: field, Description: description});
   }
 }

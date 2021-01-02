@@ -12,7 +12,6 @@ export class MainPageComponent implements OnInit {
   groups:Group[];
   groupsToShow:Group[];
   public isCollapsed = true;
-  public userId = JSON.parse(localStorage.getItem('user'))['id'];
   public groupName:string = "";
   public groupField:string = "";
   public orderByName:boolean = false;
@@ -23,13 +22,17 @@ export class MainPageComponent implements OnInit {
   public previousPage:number;
   public fullNumberOfGroups:number;
   public perPage:number;
+  public pagesVisited:number;
+  private userId:string;
 
   constructor(private service: GroupService) {}
 
   ngOnInit(): void {
+    this.userId = JSON.parse(localStorage.getItem('user'))['id'];
     this.page = 1;
     this.previousPage = 1;
     this.perPage = 5;
+    this.pagesVisited = 1;
     let params = new HttpParams().set('user', this.userId);
     this.getGroupsCount(params);
     params = params.set('from', "0").set('to', String(this.perPage));
@@ -47,8 +50,7 @@ export class MainPageComponent implements OnInit {
   }
 
   handlePageChange():void {
-    debugger
-    if(this.page > this.previousPage) {
+    if(this.page > this.previousPage && this.page > this.pagesVisited) {
       const params = new HttpParams()
       .set('name', this.groupName).set('field', this.groupField)
       .set('from', String(this.previousPage * this.perPage)).set('to', String((this.page - this.previousPage) * this.perPage))
@@ -62,12 +64,13 @@ export class MainPageComponent implements OnInit {
       this.groupsToShow = this.groups.slice(startInd, startInd + this.perPage);
     }
     this.previousPage = this.page;
+    if(this.pagesVisited < this.page)
+      this.pagesVisited = this.page;
   }
 
   private getGroups(params:any, append:boolean):void {
     this.service.getFilteredGroups(params).subscribe(
       result => {
-        debugger
         this.groups = append ? this.groups.concat(result['value']) : result['value']
         const startInd = (this.page - 1) * this.perPage;
         this.groupsToShow = this.groups.slice(startInd, startInd + this.perPage);

@@ -7,8 +7,10 @@ import { Group } from '../../../Model/group';
   styleUrls: ['./group-element.component.css']
 })
 export class GroupElementComponent implements OnInit {
-  @Input() group:Group
+  @Input() group:Group  
+  @Input() showMore: boolean;
   public isCollapsed = true;
+
 
   constructor() { }
 
