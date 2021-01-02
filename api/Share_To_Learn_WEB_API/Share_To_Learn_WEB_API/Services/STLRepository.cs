@@ -51,13 +51,19 @@ namespace Share_To_Learn_WEB_API.Services
                 .ExecuteWithoutResultsAsync();
         }
 
-        public async Task<bool> CreateNonExistingStudent(Student newStudent)
+        public async Task<bool> CreateNonExistingStudent(StudentRegisterDTO newStudent)
         {
+            Student rawStudent = newStudent.Student;
+            string password = newStudent.Password;
             var res = await _client.Cypher
                             .Merge("(student:Student {Email: $email})")
-                            .WithParam("email", newStudent.Email)
-                            .OnCreate().Set("student = $newStudent, student.IsNew = true")
-                            .WithParam("newStudent", newStudent)
+                            .WithParam("email", rawStudent.Email)
+                            .OnCreate().Set("student = $rawStudent, student.IsNew = true, student.Password = $password")
+                            .WithParams(new
+                            {
+                                rawStudent = rawStudent,
+                                password = password
+                            })
                             .OnMatch().Set("student.IsNew = false")
                             .Return<bool>("student.IsNew")
                             .ResultsAsync;
@@ -184,11 +190,13 @@ namespace Share_To_Learn_WEB_API.Services
             if (!string.IsNullOrEmpty(filters))
                 a = a.AndWhere(filters);
 
-            ICypherFluentQuery<GroupDTO> ret = a.Return(() => new GroupDTO
+            a = a.With("g, {Id: ID(ow), Student: ow} as st");
+
+            ICypherFluentQuery<GroupDTO> ret = a.Return((g, st) => new GroupDTO
             {
                 Id = Return.As<int>("ID(g)"),
                 Group = Return.As<Group>("g"),
-                Student = Return.As<Student>("ow")
+                Student = st.As<StudentDTO>()
             });
 
             if (descending)
@@ -203,14 +211,15 @@ namespace Share_To_Learn_WEB_API.Services
         public async Task<IEnumerable<GroupDTO>> GetMemberships(int studentId)
         {
             var result = await _client.Cypher
-                            .Match("(st)-[r:MEMBER]-(g), (ow)-[rel:OWNER]-(g)")
-                            .Where("ID(st) = $studentId")
+                            .Match("(s)-[r:MEMBER]-(g), (ow)-[rel:OWNER]-(g)")
+                            .Where("ID(s) = $studentId")
                             .WithParam("studentId", studentId)
-                            .Return(() => new GroupDTO
+                            .With("g, {Id: ID(ow), Student: ow} as st")
+                            .Return((g, st) => new GroupDTO
                             {
                                 Id = Return.As<int>("ID(g)"),
                                 Group = Return.As<Group>("g"),
-                                Student = Return.As<Student>("ow")
+                                Student = st.As<StudentDTO>()
                             })
                             .ResultsAsync;
 
@@ -220,14 +229,15 @@ namespace Share_To_Learn_WEB_API.Services
         public async Task<IEnumerable<GroupDTO>> GetOwnerships(int studentId)
         {
             var result = await _client.Cypher
-                .Match("(st)-[r:OWNER]-(g)")
-                .Where("ID(st) = $studentId")
+                .Match("(ow)-[r:OWNER]-(g)")
+                .Where("ID(ow) = $studentId")
                 .WithParam("studentId", studentId)
-                .Return(() => new GroupDTO
+                .With("g, {Id: ID(ow), Student: ow} as st")
+                .Return((g, st) => new GroupDTO
                 {
                     Id = Return.As<int>("ID(g)"),
                     Group = Return.As<Group>("g"),
-                    Student = Return.As<Student>("st")
+                    Student = st.As<StudentDTO>()
                 })
                 .ResultsAsync;
 

@@ -34,12 +34,12 @@ namespace Share_To_Learn_WEB_API.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult> CreateStudent([FromBody] Student newStudent)
+        public async Task<ActionResult> CreateStudent([FromBody] StudentRegisterDTO newStudent)
         {
             newStudent.Password = AuthentificationService.EncryptPassword(newStudent.Password);
             if (await _repository.CreateNonExistingStudent(newStudent))
             {
-                StudentDTO student = await _repository.StudentExists(newStudent.Email);
+                StudentDTO student = await _repository.StudentExists(newStudent.Student.Email);
                 string token = JwtManager.GenerateJWToken(student.Student, student.Id.ToString());
                 return Ok(new JsonResult(token));
             }

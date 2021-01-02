@@ -12,7 +12,7 @@ namespace Share_To_Learn_WEB_API.Services
         Task<IEnumerable<Student>> GetStudents();
         Task<StudentDTO> StudentExists(string email);
         Task CreateStudent(Student newStudent);
-        Task<bool> CreateNonExistingStudent(Student newStudent);
+        Task<bool> CreateNonExistingStudent(StudentRegisterDTO newStudent);
         Task<string> GetPassword(string email);
         Task CreateGroup(int ownerId, Group newGroup);
         Task<bool> CheckIfStudentIsMemberOfAGroup(int studentId, int groupId);
