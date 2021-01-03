@@ -124,5 +124,21 @@ namespace Share_To_Learn_WEB_API.Controllers
             var result = await _repository.GetOwnerships(studentId);
             return Ok(result);
         }
+
+        [HttpGet]
+        [Route("{groupId}/members")]
+        public async Task<ActionResult> GetGroupMembers(int groupId)
+        {
+            var result = await _repository.GetGroupMembers(groupId);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("{groupId}/owner")]
+        public async Task<ActionResult> GetGroupOwner(int groupId)
+        {
+            var result = await _repository.GetGroupOwner(groupId);
+            return Ok(result);
+        }
     }
 }

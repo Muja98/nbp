@@ -257,5 +257,33 @@ namespace Share_To_Learn_WEB_API.Services
             var res = await a.Return<int>("count(g)").ResultsAsync;
             return res.Single();
         }
+
+        public async Task<IEnumerable<StudentDTO>> GetGroupMembers(int groupId)
+        {
+            return await _client.Cypher
+                    .Match("(s:Student)-[:MEMBER]-(g:Group)")
+                    .Where("ID(g) = $groupId")
+                    .WithParam("groupId", groupId)
+                    .Return(() => new StudentDTO
+                    {
+                        Id = Return.As<int>("ID(s)"),
+                        Student = Return.As<Student>("s")
+                    }).ResultsAsync;
+        }
+
+        public async Task<StudentDTO> GetGroupOwner(int groupId)
+        {
+            var res = await _client.Cypher
+                    .Match("(s:Student)-[:OWNER]-(g:Group)")
+                    .Where("ID(g) = $groupId")
+                    .WithParam("groupId", groupId)
+                    .Return(() => new StudentDTO
+                    {
+                        Id = Return.As<int>("ID(s)"),
+                        Student = Return.As<Student>("s")
+                    }).ResultsAsync;
+
+            return res.Single();
+        }
     }
 }

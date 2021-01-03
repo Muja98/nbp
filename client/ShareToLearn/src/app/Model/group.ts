@@ -7,10 +7,13 @@ export class Group
         description: ""
     }
     student:any = {
-        firstName: "",
-        lastName: "",
-        dateOfBirth: "",
-        email: "",
+        id: 0,
+        student: {
+            firstName: "",
+            lastName: "",
+            dateOfBirth: "",
+            email: "",
+        }
     }
     constructor(){}
 }

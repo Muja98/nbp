@@ -14,9 +14,11 @@ namespace Share_To_Learn_WEB_API.Services
         {
             var claims = new[] {
                 new Claim("id", id),
-                new Claim("firstName", student.FirstName),
-                new Claim("lastName", student.LastName),
-                new Claim("email", student.Email)
+                new Claim("FirstName", student.FirstName),
+                new Claim("LastName", student.LastName),
+                new Claim("Email", student.Email),
+                new Claim("DateOfBirth", student.DateOfBirth.ToShortDateString())//,
+                //new Claim("ProfilePicturePath", student.ProfilePicturePath)
             };
 
             var token = new JwtSecurityToken(null, null, claims);

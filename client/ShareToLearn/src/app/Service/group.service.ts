@@ -24,4 +24,12 @@ export class GroupService {
   createGroup(ownerId:string, name:string, field:string, description:string) {
     return this.http.post(URL + "/api/groups/" + ownerId, {Name: name, Field: field, Description: description});
   }
+
+  getGroupMembers(groupId:number) {
+    return this.http.get(URL + "/api/groups/" + groupId + "/members");
+  }
+
+  getGroupOwner(groupId:number) {
+    return this.http.get(URL + "/api/groups/" + groupId + "/owner");
+  }
 }

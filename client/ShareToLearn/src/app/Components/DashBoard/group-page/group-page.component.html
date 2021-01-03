@@ -1,0 +1,29 @@
+<div class="container">
+    <ul ngbNav #nav="ngbNav" class="nav-tabs">
+        <li [ngbNavItem]="1">
+            <a ngbNavLink>Posts</a>
+            <ng-template ngbNavContent>
+                <app-group></app-group>
+            </ng-template>
+        </li>
+        <li [ngbNavItem]="2">
+            <a ngbNavLink>Members</a>
+            <ng-template ngbNavContent>
+                <app-group-members [groupId]='groupId'></app-group-members>
+            </ng-template>
+        </li>
+        <li [ngbNavItem]="3">
+            <a ngbNavLink>Information</a>
+            <ng-template ngbNavContent>
+                <p>TODO: ovde ubaciti komponentu sa informacijama o grupi (fajl 'group-page.component.html')</p>
+            </ng-template>
+        </li>
+        <li [ngbNavItem]="4">
+            <a ngbNavLink>Shared content</a>
+            <ng-template ngbNavContent>
+                <p>TODO: ovde ubaciti komponentu za dokumente</p>
+            </ng-template>
+        </li>
+    </ul>
+    <div [ngbNavOutlet]="nav" class="mt-2"></div>
+</div>
