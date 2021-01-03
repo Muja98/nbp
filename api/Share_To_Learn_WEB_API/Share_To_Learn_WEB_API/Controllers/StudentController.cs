@@ -37,9 +37,13 @@ namespace Share_To_Learn_WEB_API.Controllers
         public async Task<ActionResult> CreateStudent([FromBody] StudentRegisterDTO newStudent)
         {
             newStudent.Password = AuthentificationService.EncryptPassword(newStudent.Password);
+            string base64Image = newStudent.Student.ProfilePicturePath;
+            if(!string.IsNullOrEmpty(base64Image))
+                newStudent.Student.ProfilePicturePath = ImageManagerService.SaveImageToFile(base64Image);
             if (await _repository.CreateNonExistingStudent(newStudent))
             {
                 StudentDTO student = await _repository.StudentExists(newStudent.Student.Email);
+                student.Student.ProfilePicturePath = base64Image;
                 string token = JwtManager.GenerateJWToken(student.Student, student.Id.ToString());
                 return Ok(new JsonResult(token));
             }
@@ -57,6 +61,7 @@ namespace Share_To_Learn_WEB_API.Controllers
                 if(AuthentificationService.IsPasswordCorrect(savedPwd, userCredentials.Password))
                 {
                     StudentDTO student = await _repository.StudentExists(userCredentials.Email);
+                    student.Student.ProfilePicturePath = ImageManagerService.LoadImageFromFile(student.Student.ProfilePicturePath);
                     string token = JwtManager.GenerateJWToken(student.Student, student.Id.ToString());
                     return Ok(new JsonResult(token));
                 }

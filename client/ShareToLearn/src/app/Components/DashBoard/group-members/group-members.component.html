@@ -1,0 +1,15 @@
+<div class="container">
+    <div class="row justify-content-between mt-5" *ngIf="students && owner">
+        <div class="col-5">
+            <h2>Members</h2>
+            <app-student-info-element *ngFor='let studentObject of students' [studentObject]='studentObject'></app-student-info-element>
+        </div>
+        <div class="col-5">
+            <h2>Owner</h2>
+            <app-student-info-element  [studentObject]='owner'></app-student-info-element>
+        </div>
+    </div>
+    <div class="spinner-border" role="status" *ngIf="!(students && owner)">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>

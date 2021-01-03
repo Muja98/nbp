@@ -12,9 +12,12 @@ import { FormsModule } from '@angular/forms';
 import { GroupElementComponent } from './group-element/group-element.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CreateGroupComponent } from './create-group/create-group.component';
+import { GroupPageComponent } from './group-page/group-page.component';
+import { GroupMembersComponent } from './group-members/group-members.component';
+import { StudentInfoElementComponent } from './student-info-element/student-info-element.component';
 
 @NgModule({
-  declarations: [MainPageComponent,DashboardComponent, ProfileComponent, GroupElementComponent, MyGroupsComponent, GroupComponent, PostComponent, CreateGroupComponent],
+  declarations: [MainPageComponent,DashboardComponent, ProfileComponent, GroupElementComponent, MyGroupsComponent, GroupComponent, PostComponent, CreateGroupComponent, GroupPageComponent, GroupMembersComponent, StudentInfoElementComponent],
 
   imports: [
     CommonModule,
@@ -25,7 +28,8 @@ import { CreateGroupComponent } from './create-group/create-group.component';
         {path:'main',component:MainPageComponent},
         {path:'profile',component:ProfileComponent},
         {path: 'my-groups', component:MyGroupsComponent},
-        {path:'group/:idGroup', component:GroupComponent},
+        //{path:'group/:idGroup', component:GroupComponent},
+        {path:'group/:idGroup', component:GroupPageComponent},
         {path:'create-group',component:CreateGroupComponent}
       ]}]),
       NgbModule

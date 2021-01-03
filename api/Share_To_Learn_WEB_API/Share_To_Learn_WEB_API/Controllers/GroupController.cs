@@ -128,5 +128,25 @@ namespace Share_To_Learn_WEB_API.Controllers
   
 
         
+        [HttpGet]
+        [Route("{groupId}/members")]
+        public async Task<ActionResult> GetGroupMembers(int groupId)
+        {
+            var result = await _repository.GetGroupMembers(groupId);
+
+            foreach(StudentDTO s in result)
+                s.Student.ProfilePicturePath = ImageManagerService.LoadImageFromFile(s.Student.ProfilePicturePath);
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("{groupId}/owner")]
+        public async Task<ActionResult> GetGroupOwner(int groupId)
+        {
+            var result = await _repository.GetGroupOwner(groupId);
+            result.Student.ProfilePicturePath = ImageManagerService.LoadImageFromFile(result.Student.ProfilePicturePath);
+            return Ok(result);
+        }
     }
 }
