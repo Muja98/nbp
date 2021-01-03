@@ -124,5 +124,9 @@ namespace Share_To_Learn_WEB_API.Controllers
             var result = await _repository.GetOwnerships(studentId);
             return Ok(result);
         }
+
+  
+
+        
     }
 }

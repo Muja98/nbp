@@ -26,5 +26,15 @@ namespace Share_To_Learn_WEB_API.Services
         Task<IEnumerable<GroupDTO>> GetOwnerships(int studentId);
         Task<IEnumerable<GroupDTO>> GetGroupsPage(string filters, string userFilter, string orderBy, bool descending, int from, int to);
         Task<int> GetGroupsCount(string filters, string userFilter);
-    }
+
+        Task<IEnumerable<PostDTO>> GetAllPosts(int groupId);
+        Task CreatePost(int groupId, int studentId, Post newPost);
+        Task DeletePost(int postId);
+        Task UpdatePost(int postId, Post post);
+
+        Task<IEnumerable<CommentDTO>> GetAllComment(int postId);
+        Task CreateComment(int postId, int studentId, Comment newComment);
+        Task DeleteComment(int commentId);
+        Task UpdateComment(int commentId, Comment comment);
+    }   
 }

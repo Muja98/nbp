@@ -1,21 +1,33 @@
-<div class="container-fluid rounded shadow mt-5" style="background-color: white;">
+<div class="container-fluid  rounded shadow mt-5" style="background-color: white;">
     <div class="row  p-4" style="border-color: whitesmoke;">
         <div class="col-1  d-flex justify-content-center align-items-center" style="cursor: pointer;">
             <img src="/assets/profilePicture.jpg" height="55px" width="55px" class="rounded-circle" alt="profilePicture.jpg">
         </div>
-        <div class="col  d-flex align-items-center mt-1">
-            <p style="font-size: 20px; font-weight: 500; cursor: pointer;">
-                Stefan Stamenković
-            </p>
-            <p  style="font-size: 11px; font-weight: 700; position: relative; right: 177px; top: 20px;">
-                21:20 1/1/2020
-            </p>
+        <div class="col-11  d-flex align-items-center mt-1">
+            <div class="row w-100 justify-content-between">
+                <div class="col-4 ">
+                    <p style="font-size: 20px; font-weight: 500; cursor: pointer; position: relative; top: 10px;">
+                        {{post.student.student.firstName}} {{post.student.student.lastName}}
+                    </p>
+                    <p  style="font-size: 11px; font-weight: 700; position: relative; right: 0px; bottom: 10px">
+                        {{post.post.dateOfPublishing}}
+                    </p>
+                </div>
+                <div class="col-2 " *ngIf="handleCheckStudent(post.student.student) === true">
+                    <i (click)="handleEditPost(post.post.content,post.id)" class="fa fa-pencil fa-lg"  aria-hidden="true" style="position: relative; top: 10px; right: 40px; cursor: pointer; color: #F0E68C;"></i>
+                    <i (click)="handleDeletePost(post.id)"  class="fa fa-times-circle fa-lg" style="position: relative; top: 10px; right: 30px; cursor: pointer; color: #FF4136;" aria-hidden="true"></i>
+                </div>
+            </div>
+            
         </div>
     </div>
     <div class="row justify-content-center ">
        <div class="col-11 ">
-            <div class="row border-top border-bottom pt-3">
-                <textarea class="w-100 " (keyup)="povecaj($event)" style="cursor:text; min-height: 80px; border-style: none; border-color: transparent; overflow: auto; resize: none; font-size: 17px;">Drugari da li ima neko da mi posalje uradjene zadatke iz Objektno orijentisano programiranje, vestacku i ako moze snimci od sve lab vezbe</textarea>
+            <div  *ngIf="handleCheckStudent(post.student.student) === true" class="row border-top border-bottom pt-3">
+                <textarea class="w-100 " (keyup)="povecaj($event)" style="cursor:text; min-height: 80px; border-style: none; border-color: transparent; overflow: auto; resize: none; font-size: 17px;" [(ngModel)]="post.post.content"></textarea>
+            </div>
+            <div  *ngIf="handleCheckStudent(post.student.student) === false" class="row border-top border-bottom pt-3">
+                <textarea class="w-100 " (keyup)="povecaj($event)" style="cursor:text; min-height: 80px; border-style: none; border-color: transparent; overflow: auto; resize: none; font-size: 17px;" [(ngModel)]="post.post.content" disabled></textarea>
             </div>
        </div>
     </div>
@@ -31,7 +43,7 @@
         </div>
         <div class="col" >
             <p style="font-weight: 500;">{{student.FirstName}} {{student.LastName}}</p>
-            <textarea class="w-100 commentTextArea" (keyup)="povecaj($event)" style="cursor:text;  background-color: #eeeeee; border-radius: 30px;  overflow: hidden; height: 35px; cursor: text; position: relative; bottom: 10px; right: 5px; " placeholder="Write a comment..."></textarea>
+            <textarea class="w-100 commentTextArea" (keyup.enter)="handleAddNewComment()" (keyup)="povecaj($event)" style="cursor:text;  background-color: #eeeeee; border-radius: 30px;  overflow: hidden; height: 35px; cursor: text; position: relative; bottom: 10px; right: 5px; " placeholder="Write a comment..." [(ngModel)]="comment" ></textarea>
         </div>
     </div>
     <div class="row justify-content-center">
@@ -39,21 +51,38 @@
     </div>
 
     <!--COMMENT SECTION-->
-    <div style="padding-left: 15px; padding-top: 10px;"  >
+    <div *ngIf="commentArray.length>0" style="padding-left: 15px; padding-top: 10px;"  >
         <p style="font-weight: 500; font-size: 17px;">Comments</p>
     </div>
-    <div class="pl-3">
+    <div *ngIf="commentArray.length>0"  class="pl-3">
         <p style="font-weight: 500; font-size: 14px; cursor: pointer;">Show previous comments...</p>
     </div>
    
-    <div class="row pl-4 pr-4 pt-2 pb-4">
-        <div class="col-1  d-flex justify-content-center align-items-center mb-1" >
+    <div *ngFor="let comment of commentArray; index as i" class="row pl-4 pr-4 pt-2 pb-2">
+    
+        <div class="col-1  d-flex justify-content-center align-items-center" >
             <img src="/assets/profilePicture.jpg" height="35px" width="35px" class="rounded-circle" alt="profilePicture.jpg">
         </div>
-        <div class="col" >
-            <textarea class="w-100 commentTextArea" (keyup)="povecaj($event)" style="cursor:text; height: auto;  background-color: #eeeeee; border-radius: 30px;  overflow: hidden; cursor: text;"  disabled>Hajde sreco mojada se zakunemoda necemo nikadda se rastanemoRef. 2Hajde sreco moj sajdhvasdughvasdugvasdgvsaugdvsaugdvsaugdvsaugdvasugdvsaudgvsaugdvsaugdvasugdvasugdvasugdvasugdvsaugdvsaugdvsaugdvsagudvasugdvsaugdvsaugdvasugdvausgdvasugdvuagsdv</textarea>
+        <div class="col-10" >
+            <div class="row justify-content-between">
+                <p style="font-weight: 500; position: relative; top: 10px; left: 15px;">{{comment.student.student.firstName}} {{comment.student.student.lastName}}</p>
+                <div *ngIf="handleCheckStudent(comment.student.student) === true">
+                    <i (click)="handleEditComment(comment.comment.content,comment.id)" class="fa fa-pencil fa-lg"  aria-hidden="true" style="position: relative; top: 10px; right: 40px; cursor: pointer; color: #F0E68C;"></i>
+                    <i (click)="handleDeleteComment(comment.id,i)"  class="fa fa-times-circle fa-lg" style="position: relative; top: 10px; right: 30px; cursor: pointer; color: #FF4136;" aria-hidden="true"></i>
+                </div>
+               
+            </div>
+            <div class="row">
+                <div class="col" *ngIf="handleCheckStudent(comment.student.student) === true">
+                    <textarea class="w-100 commentTextArea" (keyup)="povecaj($event)" style="cursor:text; height: auto; height: 35px; color: black;  background-color: #eeeeee; border-radius: 30px;  overflow: hidden; cursor: text;"    [(ngModel)]="comment.comment.content"></textarea>
+                </div>
+                <div class="col" *ngIf="handleCheckStudent(comment.student.student) === false">
+                    <textarea class="w-100 commentTextArea" (keyup)="povecaj($event)" style="cursor:text; height: auto; height: 35px; color: black;  background-color: #eeeeee; border-radius: 30px;  overflow: hidden; cursor: text;"  disabled [(ngModel)]="comment.comment.content"></textarea>
+                </div>
+            </div>      
         </div>
     </div>
 
   
 </div>
+

@@ -50,6 +50,11 @@ export class MyGroupsComponent implements OnInit
 
     }
 
+    handleGoToGroupPage(id:any)
+    {
+        this.router.navigate(["dashboard/group/"+id])
+    }
+
 
 }
 

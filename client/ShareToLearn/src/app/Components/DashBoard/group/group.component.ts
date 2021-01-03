@@ -1,28 +1,40 @@
+import { PostService } from './../../../Service/post.service';
+import { StudentService } from './../../../Service/student.service';
+import { Student } from './../../../Model/student';
 import { Post } from './../../../Model/post';
 import { Component, OnInit } from '@angular/core';
-import {formatDate } from '@angular/common';
+import { formatDate } from '@angular/common';
+import { ActivatedRoute } from '@angular/router'
 @Component({
   selector: 'app-group',
   templateUrl: './group.component.html',
   styleUrls: ['./group.component.css']
 })
+
 export class GroupComponent implements OnInit {
 
   today= new Date();
   todaysDataTime = '';
-  newPost = new Post();
+  postText:string="";
+  student = new Student();
+  tempStudent: any;
+  postArray: Array<Post> = [];
 
-  constructor() { 
-    this.todaysDataTime = formatDate(this.today, 'dd-MM-yyyy hh:mm:ss a', 'en-US', '+0530');
+  constructor(private service:StudentService, private postService: PostService, private aroute:ActivatedRoute) { 
+    this.todaysDataTime = formatDate(this.today, 'yyyy-MM-dd', 'en-SR', 'GMT+1');
   }
 
   handleAddNewPost()
   {
-    if(this.newPost.data==="")return;
-    this.newPost.date = this.todaysDataTime;
-    console.log(this.newPost)
-    this.newPost = new Post();
+    if(this.postText === "")return;
+    this.aroute.paramMap.subscribe(params=>{
+      this.postService.createPost(params.get('idGroup'), this.tempStudent.id, this.postText, this.todaysDataTime);
+    })
+    this.postText = "";
+    window.location.reload();
   }
+
+
   
   povecaj(e)
   {
@@ -31,6 +43,15 @@ export class GroupComponent implements OnInit {
   }
 
   ngOnInit(): void {
+      this.tempStudent = this.service.getStudentFromStorage();
+      this.student.FirstName = this.tempStudent.firstName;
+      this.student.LastName = this.tempStudent.lastName;
+      this.aroute.paramMap.subscribe(params=>{
+        if(params.get('idGroup')===null){return}
+        this.postService.getAllPosts(parseInt(params.get('idGroup'))).subscribe((posts:Post[])=>{
+          this.postArray = posts;
+        })})
+      
   }
 
 }

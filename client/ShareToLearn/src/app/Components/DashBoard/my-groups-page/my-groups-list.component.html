@@ -1,4 +1,4 @@
-<div class="d-flex justify-content-around">
+<div class="d-flex justify-content-around" >
     <div> 
         <div class="card">
             <div class="card-header">
@@ -6,7 +6,7 @@
               </div>
         </div>      
         <div class="card mb-3" style="max-width: 540px;" *ngFor='let group of ownerships'>
-            <app-group-element  [group]='group' [showMore]='false'></app-group-element>
+            <app-group-element style="cursor: pointer;" (click)="handleGoToGroupPage(group.id)"  [group]='group' [showMore]='false'></app-group-element>
         </div>
     </div>
     <div>
