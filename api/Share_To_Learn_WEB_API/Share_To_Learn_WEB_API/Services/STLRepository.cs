@@ -360,6 +360,7 @@ namespace Share_To_Learn_WEB_API.Services
                     .WithParam("postId", postId)
                     .DetachDelete("co, ps")
                     .ExecuteWithoutResultsAsync();
+        }
         public async Task<IEnumerable<StudentDTO>> GetGroupMembers(int groupId)
         {
             return await _client.Cypher
