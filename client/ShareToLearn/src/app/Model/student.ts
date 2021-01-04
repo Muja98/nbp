@@ -1,9 +1,12 @@
 export class Student
 {
-    FirstName:string = "";
-    LastName:string = "";
-    DateOfBirth:string= "";
-    Email:string = "";
-    ProfilePicturePath:string = "";
+    id:number = 0;
+    student:any = {
+        firstName: "",
+        lastName:"",
+        dateOfBirth: "",
+        email: "",
+        profilePicturePath: ""
+    }
     constructor(){}
 }

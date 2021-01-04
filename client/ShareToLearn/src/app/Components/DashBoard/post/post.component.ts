@@ -24,8 +24,8 @@ export class PostComponent implements OnInit {
   
   ngOnInit(): void {
     this.tempStudent = this.authService.getStudentFromStorage();
-    this.student.FirstName = this.tempStudent.firstName;
-    this.student.LastName  = this.tempStudent.lastName;
+    this.student.student.firstName = this.tempStudent.firstName;
+    this.student.student.lastName  = this.tempStudent.lastName;
 
     this.handleGetComment();
   }
