@@ -44,8 +44,8 @@ export class GroupComponent implements OnInit {
 
   ngOnInit(): void {
       this.tempStudent = this.service.getStudentFromStorage();
-      this.student.FirstName = this.tempStudent.firstName;
-      this.student.LastName = this.tempStudent.lastName;
+      this.student.student.firstName = this.tempStudent.firstName;
+      this.student.student.lastName = this.tempStudent.lastName;
       this.aroute.paramMap.subscribe(params=>{
         if(params.get('idGroup')===null){return}
         this.postService.getAllPosts(parseInt(params.get('idGroup'))).subscribe((posts:Post[])=>{
