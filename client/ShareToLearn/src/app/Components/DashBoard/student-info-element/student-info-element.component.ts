@@ -7,13 +7,12 @@ import { Student } from 'src/app/Model/student';
   styleUrls: ['./student-info-element.component.css']
 })
 export class StudentInfoElementComponent implements OnInit {
-  @Input() studentObject:any;
+  @Input() studentObject:Student;
   public student:any;
 
   constructor() { }
 
   ngOnInit(): void {
-    debugger
     this.student = this.studentObject.student;
   }
 
