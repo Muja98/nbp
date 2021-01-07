@@ -1,22 +1,24 @@
-<div class="d-flex justify-content-around" >
-    <div> 
-        <div class="card">
-            <div class="card-header">
-                <h5>Owner</h5>
-              </div>
-        </div>      
-        <div class="card mb-3" style="max-width: 540px;" *ngFor='let group of ownerships'>
-            <app-group-element style="cursor: pointer;" (click)="handleGoToGroupPage(group.id)"  [group]='group' [showMore]='false'></app-group-element>
-        </div>
-    </div>
-    <div>
-        <div class="card">
-            <div class="card-header">
-                <h5>Member</h5>
+<div class="container">
+    <div class="row" >
+        <div class="col"> 
+            <div class="card">
+                <div class="card-header" style="text-align: center;">
+                    <h5>Owner</h5>
+                </div>
+            </div>      
+            <div class="card" style="margin-top: 5; background-color: transparent; border: 0;" *ngFor='let group of ownerships' >
+                <app-group-element style="cursor: pointer;" (click)="handleGoToGroupPage(group.id)"  [group]='group' [showMore]='false'></app-group-element>
             </div>
-        </div>      
-        <div class="card mb-3" style="max-width: 540px;" *ngFor='let group of memberships'>
-            <app-group-element  [group]='group' [showMore]='false'></app-group-element>
+        </div>
+        <div class="col"> 
+            <div class="card">
+                <div class="card-header" style="text-align: center;">
+                    <h5>Member</h5>
+                </div>
+            </div>      
+            <div class="card" style="margin-top: 5; background-color: transparent; border: 0;" *ngFor='let group of memberships'>
+                <app-group-element  [group]='group' [showMore]='false'></app-group-element>
+            </div>
         </div>
     </div>
 </div>

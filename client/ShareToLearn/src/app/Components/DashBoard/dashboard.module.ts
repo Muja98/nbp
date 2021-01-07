@@ -1,3 +1,4 @@
+import { GroupInfoComponent } from './group-info/group-info.component';
 import { MyGroupsComponent } from './my-groups-page/my-groups-list.component';
 import { PostComponent } from './post/post.component';
 import { GroupComponent } from './group/group.component';
@@ -17,7 +18,7 @@ import { GroupMembersComponent } from './group-members/group-members.component';
 import { StudentInfoElementComponent } from './student-info-element/student-info-element.component';
 
 @NgModule({
-  declarations: [MainPageComponent,DashboardComponent, ProfileComponent, GroupElementComponent, MyGroupsComponent, GroupComponent, PostComponent, CreateGroupComponent, GroupPageComponent, GroupMembersComponent, StudentInfoElementComponent],
+  declarations: [MainPageComponent,DashboardComponent, ProfileComponent, GroupElementComponent, MyGroupsComponent, GroupComponent, PostComponent, CreateGroupComponent, GroupPageComponent, GroupMembersComponent, StudentInfoElementComponent, GroupInfoComponent],
 
   imports: [
     CommonModule,
@@ -30,7 +31,8 @@ import { StudentInfoElementComponent } from './student-info-element/student-info
         {path: 'my-groups', component:MyGroupsComponent},
         //{path:'group/:idGroup', component:GroupComponent},
         {path:'group/:idGroup', component:GroupPageComponent},
-        {path:'create-group',component:CreateGroupComponent}
+        {path:'create-group',component:CreateGroupComponent},
+        {path: 'group-info', component:GroupInfoComponent}
       ]}]),
       NgbModule
   ]

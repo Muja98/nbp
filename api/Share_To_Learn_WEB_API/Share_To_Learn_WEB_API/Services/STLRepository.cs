@@ -361,6 +361,7 @@ namespace Share_To_Learn_WEB_API.Services
                     .DetachDelete("co, ps")
                     .ExecuteWithoutResultsAsync();
         }
+
         public async Task<IEnumerable<StudentDTO>> GetGroupMembers(int groupId)
         {
             return await _client.Cypher
@@ -388,5 +389,48 @@ namespace Share_To_Learn_WEB_API.Services
 
             return res.Single();
         }
+
+        public async Task<GroupStatisticsDTO> GetGroupStatistics(int groupId)
+        {
+            var group = await _client.Cypher
+                .Match("(g:Group)")
+                .Where("ID(g) = $groupId")
+                .WithParam("groupId", groupId)
+                .Return(() => new GroupStatisticsDTO
+                {
+                    Group = Return.As<Group>("g"),
+                }).ResultsAsync;
+
+            var countOfPosts = await _client.Cypher
+                .Match("(p:Post)-[:BELONG]->(g:Group)")
+                .Where("ID(g) = $groupId")
+                .WithParam("groupId", groupId)
+                .Return<int>("count(distinct p)")
+                .ResultsAsync;
+
+            var countOfComments= await _client.Cypher
+                .Match("(c:Comment)-[:STOREDIN]->(p:Post)-[:BELONG]->(g:Group)")
+                .Where("ID(g) = $groupId")
+                .WithParam("groupId", groupId)
+                .Return<int>("count(distinct c)")
+                .ResultsAsync;
+
+            var countOfMembers = await _client.Cypher
+                .Match("(st:Student)-[:Member]-> (g:Group)")
+                .Where("ID(g) = $groupId")
+                .WithParam("groupId", groupId)
+                .Return<int>("count(distinct st)")
+                .ResultsAsync;
+
+            group.Single().CountOfMembers = countOfMembers.Single();
+            group.Single().CountOfPosts = countOfPosts.Single();
+            group.Single().CountOfComments = countOfComments.Single();
+
+            return group.Single();
+
+        }
     }
 }
+
+// (s:Student)-[:Member]->(g:Group) WHERE ID(g)=3 RETURN count(s) as clanovi
+//MATCH(p: Post) -[:BELONG]->(g: Group), (c: Comment) -[:STOREDIN]->(p), (s: Student) -[:Member]->(g)  WHERE ID(g)= 4 RETURN count(c) as komentari, count(p) as postovi, count(s) as clanovi

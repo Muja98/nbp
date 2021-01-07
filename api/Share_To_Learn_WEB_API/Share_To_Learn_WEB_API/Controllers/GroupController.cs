@@ -148,5 +148,13 @@ namespace Share_To_Learn_WEB_API.Controllers
             result.Student.ProfilePicturePath = ImageManagerService.LoadImageFromFile(result.Student.ProfilePicturePath);
             return Ok(result);
         }
+
+        [HttpGet]
+        [Route("{groupId}/statistics")]
+        public async Task<ActionResult> GetGroupStatistics(int groupId)
+        {
+            var result = await _repository.GetGroupStatistics(groupId);
+            return Ok(result);
+        }
     }
 }

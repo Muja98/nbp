@@ -39,5 +39,7 @@ namespace Share_To_Learn_WEB_API.Services
       
         Task<IEnumerable<StudentDTO>> GetGroupMembers(int groupId);
         Task<StudentDTO> GetGroupOwner(int groupId);
+
+        Task<GroupStatisticsDTO> GetGroupStatistics(int groupId);
     }
 }
