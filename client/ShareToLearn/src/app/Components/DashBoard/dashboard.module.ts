@@ -16,9 +16,10 @@ import { CreateGroupComponent } from './create-group/create-group.component';
 import { GroupPageComponent } from './group-page/group-page.component';
 import { GroupMembersComponent } from './group-members/group-members.component';
 import { StudentInfoElementComponent } from './student-info-element/student-info-element.component';
+import { SearchUsersComponent } from './search-users/search-users.component';
 
 @NgModule({
-  declarations: [MainPageComponent,DashboardComponent, ProfileComponent, GroupElementComponent, MyGroupsComponent, GroupComponent, PostComponent, CreateGroupComponent, GroupPageComponent, GroupMembersComponent, StudentInfoElementComponent, GroupInfoComponent],
+  declarations: [MainPageComponent,DashboardComponent, ProfileComponent, GroupElementComponent, MyGroupsComponent, GroupComponent, PostComponent, CreateGroupComponent, GroupPageComponent, GroupMembersComponent, StudentInfoElementComponent, GroupInfoComponent, SearchUsersComponent],
 
   imports: [
     CommonModule,
@@ -29,10 +30,10 @@ import { StudentInfoElementComponent } from './student-info-element/student-info
         {path:'main',component:MainPageComponent},
         {path:'profile',component:ProfileComponent},
         {path: 'my-groups', component:MyGroupsComponent},
-        //{path:'group/:idGroup', component:GroupComponent},
         {path:'group/:idGroup', component:GroupPageComponent},
         {path:'create-group',component:CreateGroupComponent},
-        {path: 'group-info', component:GroupInfoComponent}
+        {path: 'group-info', component:GroupInfoComponent},
+        {path:'search-users', component:SearchUsersComponent}
       ]}]),
       NgbModule
   ]

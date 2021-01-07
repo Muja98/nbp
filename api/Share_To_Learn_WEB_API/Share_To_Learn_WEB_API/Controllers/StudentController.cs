@@ -25,11 +25,38 @@ namespace Share_To_Learn_WEB_API.Controllers
         }
 
         [HttpGet()]
-        public async Task<ActionResult> GetStudents()
+        public async Task<ActionResult> GetFilteredStudents([FromQuery]string firstName, [FromQuery]string lastName, [FromQuery]bool orderByName, [FromQuery]bool descending , int from, int to, int user)
         {
-            var result = await _repository.GetStudents();
+            string userFilter = "not ID(s)=" + user;
+            string whereFirstName = string.IsNullOrEmpty(firstName) ? "" : ("s.FirstName=~\"(?i).*" + firstName + ".*\"");
+            string whereLastName = string.IsNullOrEmpty(lastName) ? "" : ("s.LastName=~\"(?i).*" + lastName + ".*\"");
+            string where = "";
+            if (!string.IsNullOrEmpty(whereFirstName) && !string.IsNullOrEmpty(whereLastName))
+                where += whereFirstName + " AND " + whereLastName;
+            else if (!string.IsNullOrEmpty(whereFirstName))
+                where += whereFirstName;
+            else if (!string.IsNullOrEmpty(whereLastName))
+                where += whereLastName;
 
-            return Ok(result);
+            string order = "";
+            if (!orderByName)
+            { 
+                order += "ID(s)";
+                if (descending)
+                    order += " desc";
+            }
+            else
+            {
+                if (descending)
+                    order += "s.FirstName desc, s.LastName desc";
+                else
+                    order += "s.FirstName, s.LastName";
+            }
+            IEnumerable<StudentDTO> students;
+
+            students = await _repository.GetStudentsPage(where, userFilter, order, descending, from, to);
+
+            return Ok(students);
         }
 
         [HttpPost]
@@ -84,7 +111,26 @@ namespace Share_To_Learn_WEB_API.Controllers
             return Ok(updatedStudent);
         }
 
+        [HttpGet]
+        [Route("student-count")]
+        public async Task<ActionResult> GetFilteredStudentsCount([FromQuery] string firstName, [FromQuery] string lastName, [FromQuery] int user)
+        {
+            string userFilter = "not ID(s)=" + user;
+            string whereFirstName = string.IsNullOrEmpty(firstName) ? "" : ("s.FirstName=~\"(?i).*" + firstName + ".*\"");
+            string whereLastName = string.IsNullOrEmpty(lastName) ? "" : ("s.LastName=~\"(?i).*" + lastName + ".*\"");
+            string where = "";
+            if (!string.IsNullOrEmpty(whereFirstName) && !string.IsNullOrEmpty(whereLastName))
+                where += whereFirstName + " AND " + whereLastName;
+            else if (!string.IsNullOrEmpty(whereFirstName))
+                where += whereFirstName;
+            else if (!string.IsNullOrEmpty(whereLastName))
+                where += whereLastName;
 
+            int studentsCnt;
+            studentsCnt = await _repository.GetStudentsCount(where, userFilter);
+
+            return Ok(studentsCnt);
+        }
 
     }
 }

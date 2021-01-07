@@ -69,6 +69,12 @@ export class StudentService {
     //this.http.put(URL+ "/api/student/"+student.id, student ).subscribe((el:any)=>console.log(el))
   }
 
+  getFilteredStudents(params:any) {
+    return this.http.get<Student[]>(URL + "/api/student", {'params': params});
+  }
 
+  getFilteredStudentsCount(params:any) {
+    return this.http.get(URL + "/api/student/student-count", {'params': params});
+  }
 
 }

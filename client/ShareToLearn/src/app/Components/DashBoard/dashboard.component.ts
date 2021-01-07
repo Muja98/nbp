@@ -25,6 +25,10 @@ export class DashboardComponent implements OnInit {
     {
       link:"/my-groups", 
       text:"My groups"
+    },
+    {
+      link:"/search-users",
+      text:"Search users"
     }
   ]
 

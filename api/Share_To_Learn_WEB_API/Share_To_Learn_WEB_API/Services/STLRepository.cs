@@ -18,15 +18,37 @@ namespace Share_To_Learn_WEB_API.Services
             _client = client;
         }
 
-        public async Task<IEnumerable<Student>> GetStudents()
+        public async Task<IEnumerable<StudentDTO>> GetStudentsPage(string filter, string userFilter, string orderBy, bool descending, int from, int to)
         {
-            var res = await _client.Cypher
-                        .Match(@"(student:Student)")
-                        .Return(student => student.As<Student>
-                     ()).ResultsAsync;
+            var a = _client.Cypher
+                        .Match("(s:Student)")
+                        .Where(userFilter);
 
-            return res;
+            if (!string.IsNullOrEmpty(filter))
+                a = a.AndWhere(filter);
 
+            ICypherFluentQuery<StudentDTO> ret = a.Return(() => new StudentDTO
+            {
+                Id = Return.As<int>("ID(s)"),
+                Student = Return.As<Student>("s")
+            });
+
+            ret = ret.OrderBy(orderBy);
+
+            return await ret.Skip(from).Limit(to).ResultsAsync;
+        }
+
+        public async Task<int> GetStudentsCount(string filter, string userFilter)
+        {
+            var a = _client.Cypher
+                        .Match("(s:Student)")
+                        .Where(userFilter);
+
+            if (!string.IsNullOrEmpty(filter))
+                a = a.AndWhere(filter);
+
+            var res = await a.Return<int>("count(s)").ResultsAsync;
+            return res.Single();
         }
 
         public async Task<StudentDTO> StudentExists(string email)
@@ -200,9 +222,9 @@ namespace Share_To_Learn_WEB_API.Services
             });
 
             if (descending)
-                ret = ret.OrderBy(orderBy);
-            else
                 ret = ret.OrderByDescending(orderBy);
+            else
+                ret = ret.OrderBy(orderBy);
 
             return await ret.Skip(from).Limit(to).ResultsAsync;
         }
