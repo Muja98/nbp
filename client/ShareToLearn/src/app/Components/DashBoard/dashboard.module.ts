@@ -17,9 +17,24 @@ import { GroupPageComponent } from './group-page/group-page.component';
 import { GroupMembersComponent } from './group-members/group-members.component';
 import { StudentInfoElementComponent } from './student-info-element/student-info-element.component';
 import { SearchUsersComponent } from './search-users/search-users.component';
-
+import { GroupDocumentComponent } from './group-document/group-document.component';
 @NgModule({
-  declarations: [MainPageComponent,DashboardComponent, ProfileComponent, GroupElementComponent, MyGroupsComponent, GroupComponent, PostComponent, CreateGroupComponent, GroupPageComponent, GroupMembersComponent, StudentInfoElementComponent, GroupInfoComponent, SearchUsersComponent],
+  declarations: [
+                 MainPageComponent,
+                 DashboardComponent,
+                 ProfileComponent,
+                 GroupElementComponent,
+                 MyGroupsComponent,
+                 GroupComponent,
+                 PostComponent,
+                 CreateGroupComponent,
+                 GroupPageComponent,
+                 GroupMembersComponent,
+                 StudentInfoElementComponent,
+                 GroupInfoComponent,
+                 SearchUsersComponent,
+                 GroupDocumentComponent
+                ],
 
   imports: [
     CommonModule,
@@ -33,7 +48,8 @@ import { SearchUsersComponent } from './search-users/search-users.component';
         {path:'group/:idGroup', component:GroupPageComponent},
         {path:'create-group',component:CreateGroupComponent},
         {path: 'group-info', component:GroupInfoComponent},
-        {path:'search-users', component:SearchUsersComponent}
+        {path:'search-users', component:SearchUsersComponent},
+        {path:'group-component', component:GroupDocumentComponent}
       ]}]),
       NgbModule
   ]

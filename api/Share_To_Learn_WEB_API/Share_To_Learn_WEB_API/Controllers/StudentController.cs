@@ -132,6 +132,39 @@ namespace Share_To_Learn_WEB_API.Controllers
             return Ok(studentsCnt);
         }
 
+        [HttpPost]
+        [Route("{studentId1}/student/{studentId2}")]
+        public async Task<ActionResult> AddFriend(int studentId1, int studentId2)
+        {
+            bool res1 = await _repository.StudentExists(studentId1);
+            bool res2 = await _repository.StudentExists(studentId2);
+
+            if(res1&&res2)
+            {
+                await _repository.AddFriend(studentId1, studentId2);
+                return Ok();
+            }
+            else
+                return BadRequest("Student doesnt exist!");
+
+        }
+
+        [HttpDelete]
+        [Route("{studentId1}/student/{studentId2}")]
+        public async Task<ActionResult> RemoveFriend(int studentId1, int studentId2)
+        {
+            bool res1 = await _repository.StudentExists(studentId1);
+            bool res2 = await _repository.StudentExists(studentId2);
+
+            if (res1 && res2)
+            {
+                await _repository.RemoveFriend(studentId1, studentId2);
+                return Ok();
+            }
+            else
+                return BadRequest("Student doesnt exist!");
+        }
+
     }
 }
 

@@ -1,0 +1,94 @@
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div  style="width: 1110px;">
+            <div class="container-fluid" style="height: 100px;">
+                <div class="row pt-5 pb-5 pl-2 pr-2 flex-wrap justify-content-center ">
+                    <div class="col col-xs-12 col-sm-6 col-xl-2 col-xxl-2 d-flex flex-column  pl-2 pr-2" style="height: 100px;">
+                        <div style="background-color: #17a2b8; " class="row justify-content-center align-items-center   rounded-top" >
+                            <p  style="color: white; font-size: 20px; font-weight: 500; position: relative; top: 5px;">Level</p>
+                        </div>
+                        <div *ngFor="let level of levelArray; index as i" (click)="handleGetLevel(i+1)" class="row border justify-content-center" style=" background-color: white; height: 45px; cursor: pointer;">
+                            <p style="font-weight: 500; font-size: 20px; position: relative; top: 5px;">{{level}}</p>
+                        </div>
+                    </div>
+                    <div class="col col-xs-12 col-sm-12 col-xl-8 col-xxl-8  ">
+
+                        <!-- SEARCH -->
+                        <div class="input-group mb-3 ">
+                            <input [(ngModel)]="searchString" type="text" class="form-control" placeholder="Search for document..." />
+                            <button (click)="handleClickSearch()" style="width: 80px;"  class="btn btn-info" type="button" id="button-addon2"><i class="fa fa-search" aria-hidden="true"></i></button>
+                        </div>
+
+                        <!-- NEW DOCUMENT -->
+                        <div class="row justify-content-center p-3">
+                            <div class="col-10 border rounded p-4" style="background-color: white; ">
+                                <div class="row justify-content-between">
+                                    <div class="col-5">
+                                        <p style="font-weight: 500;">Document name</p>
+                                        <input [(ngModel)]="newDocument.name"  type="text" class="form-control " placeholder="eq. Test" />
+                                    </div>
+                                    <div class="col-4">
+                                        <p style="font-weight: 500;">Level</p>
+                                        <select (change)="handleGetLevelFromInput($event.target.value)" class="custom-select " id="inputGroupSelect01">
+                                            <option selected>select level...</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row pt-4">
+                                    <div class="col-7 ">
+                                        <p style="font-weight: 500;">Description</p>
+                                        <textarea [(ngModel)]="newDocument.description" style="border-color: #d6d6d6; height: 100px;" placeholder="eq. First test in this year" class="w-100 rounded form-control"></textarea>
+                                    </div>
+                                    <div class="col-5 d-flex flex-column">
+                                        <p style="font-weight: 500; position: relative; left: 50px;">Upload pdf</p>
+                                        <input type="file" style="position: relative; top: 20px;" (change)="onUploadChange($event)" accept=".pdf" />
+                                        <i *ngIf="base64textString.length>0" class="fa fa-file-pdf-o fa-2x" style="color:red; cursor: pointer; position: relative; top: 25px; " aria-hidden="true"></i> 
+                                    </div>
+                                </div>
+                                <div class="row pt-4">
+                                    <div class="col d-flex justify-content-center">
+                                        <button (click)="handleAddNewDocument()" class="btn btn-info">Add new document</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ALL DOCUMENTS -->
+                        <div *ngFor="let document of documentArray" class="row justify-content-center p-3" >
+                            <div class="col-10 border rounded p-4" style="background-color: white; ">
+                                <div class="row justify-content-between">
+                                    <div class="col-4 d-flex flex-row" >
+                                        <i class="fa fa-file-pdf-o fa-2x" style="color:red; cursor: pointer; " aria-hidden="true"></i> 
+                                        <p style="position:relative; left:5px; top:5px; cursor: pointer; ">{{document.name}}.pdf</p>
+                                    </div>
+                                    <div class="col-2">
+                                        <p style="font-size: 20px; font-weight: 500;">Lvl:{{document.level}}</p>
+                                    </div>
+                                </div>
+                                <div class="row pb-0 pl-3 pr-3">
+                                   <p>{{document.description}}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PAGINATION-->
+                        <div class="row justify-content-center">
+                            <ngb-pagination
+                            [collectionSize]="fullNumberOfUsers" [(page)]="page" [pageSize] = "perPage"
+                            (pageChange)="handlePageChange()" aria-label="Users pagination">
+                            ></ngb-pagination>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

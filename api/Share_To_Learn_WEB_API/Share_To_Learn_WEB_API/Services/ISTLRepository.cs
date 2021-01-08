@@ -42,5 +42,8 @@ namespace Share_To_Learn_WEB_API.Services
         Task<StudentDTO> GetGroupOwner(int groupId);
 
         Task<GroupStatisticsDTO> GetGroupStatistics(int groupId);
+
+        Task AddFriend(int studentId1, int studentId2);
+        Task RemoveFriend(int studentId1, int studentId2);
     }
 }

@@ -1,3 +1,4 @@
+import { StudentService } from './../../Service/student.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router'
 
@@ -32,7 +33,13 @@ export class DashboardComponent implements OnInit {
     }
   ]
 
-  constructor(private router:Router) { }
+  constructor(private router:Router, private userService:StudentService) { }
+
+  handleLogOut()
+  {
+    this.userService.logoutStudent();
+    this.router.navigate(['/login']);
+  }
 
   ngOnInit(): void {
   }
