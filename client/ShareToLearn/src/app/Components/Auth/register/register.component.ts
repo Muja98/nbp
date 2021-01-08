@@ -13,11 +13,34 @@ export class RegisterComponent implements OnInit {
   user:Student;
   password:string;
   rpassword:string;
+  profileImage:string;
   constructor(private router:Router, private service: StudentService) {
     this.user = new Student();
    }
 
   ngOnInit(): void {
+  }
+
+  public base64textString = [];
+
+  onUploadChange(evt: any) {
+    this.base64textString = [];
+    const file = evt.target.files[0];
+  
+    if (file) {
+      const reader = new FileReader();
+  
+      reader.onload = this.handleReaderLoaded.bind(this);
+      reader.readAsBinaryString(file);
+    }
+  }
+  
+  handleReaderLoaded(e) {
+    let pomNiz = [];
+    pomNiz.push(btoa(e.target.result));
+    this.base64textString.push('data:image/png;base64,' + btoa(e.target.result));
+    this.profileImage = this.base64textString[0];
+    this.user.student.profilePicturePath = pomNiz[0];
   }
 
 

@@ -4,6 +4,7 @@ import URL from '../../API/api';
 import {HttpClient} from '@angular/common/http';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
+import { getLocaleDateTimeFormat } from '@angular/common';
 
 
 @Injectable({
@@ -14,9 +15,17 @@ import { Router } from '@angular/router';
 export class StudentService {
 
   constructor(private http:HttpClient, private router:Router){}
-
-  addNewStudent(Student:Student, Password:string)
+ 
+  addNewStudent(Studente:Student, Password:string)
   {
+    let Student:any = {
+      FirstName : Studente.student.firstName,
+      LastName : Studente.student.lastName,
+      DateOfBirth : Studente.student.dateOfBirth+"T00:00:00",
+      Email : Studente.student.email,
+      ProfilePicturePath : Studente.student.profilePicturePath
+    }
+
     this.http.post(URL + '/api/student',{Student, Password}, {observe: 'response'} ).subscribe( 
       response => {
         //mozda prepraviti na backend-u da se vraca 200 i kad se unese vec postojeci mail, samo sa nekom porukom o tome
@@ -64,9 +73,20 @@ export class StudentService {
       return user;
   }
 
+
   editStudent(student:Student)
   {
-    //this.http.put(URL+ "/api/student/"+student.id, student ).subscribe((el:any)=>console.log(el))
+    let updatedStudent:any = {
+      FirstName : student.student.firstName,
+      LastName : student.student.lastName,
+      DateOfBirth : student.student.dateOfBirth+"T00:00:00",
+      Email : student.student.email,
+      ProfilePicturePath : student.student.profilePicturePath
+    }
+
+    console.log(updatedStudent)
+   
+    this.http.put(URL+ "/api/student/"+student.id, {updatedStudent:updatedStudent}).subscribe(()=>{})
   }
 
   getFilteredStudents(params:any) {
