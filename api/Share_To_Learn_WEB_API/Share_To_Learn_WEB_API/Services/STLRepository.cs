@@ -543,7 +543,13 @@ namespace Share_To_Learn_WEB_API.Services
                 Id = Return.As<int>("ID(friend)"),
                 Student = Return.As<Student>("friend")
             });
+
+
+            ret = ret.OrderBy(orderBy);
+
+            return await ret.Skip(from).Limit(to).ResultsAsync;
         }
+
         public async Task<string> GetDocumentsPath(int documentId)
         {
             var res = await _client.Cypher
@@ -554,11 +560,6 @@ namespace Share_To_Learn_WEB_API.Services
                 .ResultsAsync;
 
             return res.Single();
-        }
-
-            ret = ret.OrderBy(orderBy);
-
-            return await ret.Skip(from).Limit(to).ResultsAsync;
         }
     }
 }
