@@ -16,6 +16,7 @@ export class GroupDocumentComponent implements OnInit {
   public currentLevel: string = "";
   public searchString: string = "";
   public documentArray: Array<Document> = [];
+  pdfFile = "";
   public newDocument={
     name:         "",
     level:         "",
@@ -82,8 +83,8 @@ export class GroupDocumentComponent implements OnInit {
   {
     let pdfFile;
     this.documentService.getDocument(documentId).subscribe((pdf:string)=>{
-    
-      alert(pdf)
+      window.open("data:application/pdf;base64," +pdf);
+
     }); 
    
   }
