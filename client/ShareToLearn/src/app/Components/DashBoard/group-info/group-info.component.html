@@ -1,5 +1,5 @@
 <div class="card mb-3">
-    <div class="row g-0">
+    <div class="row g-0" *ngIf="group">
       <div class="col-md-4">
         <img src="..." alt="...">
       </div>
@@ -17,5 +17,8 @@
         <h6 class="card-title">field: {{group.group.description}}</h6>
     </div>
     </div>
+  </div>
+  <div class="spinner-border" role="status" *ngIf="!group">
+      <span class="sr-only">Loading...</span>
   </div>
 </div>

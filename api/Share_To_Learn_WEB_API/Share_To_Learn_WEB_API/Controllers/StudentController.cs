@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
 using Share_To_Learn_WEB_API.Entities;
 using Neo4jClient;
 using Share_To_Learn_WEB_API.Services;
@@ -106,7 +105,7 @@ namespace Share_To_Learn_WEB_API.Controllers
    
             if (!res)
                 return BadRequest("Student doesnt exist!");
-            updatedStudent.ProfilePicturePath = ImageManagerService.SaveImageToFile(updatedStudent.ProfilePicturePath);
+            updatedStudent.ProfilePicturePath = FileManagerService.SaveImageToFile(updatedStudent.ProfilePicturePath);
             await _repository.UpdateStudent(studentId, updatedStudent);
             return Ok(updatedStudent);
         }
