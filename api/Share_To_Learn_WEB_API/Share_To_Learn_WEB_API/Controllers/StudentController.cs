@@ -164,6 +164,42 @@ namespace Share_To_Learn_WEB_API.Controllers
                 return BadRequest("Student doesnt exist!");
         }
 
+        [HttpGet]
+        [Route("friends")]
+        public async Task<ActionResult> GetFilteredFriends([FromQuery] string firstName, [FromQuery] string lastName, [FromQuery] bool orderByName, [FromQuery] bool descending, int from, int to, int user)
+        {
+            string userFilter = "ID(s)=" + user;
+            string whereFirstName = string.IsNullOrEmpty(firstName) ? "" : ("s.FirstName=~\"(?i).*" + firstName + ".*\"");
+            string whereLastName = string.IsNullOrEmpty(lastName) ? "" : ("s.LastName=~\"(?i).*" + lastName + ".*\"");
+            string where = "";
+            if (!string.IsNullOrEmpty(whereFirstName) && !string.IsNullOrEmpty(whereLastName))
+                where += whereFirstName + " AND " + whereLastName;
+            else if (!string.IsNullOrEmpty(whereFirstName))
+                where += whereFirstName;
+            else if (!string.IsNullOrEmpty(whereLastName))
+                where += whereLastName;
+
+            string order = "";
+            if (!orderByName)
+            {
+                order += "ID(s)";
+                if (descending)
+                    order += " desc";
+            }
+            else
+            {
+                if (descending)
+                    order += "s.FirstName desc, s.LastName desc";
+                else
+                    order += "s.FirstName, s.LastName";
+            }
+            IEnumerable<StudentDTO> students;
+
+            students = await _repository.GetFriendsPage(where, userFilter, order, descending, from, to);
+
+            return Ok(students);
+        }
+
     }
 }
 

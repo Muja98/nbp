@@ -522,6 +522,24 @@ namespace Share_To_Learn_WEB_API.Services
             return res;
         }
 
+        public async Task<IEnumerable<StudentDTO>> GetFriendsPage(string filter, string userFilter, string orderBy, bool descending, int from, int to)
+        {
+            var a = _client.Cypher
+                        .Match("(s:Student)-[:FRIEND]-(friend:Student)")
+                        .Where(userFilter);
 
+            if (!string.IsNullOrEmpty(filter))
+                a = a.AndWhere(filter);
+
+            ICypherFluentQuery<StudentDTO> ret = a.Return(() => new StudentDTO
+            {
+                Id = Return.As<int>("ID(friend)"),
+                Student = Return.As<Student>("friend")
+            });
+
+            ret = ret.OrderBy(orderBy);
+
+            return await ret.Skip(from).Limit(to).ResultsAsync;
+        }
     }
 }

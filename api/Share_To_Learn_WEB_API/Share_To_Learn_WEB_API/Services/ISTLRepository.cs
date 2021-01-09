@@ -45,6 +45,7 @@ namespace Share_To_Learn_WEB_API.Services
 
         Task AddFriend(int studentId1, int studentId2);
         Task RemoveFriend(int studentId1, int studentId2);
+        Task<IEnumerable<StudentDTO>> GetFriendsPage(string filter, string userFilter, string orderBy, bool descending, int from, int to);
 
         Task CreateDocument(int studentId, Document newDocument);
         Task RelateDocumentAndGroup(int groupId, string documentPath);
