@@ -13,12 +13,12 @@ export class GroupDocumentComponent implements OnInit {
   constructor(private userService: StudentService, private documentService: DocumentService) { }
   //https://youtu.be/62D0vX9QeLg?t=112
   public levelArray: Array<number> = [1,2,3,4,5];
-  public currentLevel: number = 0;
-  public searchString: String;
+  public currentLevel: string = "";
+  public searchString: string = "";
   public documentArray: Array<Document> = [];
   public newDocument={
     name:         "",
-    level:         0,
+    level:         "",
     description:  "",
     documentPath:  "",
   }
@@ -32,11 +32,11 @@ export class GroupDocumentComponent implements OnInit {
     //IMPLEMENT FUNCTION
   }
 
-  handleGetLevel(level:number):void
+  handleGetLevel(level:string):void
   {
     this.currentLevel = level;
   }
-  handleGetLevelFromInput(level:number)
+  handleGetLevelFromInput(level:string)
   {
       this.newDocument.level = level;
   }
@@ -63,7 +63,7 @@ export class GroupDocumentComponent implements OnInit {
 
   handleAddNewDocument()
   {
-    if(this.newDocument.name==="" || this.newDocument.level===0 || this.newDocument.description ==="" || this.base64textString.length==0)
+    if(this.newDocument.name==="" || this.newDocument.level==="" || this.newDocument.description ==="" || this.base64textString.length==0)
       return;
     let studentPom = this.userService.getStudentFromStorage();
 
@@ -73,30 +73,34 @@ export class GroupDocumentComponent implements OnInit {
       Description: this.newDocument.description,
       DocumentPath: this.newDocument.documentPath
     }
-
     this.documentService.createDocument(this.groupId, studentPom.id, document);
     
    window.location.reload();
   }
 
-  handleClickDocument(path:string)
+  handleClickDocument(documentId:string)
   {
-    alert(path);
+    let pdfFile;
+    this.documentService.getDocument(documentId).subscribe((pdf:string)=>{
+    
+      alert(pdf)
+    }); 
+   
   }
 
   handleClickSearch()
   {
-    if(this.searchString==="" || this.currentLevel == 0)
+    if(this.searchString==="" || this.currentLevel == "")
     return;
     //U searchString se nalazi string za search
     //U curentLevel se nalazi izabrani nivo sa leve strane
     //TODO: dodati servis za pretragu
     this.searchString = "";
-    this.currentLevel = 0;
+    this.currentLevel = "";
   } 
 
   ngOnInit(): void {
-      this.documentService.getDocuments(this.groupId).subscribe((documents:Array<Document>)=>{
+      this.documentService.getDocuments(this.groupId, this.currentLevel, this.searchString).subscribe((documents:any)=>{
           this.documentArray = documents;
       })
   }

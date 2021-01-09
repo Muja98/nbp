@@ -1,13 +1,9 @@
 export class Document
 {
     id:number = 0;
-    document:any={
-        name:         "",
-        level:         0,
-        description:  "",
-        documentPath: "",
-    }
-   
-    
+    name:string="";
+    level:string="";
+    description:string="";
+
     constructor(){}
 }

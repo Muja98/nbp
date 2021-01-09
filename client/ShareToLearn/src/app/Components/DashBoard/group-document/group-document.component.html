@@ -31,11 +31,9 @@
                                         <p style="font-weight: 500;">Level</p>
                                         <select (change)="handleGetLevelFromInput($event.target.value)" class="custom-select " id="inputGroupSelect01">
                                             <option selected>select level...</option>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
+                                            <option value="Beginner">Beginner</option>
+                                            <option value="Intermediate">Intermediate</option>
+                                            <option value="Advanced">Advanced</option>
                                         </select>
                                     </div>
                                 </div>
@@ -63,26 +61,20 @@
                             <div class="col-10 border rounded p-4" style="background-color: white; ">
                                 <div class="row justify-content-between">
                                     <div class="col-4 d-flex flex-row" >
-                                        <i (click)="handleClickDocument(document.document.documentPath)" class="fa fa-file-pdf-o fa-2x" style="color:red; cursor: pointer; " aria-hidden="true"></i> 
-                                        <p (click)="handleClickDocument(document.document.documentPath)" style="position:relative; left:5px; top:5px; cursor: pointer; ">{{document.document.name}}.pdf</p>
+                                        <i (click)="handleClickDocument(document.id)" class="fa fa-file-pdf-o fa-2x" style="color:red; cursor: pointer; " aria-hidden="true"></i> 
+                                        <p (click)="handleClickDocument(document.id)" style="position:relative; left:5px; top:5px; cursor: pointer; ">{{document.name}}.pdf</p>
                                     </div>
-                                    <div class="col-2">
-                                        <p style="font-size: 20px; font-weight: 500;">Lvl:{{document.document.level}}</p>
+                                    <div class="col-4 d-flex justify-content-end">
+                                        <p style="font-size: 20px; font-weight: 500;">Lvl:{{document.level}}</p>
                                     </div>
                                 </div>
                                 <div class="row pb-0 pl-3 pr-3">
-                                   <p>{{document.document.description}}</p>
+                                   <p>{{document.description}}</p>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- PAGINATION-->
-                        <div class="row justify-content-center">
-                            <ngb-pagination
-                            [collectionSize]="fullNumberOfUsers" [(page)]="page" [pageSize] = "perPage"
-                            (pageChange)="handlePageChange()" aria-label="Users pagination">
-                            ></ngb-pagination>
-                        </div>
+                    
 
                     </div>
                 </div>

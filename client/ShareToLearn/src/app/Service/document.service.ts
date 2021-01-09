@@ -13,14 +13,14 @@ export class DocumentService {
 
   constructor(private http:HttpClient, private router:Router) { }
 
-  getDocuments(groupId:number, level:string) {
-    //`/productTypes/specialDataProducts?productTypeId=${this.state.typeId}&substring=${this.state.itemForSearch}&sortType=${this.state.sortType}&sortArgument=${this.state.sortArgument}`);
-    return this.http.get<Document[]>(URL + "/api/documents/group/"+groupId+"?level="+);
+  getDocuments(groupId:number, level:string, substring:string ) {
+    console.log("groupid "+groupId+ " level "+level+" substring "+substring)
+    return this.http.get<Document[]>(URL + "/api/documents/group/"+groupId+"?level="+level+"&substring="+substring);
   }
 
-  getDocument(id:any)
+  getDocument(documentId:any)
   {
-    return this.http.get<string>(URL + "/api/student"+id);
+    return this.http.get<any>(URL + "/api/documents/"+documentId);
   }
 
   createDocument(groupId:number, studentId:number, document:any) {
