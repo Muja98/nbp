@@ -42,6 +42,10 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if(!this.userService.getStudentFromStorage)
+    {
+      this.router.navigate(['/login']);
+    }
   }
 
   isActive(ind:number):object {

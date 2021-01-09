@@ -174,8 +174,14 @@ namespace Share_To_Learn_WEB_API.Services
                 .Match("(student: Student)")
                 .Where("ID(student) = $studentId")
                 .WithParam("studentId", studentId)
-                .Set("student = $updatedStudent")
-                .WithParam("updatedStudent", updatedStudent)
+                .Set("student.FirstName = $FirstName")
+                .WithParam("FirstName", updatedStudent.FirstName)
+                .Set("student.LastName = $LastName")
+                .WithParam("LastName", updatedStudent.LastName)
+                .Set("student.DateOfBirth = $DateOfBirth")
+                .WithParam("DateOfBirth", updatedStudent.DateOfBirth)
+                .Set("student.ProfilePicturePath = $ProfilePicturePath")
+                .WithParam("ProfilePicturePath", updatedStudent.ProfilePicturePath)
                 .ExecuteWithoutResultsAsync();
         }
 

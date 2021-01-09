@@ -19,9 +19,10 @@ export class GroupComponent implements OnInit {
   student = new Student();
   tempStudent: any;
   postArray: Array<Post> = [];
-
+  profileImage:string;
   constructor(private service:StudentService, private postService: PostService, private aroute:ActivatedRoute) { 
     this.todaysDataTime = formatDate(this.today, 'yyyy-MM-dd', 'en-SR', 'GMT+1');
+
   }
 
   handleAddNewPost()
@@ -44,6 +45,7 @@ export class GroupComponent implements OnInit {
 
   ngOnInit(): void {
       this.tempStudent = this.service.getStudentFromStorage();
+      this.profileImage ="data:image/png;base64,"+this.tempStudent.profilePicturePath;
       this.student.student.firstName = this.tempStudent.firstName;
       this.student.student.lastName = this.tempStudent.lastName;
       this.aroute.paramMap.subscribe(params=>{

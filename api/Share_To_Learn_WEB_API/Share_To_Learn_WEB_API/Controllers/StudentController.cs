@@ -100,13 +100,13 @@ namespace Share_To_Learn_WEB_API.Controllers
         }
 
         [HttpPut("{studentId}")]
-        public async Task<ActionResult> UpdateStudent(int studentId, Student updatedStudent)
+        public async Task<ActionResult> UpdateStudent(int studentId, [FromBody] Student updatedStudent)
         {
             bool res = await _repository.StudentExists(studentId);
-
+   
             if (!res)
                 return BadRequest("Student doesnt exist!");
-
+            updatedStudent.ProfilePicturePath = ImageManagerService.SaveImageToFile(updatedStudent.ProfilePicturePath);
             await _repository.UpdateStudent(studentId, updatedStudent);
             return Ok(updatedStudent);
         }

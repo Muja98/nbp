@@ -48,7 +48,8 @@ export class GroupDocumentComponent implements OnInit {
   }
   
   handleReaderLoaded(e) {
-    this.base64textString.push('data:application/pdf;base64,' + btoa(e.target.result));
+    //this.base64textString.push('data:application/pdf;base64,' + btoa(e.target.result));
+    this.base64textString.push(btoa(e.target.result));
   }
 
   handleAddNewDocument()

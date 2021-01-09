@@ -19,7 +19,7 @@ export class PostComponent implements OnInit {
   public postArray: Array<Post> = [];
   public commentArray: Array<Comment>= [];
   public comment:string;
-
+  public profilePicture:string;
   @Input() post: Post;
   
   ngOnInit(): void {
@@ -30,11 +30,15 @@ export class PostComponent implements OnInit {
     this.handleGetComment();
   }
 
+  handleReturnImage(string:String):any
+  {
+    return "data:image/png;base64,"+string
+  }
+
   handleGetComment()
   {
     this.postService.getAllComment(this.post.id).subscribe((comment:Comment[])=>{
       this.commentArray = comment;
-     
     })
   }
 

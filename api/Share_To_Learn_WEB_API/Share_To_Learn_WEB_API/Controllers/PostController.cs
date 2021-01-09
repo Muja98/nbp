@@ -45,7 +45,11 @@ namespace Share_To_Learn_WEB_API.Controllers
         [Route("{postId}/comments")]
         public async Task<ActionResult> GetAllComments(int postId)
         {
-            var result = await _repository.GetAllComment(postId);
+            IEnumerable<CommentDTO> result = await _repository.GetAllComment(postId);
+            foreach(CommentDTO item in result)
+            {
+                item.Student.Student.ProfilePicturePath = ImageManagerService.LoadImageFromFile(item.Student.Student.ProfilePicturePath);
+            }
             return Ok(result);
         }
 

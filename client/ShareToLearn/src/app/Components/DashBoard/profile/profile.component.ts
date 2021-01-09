@@ -16,6 +16,7 @@ export class ProfileComponent implements OnInit {
   public tempStudent:any;
   public dateOfBirth:Date;
   public imgSrc:string;
+  public imgSrcPom:string;
 
   constructor(private service:StudentService,private router:Router) {
     
@@ -31,17 +32,39 @@ export class ProfileComponent implements OnInit {
       this.student.student.lastName = this.tempStudent.lastName
     this.student.student.email = this.tempStudent.email;
     this.student.student.profilePicturePath = this.tempStudent.profilePicturePath;
-    this.imgSrc = "data:image/jpeg;base64," + this.student.student.profilePicturePath;
-    this.student.student.dateOfBirth = (new Date(this.tempStudent.dateOfBirth)).toDateString();
+    this.imgSrc = 'data:image/png;base64,' + this.tempStudent.profilePicturePath;
+    this.student.student.dateOfBirth = this.tempStudent.dateOfBirth;
     this.dateOfBirth = new Date(this.student.student.dateOfBirth);
-
+    
     //TODO:Get student from API
   }
 
+  base64textString = [];
+
+  onUploadChange(evt: any) {
+    this.base64textString = [];
+    const file = evt.target.files[0];
+  
+    if (file) {
+      const reader = new FileReader();
+  
+      reader.onload = this.handleReaderLoaded.bind(this);
+      reader.readAsBinaryString(file);
+    }
+  }
+  
+  handleReaderLoaded(e) {
+    let pomNiz = [];
+    pomNiz.push(btoa(e.target.result));
+    this.base64textString.push('data:image/png;base64,' + btoa(e.target.result));
+    this.imgSrc=this.base64textString[0];
+    this.imgSrcPom = pomNiz[0];
+    this.student.student.profilePicturePath = pomNiz[0];
+  }
  
   handleCheckStudent():void
   {
-    this.student.student.dateOfBirth = (new Date(this.dateOfBirth)).toDateString();
+  
     if(
         this.student.student.firstName === this.pomStudent.student.firstName     &&
         this.student.student.lastName === this.pomStudent.student.lastName       &&
@@ -58,9 +81,35 @@ export class ProfileComponent implements OnInit {
 
   handleEditStudent()
   {
+      this.student.id = this.tempStudent.id;
+      //Sat Jan 09 2021 00:00:00 GMT+0100 (Central European Standard Time)
+      let pom = this.dateOfBirth.toString().split(" ");
+      if(this.dateOfBirth.toString().length>10)
+      {
+        let array = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+       
+        let mesec = 0;
+        for(let i=0; i<array.length; i++)
+        {
+          if(array[i]===pom[1])
+          {
+            mesec = i+1;
+          }
+        }
+        var mes = "";
+        if(mesec<10)
+          mes = "0";
+        mes = mes+mesec;
+        this.student.student.dateOfBirth = pom[3]+"-"+mes+"-"+pom[2];
+      }
+      else
+      {
+        this.student.student.dateOfBirth = this.dateOfBirth
+      }
+     
       this.service.editStudent(this.student);
-      this.service.logoutStudent();
-      this.router.navigate(['/login'])
+      //this.service.logoutStudent();
+      //this.router.navigate(['/login'])
   }
 
   

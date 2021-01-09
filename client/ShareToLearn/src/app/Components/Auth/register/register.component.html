@@ -8,19 +8,19 @@
                 </div>
                 <div class="row border-bottom border-dark pt-4">
                     <i class="fa fa-user" aria-hidden="true"></i>
-                    <input class="loginInput"  placeholder="Name" [(ngModel)]="user.student.FirstName">
+                    <input class="loginInput"  placeholder="Name" [(ngModel)]="user.student.firstName">
                 </div>
                 <div class="row border-bottom border-dark pt-4">
                     <i class="fa fa-user" aria-hidden="true"></i>
-                    <input class="loginInput"  placeholder="Surname" [(ngModel)]="user.student.LastName">
+                    <input class="loginInput"  placeholder="Surname" [(ngModel)]="user.student.lastName">
                 </div>
                 <div class="row border-bottom border-dark pt-4">
                     <i class="fa fa-envelope" aria-hidden="true"></i>
-                    <input placeholder="E-mail"  style="border-width: 0px; border: none; outline: none; position: relative; left: 14px; bottom: 4px;"  [(ngModel)]="user.student.Email">
+                    <input placeholder="E-mail"  style="border-width: 0px; border: none; outline: none; position: relative; left: 14px; bottom: 4px;"  [(ngModel)]="user.student.email">
                 </div>
                 <div class="row border-bottom border-dark pt-4">
                     <i class="fa fa-birthday-cake" aria-hidden="true"></i>
-                    <input type="date"  style="border-width: 0px; border: none; outline: none; position: relative; left: 14px; bottom: 4px;"  [(ngModel)]="user.student.DateOfBirth">
+                    <input type="date"  style="border-width: 0px; border: none; outline: none; position: relative; left: 14px; bottom: 4px;"  [(ngModel)]="user.student.dateOfBirth">
                 </div>
                 <div class="row border-bottom border-dark pt-4">
                     <i class="fa fa-lock" aria-hidden="true"></i>
@@ -43,6 +43,17 @@
                <div class="row  justify-content-center " style="cursor: pointer;">
                    <p style="text-decoration: underline;" (click)="handleLoginRedirect()">I'm already member</p>
                </div>
+               <div class="row pl-5">
+                    <div class="col-5 d-flex align-items-center justify-content-center">
+                        <div  class="inputWrapper ">
+                            <input type="file"  (change)="onUploadChange($event)" accept=".png, .jpg, .jpeg, .pdf" name="file1"/>  
+                        </div>
+                    </div>
+                    <div  class="col  " style="position: relative; bottom: 30px;">
+                        <img   [src]="profileImage" height="115px" width="115px" class="rounded-circle mt-5" >
+                    </div>
+               </div>
+               
             </div>
         </div>
     </div>
