@@ -6,7 +6,7 @@ using System.IO;
 
 namespace Share_To_Learn_WEB_API.Services
 {
-    public class ImageManagerService
+    public class FileManagerService
     {
         public static string SaveImageToFile(string base64Image)
         {
@@ -27,6 +27,27 @@ namespace Share_To_Learn_WEB_API.Services
                 base64Image = Convert.ToBase64String(bytes);
             }
             return base64Image;
+        }
+
+        public static string SaveDocumentToFile(string base64Document)
+        {
+            string documentCounter = File.ReadAllText(@"..\..\Documents\tempDocCounter.txt");
+            byte[] bytes = Convert.FromBase64String(base64Document);
+            string documentpath = @"..\..\Documents\" + documentCounter + ".pdf";
+            File.WriteAllBytes(documentpath, bytes);
+            File.WriteAllText(@"..\..\Documents\tempDocCounter.txt", (int.Parse(documentCounter) + 1).ToString());
+            return documentpath;
+        }
+
+        public static string LoadDocumentFromFile(string path)
+        {
+            string base64Document = "";
+            if (!string.IsNullOrEmpty(path))
+            {
+                byte[] bytes = File.ReadAllBytes(path);
+                base64Document = Convert.ToBase64String(bytes);
+            }
+            return base64Document;
         }
     }
 }

@@ -476,8 +476,46 @@ namespace Share_To_Learn_WEB_API.Services
                    .Delete("f1, f2")
                    .ExecuteWithoutResultsAsync();
         }
+
+        public async Task CreateDocument(int studentId, Document newDocument)
+        {
+            await _client.Cypher
+                .Match("(creator: Student)")
+                .Where("ID(creator) = $studentId")
+                .WithParam("studentId", studentId)
+                .Create("(creator)-[:CREATED]->(document:Document $newDocument)")
+                .WithParam("newDocument", newDocument)
+                .ExecuteWithoutResultsAsync();
+        }
+
+        public async Task RelateDocumentAndGroup(int groupId, string documentPath)
+        {
+            await _client.Cypher
+                .Match("(group: Group), (document: Document)")
+                .Where("ID(group) = $groupId")
+                .WithParam("groupId", groupId)
+                .AndWhere("document.DocumentPath = $documentPath")
+                .WithParam("documentPath", documentPath)
+                .Create("(group)-[:CONTAINS]->(document)")
+                .ExecuteWithoutResultsAsync();
+        }
+
+        public async Task<IEnumerable<DocumentDTO>> GetDocuments(int groupId)
+        {
+            var res = await _client.Cypher
+                    .Match("(group: Group)-[:CONTAINS]->(document: Document)")
+                    .Where("ID(group) = $groupId")
+                    .WithParam("groupId", groupId)
+                    .Return(() => new DocumentDTO
+                    {
+                         Id = Return.As<int>("ID(document)"),
+                         Document = Return.As<Document>("document")
+                    }
+                    ).ResultsAsync;
+
+            return res;
+        }
+
+
     }
 }
-
-// (s:Student)-[:Member]->(g:Group) WHERE ID(g)=3 RETURN count(s) as clanovi
-//MATCH(p: Post) -[:BELONG]->(g: Group), (c: Comment) -[:STOREDIN]->(p), (s: Student) -[:Member]->(g)  WHERE ID(g)= 4 RETURN count(c) as komentari, count(p) as postovi, count(s) as clanovi
