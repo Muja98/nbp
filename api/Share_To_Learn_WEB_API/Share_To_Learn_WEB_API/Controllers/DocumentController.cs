@@ -23,7 +23,7 @@ namespace Share_To_Learn_WEB_API.Controllers
 
         [HttpPost]
         [Route("creator/{studentId}/group/{groupId}")]
-        public async Task<ActionResult> CreateDocument(int studentId, int groupId, [FromBody] Document newDocument)
+        public async Task<ActionResult> CreateDocument(int studentId, int groupId,  Document newDocument)
         {   
             newDocument.DocumentPath = FileManagerService.SaveDocumentToFile(newDocument.DocumentPath);
             await _repository.CreateDocument(studentId, newDocument);
