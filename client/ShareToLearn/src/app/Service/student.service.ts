@@ -76,17 +76,16 @@ export class StudentService {
 
   editStudent(student:Student)
   {
-    let updatedStudent:any = {
+    
+  
+   
+    this.http.put(URL + "/api/student/"+student.id,{
       FirstName : student.student.firstName,
       LastName : student.student.lastName,
       DateOfBirth : student.student.dateOfBirth+"T00:00:00",
       Email : student.student.email,
       ProfilePicturePath : student.student.profilePicturePath
-    }
-
-    console.log(updatedStudent)
-   
-    this.http.put(URL+ "/api/student/"+student.id, {updatedStudent:updatedStudent}).subscribe(()=>{})
+    }).subscribe(()=>{});
   }
 
   getFilteredStudents(params:any) {
