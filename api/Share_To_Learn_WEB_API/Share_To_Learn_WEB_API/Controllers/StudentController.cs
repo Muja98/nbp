@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
 using Share_To_Learn_WEB_API.Entities;
 using Neo4jClient;
 using Share_To_Learn_WEB_API.Services;
