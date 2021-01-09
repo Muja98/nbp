@@ -1,3 +1,5 @@
+import { DocumentService } from './../../../Service/document.service';
+import { StudentService } from 'src/app/Service/student.service';
 import { Document } from './../../../Model/document';
 import { Component, Input, OnInit } from '@angular/core';
 
@@ -8,13 +10,18 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class GroupDocumentComponent implements OnInit {
 
-  constructor() { }
+  constructor(private userService: StudentService, private documentService: DocumentService) { }
   //https://youtu.be/62D0vX9QeLg?t=112
   public levelArray: Array<number> = [1,2,3,4,5];
   public currentLevel: number = 0;
   public searchString: String;
   public documentArray: Array<Document> = [];
-  public newDocument: Document;
+  public newDocument={
+    name:         "",
+    level:         0,
+    description:  "",
+    documentPath:  "",
+  }
   @Input()groupId: number;
 
   public fullNumberOfUsers:number;
@@ -37,6 +44,7 @@ export class GroupDocumentComponent implements OnInit {
   base64textString = [];
 
   onUploadChange(evt: any) {
+    this.base64textString = [];
     const file = evt.target.files[0];
   
     if (file) {
@@ -50,16 +58,30 @@ export class GroupDocumentComponent implements OnInit {
   handleReaderLoaded(e) {
     //this.base64textString.push('data:application/pdf;base64,' + btoa(e.target.result));
     this.base64textString.push(btoa(e.target.result));
+    this.newDocument.documentPath= this.base64textString.toString();
   }
 
   handleAddNewDocument()
   {
     if(this.newDocument.name==="" || this.newDocument.level===0 || this.newDocument.description ==="" || this.base64textString.length==0)
       return;
-    //U newDocument se nalaze svi podaci sa inputa
-    //U base64textString se nalazi sam pdf file
-    //TODO: dodati servis za dodavanje novog dokumenta
-    window.location.reload();
+    let studentPom = this.userService.getStudentFromStorage();
+
+    let document ={
+      Name: this.newDocument.name,
+      Level: this.newDocument.level,
+      Description: this.newDocument.description,
+      DocumentPath: this.newDocument.documentPath
+    }
+
+    this.documentService.createDocument(this.groupId, studentPom.id, document);
+    
+   window.location.reload();
+  }
+
+  handleClickDocument(path:string)
+  {
+    alert(path);
   }
 
   handleClickSearch()
@@ -74,17 +96,9 @@ export class GroupDocumentComponent implements OnInit {
   } 
 
   ngOnInit(): void {
-    this.newDocument = new Document();
-    let p1 = new Document();
-    p1.description = "neki opis";
-    p1.name = "naziv1";
-    p1.level = 3;
-    this.documentArray.push(p1)
-    let p2 = new Document();
-    p2.description = "neki opis";
-    p2.name = "naziv2";
-    p2.level = 3;
-    this.documentArray.push(p2)
+      this.documentService.getDocuments(this.groupId).subscribe((documents:Array<Document>)=>{
+          this.documentArray = documents;
+      })
   }
 
 }

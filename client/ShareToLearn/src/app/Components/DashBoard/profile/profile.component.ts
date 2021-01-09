@@ -82,8 +82,8 @@ export class ProfileComponent implements OnInit {
   handleEditStudent()
   {
       this.student.id = this.tempStudent.id;
-      //Sat Jan 09 2021 00:00:00 GMT+0100 (Central European Standard Time)
       let pom = this.dateOfBirth.toString().split(" ");
+
       if(this.dateOfBirth.toString().length>10)
       {
         let array = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
@@ -103,13 +103,11 @@ export class ProfileComponent implements OnInit {
         this.student.student.dateOfBirth = pom[3]+"-"+mes+"-"+pom[2];
       }
       else
-      {
         this.student.student.dateOfBirth = this.dateOfBirth
-      }
      
       this.service.editStudent(this.student);
-      //this.service.logoutStudent();
-      //this.router.navigate(['/login'])
+      this.service.logoutStudent();
+      this.router.navigate(['/login'])
   }
 
   
