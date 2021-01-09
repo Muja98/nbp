@@ -12,11 +12,10 @@ export class GroupDocumentComponent implements OnInit {
 
   constructor(private userService: StudentService, private documentService: DocumentService) { }
   //https://youtu.be/62D0vX9QeLg?t=112
-  public levelArray: Array<number> = [1,2,3,4,5];
+  public levelArray: Array<string> = ["Beginner","Intermediate","Advanced"];
   public currentLevel: string = "";
   public searchString: string = "";
   public documentArray: Array<Document> = [];
-  pdfFile = "";
   public newDocument={
     name:         "",
     level:         "",
@@ -79,23 +78,32 @@ export class GroupDocumentComponent implements OnInit {
    window.location.reload();
   }
 
-  handleClickDocument(documentId:string)
+  handleClickDocument(documentId:string, name:string)
   {
-    let pdfFile;
-    this.documentService.getDocument(documentId).subscribe((pdf:string)=>{
-      window.open("data:application/pdf;base64," +pdf);
 
+    this.documentService.getDocument(documentId).subscribe((pdf:any)=>{
+
+      const linkSource = 'data:application/pdf;base64,'+pdf.base64Content;
+      const downloadLink = document.createElement("a");
+
+      downloadLink.href = linkSource;
+      downloadLink.download = name+".pdf";
+      downloadLink.click();
+      
+    
     }); 
    
   }
 
   handleClickSearch()
   {
-    if(this.searchString==="" || this.currentLevel == "")
+    if(this.searchString==="" && this.currentLevel == "")
     return;
-    //U searchString se nalazi string za search
-    //U curentLevel se nalazi izabrani nivo sa leve strane
-    //TODO: dodati servis za pretragu
+
+    this.documentService.getDocuments(this.groupId, this.currentLevel, this.searchString).subscribe((documents:any)=>{
+      this.documentArray = [];
+      this.documentArray = documents;
+  })
     this.searchString = "";
     this.currentLevel = "";
   } 
