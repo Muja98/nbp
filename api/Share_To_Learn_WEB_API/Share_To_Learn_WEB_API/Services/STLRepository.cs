@@ -506,22 +506,40 @@ namespace Share_To_Learn_WEB_API.Services
                 .ExecuteWithoutResultsAsync();
         }
 
-        public async Task<IEnumerable<DocumentDTO>> GetDocuments(int groupId)
+        public async Task<IEnumerable<DocumentDTO>> GetDocuments(int groupId, string filter)
         {
-            var res = await _client.Cypher
-                    .Match("(group: Group)-[:CONTAINS]->(document: Document)")
-                    .Where("ID(group) = $groupId")
-                    .WithParam("groupId", groupId)
-                    .Return(() => new DocumentDTO
-                    {
-                         Id = Return.As<int>("ID(document)"),
-                         Document = Return.As<Document>("document")
-                    }
-                    ).ResultsAsync;
+            var process = _client.Cypher
+                .Match("(group: Group)-[:CONTAINS]->(document: Document)")
+                .Where("ID(group) = $groupId")
+                .WithParam("groupId", groupId);
+
+            if (!string.IsNullOrEmpty(filter))
+                process = process.AndWhere(filter);
+
+            var res = await process.Return(() => new DocumentDTO
+            {
+                Id = Return.As<int>("ID(document)"),
+                Name = Return.As<string>("document.Name"),
+                Level = Return.As<string>("document.Level"),
+                Description = Return.As<string>("document.Description"),
+            })
+                .OrderBy("ID(document) desc")
+                .ResultsAsync;
 
             return res;
         }
 
+        public async Task<string> GetDocumentsPath(int documentId)
+        {
+            var res = await _client.Cypher
+                .Match("(document: Document)")
+                .Where("ID(document) = $documentId")
+                .WithParam("documentId", documentId)
+                .Return<string>("document.DocumentPath")
+                .ResultsAsync;
+
+            return res.Single();
+        }
 
     }
 }

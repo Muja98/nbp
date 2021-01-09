@@ -37,7 +37,7 @@ namespace Share_To_Learn_WEB_API.Services
         Task CreateComment(int postId, int studentId, Comment newComment);
         Task DeleteComment(int commentId);
         Task UpdateComment(int commentId, Comment comment);
-      
+
         Task<IEnumerable<StudentDTO>> GetGroupMembers(int groupId);
         Task<StudentDTO> GetGroupOwner(int groupId);
 
@@ -49,6 +49,7 @@ namespace Share_To_Learn_WEB_API.Services
         Task CreateDocument(int studentId, Document newDocument);
         Task RelateDocumentAndGroup(int groupId, string documentPath);
 
-        Task<IEnumerable<DocumentDTO>>GetDocuments(int groupId);
+        Task<IEnumerable<DocumentDTO>> GetDocuments(int groupId, string filter);
+        Task<string> GetDocumentsPath(int documentId);
     }
 }

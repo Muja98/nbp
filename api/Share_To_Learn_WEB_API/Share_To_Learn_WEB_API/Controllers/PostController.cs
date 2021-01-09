@@ -48,7 +48,7 @@ namespace Share_To_Learn_WEB_API.Controllers
             IEnumerable<CommentDTO> result = await _repository.GetAllComment(postId);
             foreach(CommentDTO item in result)
             {
-                item.Student.Student.ProfilePicturePath = ImageManagerService.LoadImageFromFile(item.Student.Student.ProfilePicturePath);
+                item.Student.Student.ProfilePicturePath = FileManagerService.LoadImageFromFile(item.Student.Student.ProfilePicturePath);
             }
             return Ok(result);
         }
