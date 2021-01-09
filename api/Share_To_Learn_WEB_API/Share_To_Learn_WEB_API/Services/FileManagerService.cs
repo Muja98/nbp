@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
+using Share_To_Learn_WEB_API.DTOs;
 
 namespace Share_To_Learn_WEB_API.Services
 {
@@ -39,7 +40,7 @@ namespace Share_To_Learn_WEB_API.Services
             return documentpath;
         }
 
-        public static string LoadDocumentFromFile(string path)
+        public static PDFContent LoadDocumentFromFile(string path)
         {
             string base64Document = "";
             if (!string.IsNullOrEmpty(path))
@@ -47,7 +48,11 @@ namespace Share_To_Learn_WEB_API.Services
                 byte[] bytes = File.ReadAllBytes(path);
                 base64Document = Convert.ToBase64String(bytes);
             }
-            return base64Document;
+
+            PDFContent document = new PDFContent();
+            document.Base64Content = base64Document;
+
+            return document;
         }
     }
 }
