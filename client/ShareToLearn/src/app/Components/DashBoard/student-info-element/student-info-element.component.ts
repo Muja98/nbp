@@ -13,7 +13,14 @@ export class StudentInfoElementComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    debugger
     this.student = this.studentObject.student;
+    if(this.student.profilePicturePath) {
+      this.student.profilePicturePath = 'data:image/png;base64,' + this.student.profilePicturePath;
+    }
+    else {
+      this.student.profilePicturePath = "assets/profileDefault.png"
+    }
   }
 
 }

@@ -1,7 +1,7 @@
 <div class="card mt-4" style="max-width: 540px;">
     <div class="row no-gutters">
-        <div class="col-md-4">
-            <img class="card-img" alt="...">
+        <div class="col d-flex justify-content-center align-items-center">
+            <img *ngIf="student.profilePicturePath" [src]="student.profilePicturePath" height="75px" width="75px" class="rounded-circle mt-2 mb-2" alt="profilePicture.jpg">
         </div>
         <div class="col-md-8">
             <div class="card-body">
