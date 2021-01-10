@@ -11,15 +11,34 @@
                         (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed"
                         aria-controls="collapseExample" style="margin-bottom: 10px;">
                         Toggle description
-                        
-                        <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed" >
-                            <p class="card-text">{{ group.group.description }}</p>
-                        </div>
                     </button>
+                        
+                    <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed" >
+                        <p class="card-text">{{ group.group.description }}</p>
+                    </div>
                 </div>
 
                 <div class="card-text" style="padding-top: 5px;"><small class="text-muted">Field: {{ group.group.field }}</small></div>
                 <div class="card-text"><small class="text-muted">Owner: {{group.student.student.firstName}} {{group.student.student.lastName}}</small></div>
+                <div> 
+                    <button 
+                        *ngIf='showMore' type="button" (click)='handleGroupJoin()'
+                        class="btn btn-outline-success" style="margin-top: 10px;">
+                        Join group
+                    </button>
+                    <div *ngIf='!showMore'>
+                        <button 
+                            *ngIf="!owner" type="button" (click)='handleGroupLeave()'
+                            class="btn btn-outline-danger" style="margin: 10px 10px 0px 0px;">
+                            Leave group
+                        </button>
+                        <button
+                            type="button" (click)='handleGroupPageVisit()'
+                            class="btn btn-outline-primary" style="margin-top: 10px;">
+                            Visit group page
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
