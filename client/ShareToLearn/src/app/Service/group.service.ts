@@ -40,4 +40,8 @@ export class GroupService {
   leaveGroup(studentId:number, groupId:number) {
     return this.http.delete(URL + "/api/groups/delete/student/" + studentId + "/group/" + groupId);
   }
+
+  getStudentGroupRelationship(studentId:number, groupId:number) {
+    return this.http.get<any>(URL + "/api/groups/relationship/student/" + studentId + "/group/" + groupId);
+  }
 }

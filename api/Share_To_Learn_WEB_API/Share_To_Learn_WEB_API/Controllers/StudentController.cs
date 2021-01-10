@@ -206,7 +206,7 @@ namespace Share_To_Learn_WEB_API.Controllers
         [HttpGet]
         [Route("friend-count")]
         public async Task<ActionResult> GetFilteredFriendsCount([FromQuery] string firstName, [FromQuery] string lastName, [FromQuery] int user)
-        {;
+        {
             string whereFirstName = string.IsNullOrEmpty(firstName) ? "" : ("s.FirstName=~\"(?i).*" + firstName + ".*\"");
             string whereLastName = string.IsNullOrEmpty(lastName) ? "" : ("s.LastName=~\"(?i).*" + lastName + ".*\"");
             string where = "";
@@ -221,6 +221,14 @@ namespace Share_To_Learn_WEB_API.Controllers
             studentsCnt = await _repository.GetFriendsCount(where, user);
 
             return Ok(studentsCnt);
+        }
+
+        [HttpGet]
+        [Route("student/{studentId}")]
+        public async Task<ActionResult> GetSpecificStudent(int studentId)
+        {
+            StudentDTO student = await _repository.GetSpecificStudent(studentId);
+            return Ok(student);
         }
     }
 }
