@@ -32,4 +32,12 @@ export class GroupService {
   getGroupOwner(groupId:number) {
     return this.http.get(URL + "/api/groups/" + groupId + "/owner");
   }
+
+  joinGroup(studentId:number, groupId:number) {
+    return this.http.post(URL + "/api/groups/student/" + studentId + "/group/" + groupId, null);
+  }
+
+  leaveGroup(studentId:number, groupId:number) {
+    return this.http.delete(URL + "/api/groups/delete/student/" + studentId + "/group/" + groupId);
+  }
 }

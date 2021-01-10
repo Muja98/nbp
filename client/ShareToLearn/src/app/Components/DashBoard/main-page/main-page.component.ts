@@ -1,5 +1,6 @@
 import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Group } from '../../../Model/group';
 import { GroupService } from '../../../Service/group.service';
 
@@ -25,7 +26,7 @@ export class MainPageComponent implements OnInit {
   public pagesVisited:number;
   private userId:string;
 
-  constructor(private service: GroupService) {}
+  constructor(private service: GroupService, private router:Router) {}
 
   ngOnInit(): void {
     this.userId = JSON.parse(localStorage.getItem('user'))['id'];
@@ -83,5 +84,4 @@ export class MainPageComponent implements OnInit {
       result => this.fullNumberOfGroups = result['value']
     );
   }
-
 }
