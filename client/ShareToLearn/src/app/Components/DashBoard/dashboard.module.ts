@@ -52,7 +52,8 @@ import { GroupDocumentComponent } from './group-document/group-document.componen
         {path: 'group-info', component:GroupInfoComponent},
         {path:'search-users', component:SearchUsersComponent},
         {path:'group-component', component:GroupDocumentComponent},
-        {path:'my-friends', component:MyFriendsComponent}
+        {path:'my-friends', component:MyFriendsComponent},
+        {path:'profile/:studentId', component:ProfileComponent}
       ]}]),
       NgbModule
   ]

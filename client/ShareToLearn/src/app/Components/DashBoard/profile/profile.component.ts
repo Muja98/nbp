@@ -1,15 +1,15 @@
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { StudentService } from './../../../Service/student.service';
 import { Student } from './../../../Model/student';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent implements OnInit {
-
+export class ProfileComponent implements OnInit, OnDestroy {
+  private studentId:number;
   public student:Student;
   public pomStudent:Student;
   public studentChangeFlag:boolean = false;
@@ -17,8 +17,9 @@ export class ProfileComponent implements OnInit {
   public dateOfBirth:Date;
   public imgSrc:string;
   public imgSrcPom:string;
+  private sub:any;
 
-  constructor(private service:StudentService,private router:Router) {
+  constructor(private service:StudentService,private router:Router, private route:ActivatedRoute) {
     
    }
   
@@ -112,16 +113,33 @@ export class ProfileComponent implements OnInit {
 
   
   ngOnInit(): void {
-    this.student = new Student();
-    this.pomStudent = new Student();
-    this.handleSetStudent();
-    
-    this.pomStudent.student.firstName = this.student.student.firstName;
-    this.pomStudent.student.lastName = this.student.student.lastName;
-    this.pomStudent.student.email = this.student.student.email;
-    this.pomStudent.student.dateOfBirth = this.student.student.dateOfBirth;
+    this.sub = this.route.params.subscribe(params => {
+      this.studentId = +params['studentId'];
+      
+      if(!this.studentId) {
+        this.student = new Student();
+        this.pomStudent = new Student();
+        this.handleSetStudent();
+        
+        this.pomStudent.student.firstName = this.student.student.firstName;
+        this.pomStudent.student.lastName = this.student.student.lastName;
+        this.pomStudent.student.email = this.student.student.email;
+        this.pomStudent.student.dateOfBirth = this.student.student.dateOfBirth;
+      }
+      else {
+        this.service.getSpecificStudent(this.studentId).subscribe(
+          result => {
+            this.student = result;
+            this.imgSrc = 'data:image/png;base64,' + this.student.student.profilePicturePath;
+            this.dateOfBirth = new Date(this.student.student.dateOfBirth);
+          }
+        )
+      }
+    })
   }
 
-
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
+  }
   
 }

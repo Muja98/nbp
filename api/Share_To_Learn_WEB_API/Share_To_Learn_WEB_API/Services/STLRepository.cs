@@ -415,7 +415,7 @@ namespace Share_To_Learn_WEB_API.Services
                         Student = Return.As<Student>("s")
                     }).ResultsAsync;
 
-            return res.Single();
+            return res.FirstOrDefault();
         }
 
         public async Task<GroupStatisticsDTO> GetGroupStatistics(int groupId)
@@ -574,6 +574,35 @@ namespace Share_To_Learn_WEB_API.Services
 
             var res = await a.Return<int>("count(distinct s)").ResultsAsync;
             return res.Single();
+        }
+
+        public async Task<StudentDTO> GetSpecificStudent(int studentId)
+        {
+            var student = await _client.Cypher
+                    .Match("(s:Student)")
+                    .Where("ID(s) = $studentId")
+                    .WithParam("studentId", studentId)
+                    .Return(() => new StudentDTO
+                    {
+                        Id = Return.As<int>("ID(s)"),
+                        Student = Return.As<Student>("s")
+                    }).ResultsAsync;
+            return student.Single();
+        }
+
+        public async Task<string> GetStudentGroupRelationship(int studentId, int groupId)
+        {
+            var res = await _client.Cypher
+                      .Match("(s:Student)-[rel]-(g:Group)")
+                      .Where("ID(s) = $studentId AND ID(g) = $groupId")
+                      .WithParams(new
+                      {
+                          studentId = studentId,
+                          groupId = groupId
+                      })
+                      .Return<string>("TYPE(rel)")
+                      .ResultsAsync;
+            return res.FirstOrDefault();
         }
     }
 }

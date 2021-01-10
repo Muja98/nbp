@@ -23,7 +23,7 @@
                 <div> 
                     <button 
                         *ngIf='showMore' type="button" (click)='handleGroupJoin()'
-                        class="btn btn-outline-success" style="margin-top: 10px;">
+                        class="btn btn-outline-success" style="margin: 10px 10px 0px 0px;">
                         Join group
                     </button>
                     <div *ngIf='!showMore'>
@@ -32,12 +32,12 @@
                             class="btn btn-outline-danger" style="margin: 10px 10px 0px 0px;">
                             Leave group
                         </button>
-                        <button
-                            type="button" (click)='handleGroupPageVisit()'
-                            class="btn btn-outline-primary" style="margin-top: 10px;">
-                            Visit group page
-                        </button>
                     </div>
+                    <button
+                        type="button" (click)='handleGroupPageVisit()'
+                        class="btn btn-outline-primary" style="margin-top: 10px;">
+                        Visit group page
+                    </button>
                 </div>
             </div>
         </div>
