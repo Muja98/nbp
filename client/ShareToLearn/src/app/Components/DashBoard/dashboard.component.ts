@@ -30,6 +30,10 @@ export class DashboardComponent implements OnInit {
     {
       link:"/search-users",
       text:"Search users"
+    },
+    {
+      link:"/my-friends",
+      text:"My friends"
     }
   ]
 

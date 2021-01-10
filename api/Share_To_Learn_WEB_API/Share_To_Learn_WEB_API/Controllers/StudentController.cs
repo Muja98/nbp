@@ -200,6 +200,25 @@ namespace Share_To_Learn_WEB_API.Controllers
             return Ok(students);
         }
 
+        [HttpGet]
+        [Route("friend-count")]
+        public async Task<ActionResult> GetFilteredFriendsCount([FromQuery] string firstName, [FromQuery] string lastName, [FromQuery] int user)
+        {;
+            string whereFirstName = string.IsNullOrEmpty(firstName) ? "" : ("s.FirstName=~\"(?i).*" + firstName + ".*\"");
+            string whereLastName = string.IsNullOrEmpty(lastName) ? "" : ("s.LastName=~\"(?i).*" + lastName + ".*\"");
+            string where = "";
+            if (!string.IsNullOrEmpty(whereFirstName) && !string.IsNullOrEmpty(whereLastName))
+                where += whereFirstName + " AND " + whereLastName;
+            else if (!string.IsNullOrEmpty(whereFirstName))
+                where += whereFirstName;
+            else if (!string.IsNullOrEmpty(whereLastName))
+                where += whereLastName;
+
+            int studentsCnt;
+            studentsCnt = await _repository.GetFriendsCount(where, user);
+
+            return Ok(studentsCnt);
+        }
     }
 }
 

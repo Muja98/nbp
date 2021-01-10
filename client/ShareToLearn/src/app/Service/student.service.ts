@@ -96,4 +96,12 @@ export class StudentService {
     return this.http.get(URL + "/api/student/student-count", {'params': params});
   }
 
+  getFilteredFriends(params:any) {
+    return this.http.get<Student[]>(URL + "/api/student/friends", {'params': params});
+  }
+
+  getFilteredFriendsCount(params:any) {
+    return this.http.get(URL + "/api/student/friend-count", {'params': params});
+  }
+
 }

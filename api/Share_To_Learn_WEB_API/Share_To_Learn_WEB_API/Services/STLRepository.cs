@@ -561,5 +561,19 @@ namespace Share_To_Learn_WEB_API.Services
 
             return res.Single();
         }
+
+        public async Task<int> GetFriendsCount(string filter, int userId)
+        {
+            var a = _client.Cypher
+            .Match("(st1: Student), (s:Student), (st1)-[r:FRIEND]->(s)")
+            .Where("ID(st1) = $userId")
+            .WithParam("userId", userId);
+
+            if (!string.IsNullOrEmpty(filter))
+                a = a.AndWhere(filter);
+
+            var res = await a.Return<int>("count(distinct s)").ResultsAsync;
+            return res.Single();
+        }
     }
 }

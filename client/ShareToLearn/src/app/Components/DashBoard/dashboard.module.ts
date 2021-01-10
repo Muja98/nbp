@@ -1,3 +1,4 @@
+import { MyFriendsComponent } from './my-friends-page/my-friends.component';
 import { GroupInfoComponent } from './group-info/group-info.component';
 import { MyGroupsComponent } from './my-groups-page/my-groups-list.component';
 import { PostComponent } from './post/post.component';
@@ -6,7 +7,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ProfileComponent } from './profile/profile.component';
 import { DashboardComponent } from './dashboard.component';
 import { MainPageComponent } from './main-page/main-page.component';
-import { NgModule } from '@angular/core';
+import { NgModule, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -33,8 +34,9 @@ import { GroupDocumentComponent } from './group-document/group-document.componen
                  StudentInfoElementComponent,
                  GroupInfoComponent,
                  SearchUsersComponent,
-                 GroupDocumentComponent
-                ],
+                 GroupDocumentComponent,
+                 MyFriendsComponent
+  ],
 
   imports: [
     CommonModule,
@@ -49,7 +51,8 @@ import { GroupDocumentComponent } from './group-document/group-document.componen
         {path:'create-group',component:CreateGroupComponent},
         {path: 'group-info', component:GroupInfoComponent},
         {path:'search-users', component:SearchUsersComponent},
-        {path:'group-component', component:GroupDocumentComponent}
+        {path:'group-component', component:GroupDocumentComponent},
+        {path:'my-friends', component:MyFriendsComponent}
       ]}]),
       NgbModule
   ]
