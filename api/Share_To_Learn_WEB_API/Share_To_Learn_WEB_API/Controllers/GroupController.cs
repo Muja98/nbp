@@ -18,6 +18,18 @@ namespace Share_To_Learn_WEB_API.Controllers
     {
         private readonly ISTLRepository _repository;
         private readonly IConnectionMultiplexer _redisConnection;
+        /*------------------------------------------------------
+        Redis koriscenje:
+            Kreirati privatni atribut tipa IConnectionMultiplexer, kao u liniji iznad.
+            Dodati parametar tipa IRedisConnectionBuilder u konstruktor, i iskoristiti ga 
+                kao sto je prikazano u konstruktoru ipod komentara.
+            Ovi koraci zahtevaju 2 using direktive:
+                using StackExchange.Redis;
+                using Share_To_Learn_WEB_API.RedisConnection;
+            Nakon toga pratiti dokumentaciju. U sustini, u metodi gde je potreban redis
+                pribaviti instancu baze: IDatabase redisDB = _redisConnection.GetDatabase();
+                Nakon pribavljanja, koristiti je po uputstvima iz dokumentacije.
+        ------------------------------------------------------*/
 
         public GroupController(ISTLRepository repository, IRedisConnectionBuilder builder)
         {
