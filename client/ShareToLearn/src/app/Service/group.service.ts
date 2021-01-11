@@ -44,4 +44,8 @@ export class GroupService {
   getStudentGroupRelationship(studentId:number, groupId:number) {
     return this.http.get<any>(URL + "/api/groups/relationship/student/" + studentId + "/group/" + groupId);
   }
+
+  getStudentGroups(studentId:number) {
+    return this.http.get<Group[]>(URL + "/api/groups/student/" + studentId + "/groups");
+  }
 }

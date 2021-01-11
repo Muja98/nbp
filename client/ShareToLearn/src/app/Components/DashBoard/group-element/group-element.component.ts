@@ -12,7 +12,9 @@ import { Group } from '../../../Model/group';
 export class GroupElementComponent implements OnInit {
   @Input() group:Group  
   @Input() showMore: boolean;
-  @Input() owner: boolean;
+  @Input() canJoin: boolean;
+  @Input() canLeave: boolean;
+
   public isCollapsed = true;
   private studentId:number;
 
@@ -27,7 +29,9 @@ export class GroupElementComponent implements OnInit {
     this.groupService.joinGroup(this.studentId, this.group.id).subscribe(
       result => {
         console.log(result);
-        this.showMore = !this.showMore;
+        this.showMore = false;
+        this.canJoin = false;
+        this.canLeave = true;
       }
     )
   }
@@ -36,7 +40,9 @@ export class GroupElementComponent implements OnInit {
     this.groupService.leaveGroup(this.studentId, this.group.id).subscribe(
       result => {
         console.log(result)
-        this.showMore = !this.showMore;
+        this.showMore = true;
+        this.canJoin = true;
+        this.canLeave = false;
       }
     )
   }

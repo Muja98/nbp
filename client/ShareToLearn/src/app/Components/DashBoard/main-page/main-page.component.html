@@ -10,7 +10,7 @@
     </div>
     <div class="row">
         <div class="col-7" >
-            <app-group-element *ngFor='let group of groupsToShow' [owner]="true" [group]='group' [showMore]='true'></app-group-element>
+            <app-group-element *ngFor='let group of groupsToShow' [group]='group' [showMore]='true' [canJoin]='true' [canLeave]='false'></app-group-element>
         </div>
         <div class="col-5">
             <div class="mb-3">
