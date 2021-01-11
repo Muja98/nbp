@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Share_To_Learn_WEB_API.DTOs;
 using Share_To_Learn_WEB_API.Entities;
+using Share_To_Learn_WEB_API.RedisConnection;
 using Share_To_Learn_WEB_API.Services;
+using StackExchange.Redis;
 
 namespace Share_To_Learn_WEB_API.Controllers
 {
@@ -15,10 +17,12 @@ namespace Share_To_Learn_WEB_API.Controllers
     public class GroupController : ControllerBase
     {
         private readonly ISTLRepository _repository;
+        private readonly IConnectionMultiplexer _redisConnection;
 
-        public GroupController(ISTLRepository repository)
+        public GroupController(ISTLRepository repository, IRedisConnectionBuilder builder)
         {
             _repository = repository;
+            _redisConnection = builder.Connection;
         }
 
         [HttpPost]

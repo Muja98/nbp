@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Neo4jClient;
+using Share_To_Learn_WEB_API.RedisConnection;
 using Share_To_Learn_WEB_API.Services;
 
 namespace Share_To_Learn_WEB_API
@@ -32,6 +33,7 @@ namespace Share_To_Learn_WEB_API
             var neo4jClient = new GraphClient(new Uri("http://localhost:7474/"), "neo4j", "sharetolearn");
             neo4jClient.ConnectAsync();
             services.AddSingleton<IGraphClient>(neo4jClient);
+            services.AddSingleton<IRedisConnectionBuilder, RedisConnectionBuilder>();
             services.AddScoped<ISTLRepository, STLRepository>();
             services.AddMvc().AddJsonOptions(options =>
             {
