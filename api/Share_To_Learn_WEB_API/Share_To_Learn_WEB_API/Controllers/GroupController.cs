@@ -141,7 +141,13 @@ namespace Share_To_Learn_WEB_API.Controllers
             return Ok(result);
         }
 
-  
+        [HttpGet]
+        [Route("student/{studentId}/groups")]
+        public async Task<ActionResult> GetStudentGroups(int studentId)
+        {
+            var result = await _repository.GetStudentGroups(studentId);
+            return Ok(result);
+        }
 
         
         [HttpGet]
