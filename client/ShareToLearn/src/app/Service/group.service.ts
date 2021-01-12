@@ -60,4 +60,7 @@ export class GroupService {
   {
     return this.http.get(URL+"/api/groups/"+groupId+"/groupImage")
   }
+  getStudentGroups(studentId:number) {
+    return this.http.get<Group[]>(URL + "/api/groups/student/" + studentId + "/groups");
+  }
 }

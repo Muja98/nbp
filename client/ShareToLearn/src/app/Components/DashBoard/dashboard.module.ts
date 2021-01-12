@@ -19,6 +19,7 @@ import { GroupMembersComponent } from './group-members/group-members.component';
 import { StudentInfoElementComponent } from './student-info-element/student-info-element.component';
 import { SearchUsersComponent } from './search-users/search-users.component';
 import { GroupDocumentComponent } from './group-document/group-document.component';
+import { OtherUsersGroupsPageComponent } from './other-users-groups-page/other-users-groups-page.component';
 @NgModule({
   declarations: [
                  MainPageComponent,
@@ -35,7 +36,8 @@ import { GroupDocumentComponent } from './group-document/group-document.componen
                  GroupInfoComponent,
                  SearchUsersComponent,
                  GroupDocumentComponent,
-                 MyFriendsComponent
+                 MyFriendsComponent,
+                 OtherUsersGroupsPageComponent
   ],
 
   imports: [
@@ -53,7 +55,8 @@ import { GroupDocumentComponent } from './group-document/group-document.componen
         {path:'search-users', component:SearchUsersComponent},
         {path:'group-component', component:GroupDocumentComponent},
         {path:'my-friends', component:MyFriendsComponent},
-        {path:'profile/:studentId', component:ProfileComponent}
+        {path:'profile/:studentId', component:ProfileComponent},
+        {path:'student-groups/:studentId', component:OtherUsersGroupsPageComponent}
       ]}]),
       NgbModule
   ]

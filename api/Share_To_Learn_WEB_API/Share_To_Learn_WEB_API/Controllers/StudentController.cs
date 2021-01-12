@@ -54,6 +54,8 @@ namespace Share_To_Learn_WEB_API.Controllers
             IEnumerable<StudentDTO> students;
 
             students = await _repository.GetStudentsPage(where, userFilter, order, descending, from, to);
+            foreach (StudentDTO s in students)
+                s.Student.ProfilePicturePath = FileManagerService.LoadImageFromFile(s.Student.ProfilePicturePath);
 
             return Ok(students);
         }

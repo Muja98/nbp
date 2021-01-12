@@ -111,6 +111,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.router.navigate(['/login'])
   }
 
+  handleViewStudentGroups(): void {
+    this.router.navigate(['dashboard/student-groups/' + this.studentId]);
+  }
+
   
   ngOnInit(): void {
     this.sub = this.route.params.subscribe(params => {
