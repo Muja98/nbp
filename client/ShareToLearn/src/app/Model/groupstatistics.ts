@@ -3,7 +3,8 @@ export class GroupStatistics
     group:any = {
         field: "",
         name: "",
-        description: ""
+        description: "",
+        groupPicturePath:""
     }
     countOfMembers = 0;
     countOfPosts = 0;

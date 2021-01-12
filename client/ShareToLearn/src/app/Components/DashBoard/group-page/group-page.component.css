@@ -1,0 +1,11 @@
+.groupPicture
+{
+    height: 400px;
+    width: 100%;
+    background: no-repeat center;
+    background-size: 100% 100%;
+    background-position: left;
+    background-attachment: fixed;
+    filter: blur(0.3px);
+  -webkit-filter: blur(0.3px);
+}

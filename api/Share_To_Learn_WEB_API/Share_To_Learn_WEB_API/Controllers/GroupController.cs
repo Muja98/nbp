@@ -41,6 +41,7 @@ namespace Share_To_Learn_WEB_API.Controllers
         [Route("{ownerId}")]
         public async Task<ActionResult> CreateGroup(int ownerId, Group newGroup)
         {
+            newGroup.GroupPicturePath = FileManagerService.SaveImageToFile(newGroup.GroupPicturePath);
             await _repository.CreateGroup(ownerId, newGroup);
             return Ok();
         }
@@ -54,6 +55,7 @@ namespace Share_To_Learn_WEB_API.Controllers
             if (!res)
                 return BadRequest("Group doesnt exist!");
 
+            newGroup.GroupPicturePath = FileManagerService.SaveImageToFile(newGroup.GroupPicturePath);
             await _repository.UpdateGroup(groupId, newGroup);
             return Ok();
         }
@@ -77,6 +79,10 @@ namespace Share_To_Learn_WEB_API.Controllers
             IEnumerable<GroupDTO> groups;
             groups = await _repository.GetGroupsPage(where, userFilter, order, descending, from, to);
 
+            foreach(GroupDTO g in groups)
+            {
+                g.Group.GroupPicturePath = FileManagerService.LoadImageFromFile(g.Group.GroupPicturePath);
+            }
             return Ok(new JsonResult(groups));
         }
 
@@ -130,6 +136,11 @@ namespace Share_To_Learn_WEB_API.Controllers
                 return Ok("Student doesnt exists");
 
             var result = await _repository.GetMemberships(studentId);
+
+            foreach (GroupDTO g in result)
+            {
+                g.Group.GroupPicturePath = FileManagerService.LoadImageFromFile(g.Group.GroupPicturePath);
+            }
             return Ok(result);
         }
 
@@ -138,6 +149,11 @@ namespace Share_To_Learn_WEB_API.Controllers
         public async Task<ActionResult> GetMyOwnerships(int studentId)
         {
             var result = await _repository.GetOwnerships(studentId);
+
+            foreach (GroupDTO g in result)
+            {
+                g.Group.GroupPicturePath = FileManagerService.LoadImageFromFile(g.Group.GroupPicturePath);
+            }
             return Ok(result);
         }
 
@@ -169,7 +185,8 @@ namespace Share_To_Learn_WEB_API.Controllers
         [Route("{groupId}/statistics")]
         public async Task<ActionResult> GetGroupStatistics(int groupId)
         {
-            var result = await _repository.GetGroupStatistics(groupId);
+            GroupStatisticsDTO result = await _repository.GetGroupStatistics(groupId);
+            result.Group.GroupPicturePath = FileManagerService.LoadImageFromFile(result.Group.GroupPicturePath);
             return Ok(result);
         }
 
@@ -179,6 +196,15 @@ namespace Share_To_Learn_WEB_API.Controllers
         {
             var result = await _repository.GetStudentGroupRelationship(studentId, groupId);
             return Ok(new { type = result});
+        }
+
+       [HttpGet]
+       [Route ("{groupId}/groupImage")]
+        public async Task<ActionResult> getGroupImage(int groupId)
+        {
+            string path = await _repository.GetGroupImage(groupId);
+            path = FileManagerService.LoadImageFromFile(path);
+            return Ok(new { image = path });
         }
     }
 }

@@ -15,12 +15,15 @@ export class GroupElementComponent implements OnInit {
   @Input() owner: boolean;
   public isCollapsed = true;
   private studentId:number;
-
+  public groupImage = "";
 
   constructor(private groupService:GroupService, private studentService:StudentService, private router:Router) { }
 
   ngOnInit(): void {
     this.studentId = this.studentService.getStudentFromStorage()['id'];
+    if(this.group.group.groupPicturePath !== null && this.group.group.groupPicturePath !== undefined && this.group.group.groupPicturePath!=="")
+      this.groupImage = 'data:image/png;base64,'+ this.group.group.groupPicturePath;
+
   }
 
   handleGroupJoin(): void {

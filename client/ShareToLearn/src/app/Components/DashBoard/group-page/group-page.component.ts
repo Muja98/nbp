@@ -14,6 +14,8 @@ export class GroupPageComponent implements OnInit, OnDestroy {
   public relationship:string;
   private studentId:number;
 
+  public groupImage: string = "";
+
   constructor(private route:ActivatedRoute, private groupService:GroupService, private studentService:StudentService) { }
 
   ngOnInit(): void {
@@ -27,12 +29,21 @@ export class GroupPageComponent implements OnInit, OnDestroy {
         if(result['type'])
           this.relationship = result['type']
       })
+
+      this.groupService.getDocumentImage(this.groupId).subscribe((image:any)=>{
+       
+        if(image.image !=="" && image.image !== null && image.image !== undefined)
+          this.groupImage = 'data:image/png;base64,'+image.image;
+       
+      })
     })
   }
 
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
+
+
 
   handleGroupJoin(): void {
     this.groupService.joinGroup(this.studentId, this.groupId).subscribe(

@@ -1,9 +1,12 @@
 <div class="card mb-3" style="max-width: 540px;">
     <div class="row g-0">
-        <div class="col-md-4">
-            <img  alt="...">
+        <div class="col-md-7 p-3 pl-4" *ngIf="groupImage.length>0">
+            <img class="img-fluid d-flex  justify-content-center" [src]="groupImage" style="height: 180px; width: 100%;"   >
         </div>
-        <div class="col-md-8">
+        <div class="col-md-7 p-3 pl-4 d-flex justify-content-center align-items-center"  *ngIf="groupImage.length==0">
+            <img class="img-fluid d-flex  justify-content-center" src="assets\noImageWhite.png" style="height: 140px; width: 50%;"   >
+        </div>
+        <div class="col-md-5">
             <div class="card-body">
                 <h6 class="card-title">{{ group.group.name }}</h6>
                 <div *ngIf='showMore'>

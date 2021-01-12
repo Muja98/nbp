@@ -21,8 +21,9 @@ export class GroupService {
     return this.http.get(URL + "/api/groups/group-count", {'params': params});
   }
 
-  createGroup(ownerId:string, name:string, field:string, description:string) {
-    return this.http.post(URL + "/api/groups/" + ownerId, {Name: name, Field: field, Description: description});
+  createGroup(ownerId:string, name:string, field:string, description:string, groupPicturePath:string) {
+    console.log(groupPicturePath)
+    return this.http.post(URL + "/api/groups/" + ownerId, {Name: name, Field: field, Description: description, GroupPicturePath: groupPicturePath});
   }
 
   getGroupMembers(groupId:number) {
@@ -43,5 +44,20 @@ export class GroupService {
 
   getStudentGroupRelationship(studentId:number, groupId:number) {
     return this.http.get<any>(URL + "/api/groups/relationship/student/" + studentId + "/group/" + groupId);
+  }
+
+  editGroup(groupId:number, group:any)
+  {
+    this.http.put(URL+"/api/groups/"+groupId, {
+                                                Field: group.Field,
+                                                Name: group.Name,
+                                                Description: group.Description,
+                                                GroupPicturePath: group.GroupPicturePath
+                                              }).subscribe(()=>{});
+  }
+
+  getDocumentImage(groupId:number)
+  {
+    return this.http.get(URL+"/api/groups/"+groupId+"/groupImage")
   }
 }

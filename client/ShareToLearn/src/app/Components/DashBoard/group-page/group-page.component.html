@@ -1,3 +1,9 @@
+<div *ngIf="groupImage.length==0"class="container d-flex justify-content-center" >
+    <img class="img-fluid d-flex  justify-content-center" src="assets\noImage.png" style="height: 180px; width: 180px;"  >
+</div>
+<div *ngIf="groupImage.length>0" class="container d-flex justify-content-center">
+    <img class="img-fluid d-flex  justify-content-center" [src]="groupImage" style="height: 355px; width: 100%;"   >
+</div>
 <div class="container">
     <div *ngIf='relationship && relationship!="OWNER"' style="margin-bottom: 20px;">
         <button 
@@ -51,7 +57,7 @@
             <li [ngbNavItem]="2">
                 <a ngbNavLink>Information</a>
                 <ng-template ngbNavContent>
-                    <group-info [groupId]='groupId'></group-info>
+                    <group-info [groupId]='groupId' ></group-info>
                 </ng-template>
             </li>
         </ul>

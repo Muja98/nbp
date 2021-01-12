@@ -4,7 +4,8 @@ export class Group
     group:any = {
         field: "",
         name: "",
-        description: ""
+        description: "",
+        groupPicturePath: ""
     }
     student:any = {
         id: 0,

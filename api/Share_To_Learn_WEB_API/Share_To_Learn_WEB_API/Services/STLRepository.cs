@@ -163,9 +163,17 @@ namespace Share_To_Learn_WEB_API.Services
                .Match("(group: Group)")
                .Where("ID(group) = $groupId")
                .WithParam("groupId", groupId)
-               .Set("group = $updatedGroup")
-               .WithParam("updatedGroup", updatedGroup)
+               .Set("group.Name = $Name")
+               .WithParam("Name", updatedGroup.Name)
+               .Set("group.Field = $Field")
+               .WithParam("Field", updatedGroup.Field)
+               .Set("group.Description = $Description")
+               .WithParam("Description", updatedGroup.Description)
+               .Set("group.GroupPicturePath = $GroupPicturePath")
+               .WithParam("GroupPicturePath", updatedGroup.GroupPicturePath)
                .ExecuteWithoutResultsAsync();
+
+               
         }
 
         public async Task UpdateStudent(int studentId, Student updatedStudent)
@@ -456,6 +464,18 @@ namespace Share_To_Learn_WEB_API.Services
 
             return group.Single();
 
+        }
+
+        public async Task<string> GetGroupImage(int groupId)
+        {
+            var res = await _client.Cypher
+                 .Match("(g: Group)")
+                 .Where("ID(g) = $groupId")
+                 .WithParam("groupId", groupId)
+                 .Return<string>("g.GroupPicturePath")
+                 .ResultsAsync;
+
+            return res.Single();
         }
 
         public async Task AddFriend(int studentId1, int studentId2)

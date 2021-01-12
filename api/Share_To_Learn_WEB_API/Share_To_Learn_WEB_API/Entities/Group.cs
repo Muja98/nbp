@@ -10,5 +10,6 @@ namespace Share_To_Learn_WEB_API.Entities
         public string Field { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public string GroupPicturePath { get; set; }
     }
 }

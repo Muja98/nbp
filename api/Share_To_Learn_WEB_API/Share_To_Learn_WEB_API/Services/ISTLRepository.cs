@@ -42,6 +42,7 @@ namespace Share_To_Learn_WEB_API.Services
         Task<StudentDTO> GetGroupOwner(int groupId);
         Task<StudentDTO> GetSpecificStudent(int studentId);
         Task<string> GetStudentGroupRelationship(int studentId, int groupId);
+        Task<string> GetGroupImage(int groupId);
 
         Task<GroupStatisticsDTO> GetGroupStatistics(int groupId);
 
