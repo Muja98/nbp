@@ -58,6 +58,10 @@ namespace Share_To_Learn_WEB_API.Services
         Task<string> GetDocumentsPath(int documentId);
         Task<int> GetFriendsCount(string filter, int userId);
 
+
+        Task SendMessage(Message message);
+        Task<IEnumerable<MessageDTO>> ReceiveMessage(int senderId, int receiverId, string from, int count);
+
         Task<string> getNextId(bool isImage);
 
     }
