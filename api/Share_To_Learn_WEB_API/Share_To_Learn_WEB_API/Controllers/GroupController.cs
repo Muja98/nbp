@@ -41,7 +41,8 @@ namespace Share_To_Learn_WEB_API.Controllers
         [Route("{ownerId}")]
         public async Task<ActionResult> CreateGroup(int ownerId, Group newGroup)
         {
-            newGroup.GroupPicturePath = FileManagerService.SaveImageToFile(newGroup.GroupPicturePath);
+            string imageFileId = await _repository.getNextId(true);
+            newGroup.GroupPicturePath = FileManagerService.SaveImageToFile(newGroup.GroupPicturePath, imageFileId);
             await _repository.CreateGroup(ownerId, newGroup);
             return Ok();
         }
@@ -55,7 +56,8 @@ namespace Share_To_Learn_WEB_API.Controllers
             if (!res)
                 return BadRequest("Group doesnt exist!");
 
-            newGroup.GroupPicturePath = FileManagerService.SaveImageToFile(newGroup.GroupPicturePath);
+            string imageFileId = await _repository.getNextId(true);
+            newGroup.GroupPicturePath = FileManagerService.SaveImageToFile(newGroup.GroupPicturePath, imageFileId);
             await _repository.UpdateGroup(groupId, newGroup);
             return Ok();
         }

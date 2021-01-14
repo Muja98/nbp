@@ -9,13 +9,13 @@ namespace Share_To_Learn_WEB_API.Services
 {
     public class FileManagerService
     {
-        public static string SaveImageToFile(string base64Image)
+        public static string SaveImageToFile(string base64Image, string imagefileId)
         {
-            string imageCounter = File.ReadAllText(@"..\..\UserImages\tempImgCounter.txt");
+            //string imageCounter = File.ReadAllText(@"..\..\UserImages\tempImgCounter.txt");
             byte[] bytes = Convert.FromBase64String(base64Image);
-            string imagePath = @"..\..\UserImages\userImg" + imageCounter + ".png";
+            string imagePath = @"..\..\UserImages\userImg" + imagefileId + ".png";
             File.WriteAllBytes(imagePath, bytes);
-            File.WriteAllText(@"..\..\UserImages\tempImgCounter.txt", (int.Parse(imageCounter) + 1).ToString());
+            //File.WriteAllText(@"..\..\UserImages\tempImgCounter.txt", (int.Parse(imageCounter) + 1).ToString());
             return imagePath;
         }
 
@@ -30,13 +30,13 @@ namespace Share_To_Learn_WEB_API.Services
             return base64Image;
         }
 
-        public static string SaveDocumentToFile(string base64Document)
+        public static string SaveDocumentToFile(string base64Document, string documentFileId)
         {
-            string documentCounter = File.ReadAllText(@"..\..\Documents\tempDocCounter.txt");
+            //string documentCounter = File.ReadAllText(@"..\..\Documents\tempDocCounter.txt");
             byte[] bytes = Convert.FromBase64String(base64Document);
-            string documentpath = @"..\..\Documents\" + documentCounter + ".pdf";
+            string documentpath = @"..\..\Documents\" + documentFileId + ".pdf";
             File.WriteAllBytes(documentpath, bytes);
-            File.WriteAllText(@"..\..\Documents\tempDocCounter.txt", (int.Parse(documentCounter) + 1).ToString());
+            //File.WriteAllText(@"..\..\Documents\tempDocCounter.txt", (int.Parse(documentCounter) + 1).ToString());
             return documentpath;
         }
 
@@ -53,6 +53,16 @@ namespace Share_To_Learn_WEB_API.Services
             document.Base64Content = base64Document;
 
             return document;
+        }
+
+        public static int GetFileCount(bool isImage)
+        {
+            if(isImage)
+                return  (from file in Directory.EnumerateFiles(@"..\..\UserImages", "*.png", SearchOption.AllDirectories)
+                          select file).Count();
+            else
+                return  (from file in Directory.EnumerateFiles(@"..\..\Documents", "*.pdf", SearchOption.AllDirectories)
+                             select file).Count();
         }
     }
 }

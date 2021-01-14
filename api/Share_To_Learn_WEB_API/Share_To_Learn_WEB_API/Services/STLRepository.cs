@@ -6,16 +6,19 @@ using Share_To_Learn_WEB_API.Entities;
 using Neo4jClient;
 using Share_To_Learn_WEB_API.DTOs;
 using Neo4jClient.Cypher;
+using StackExchange.Redis;
+using Share_To_Learn_WEB_API.RedisConnection;
 
 namespace Share_To_Learn_WEB_API.Services
 {
     public class STLRepository : ISTLRepository
     {  
         private readonly IGraphClient _client;
-
-        public STLRepository(IGraphClient client)
+        private readonly IConnectionMultiplexer _redisConnection;
+        public STLRepository(IGraphClient client, IRedisConnectionBuilder builder)
         {
             _client = client;
+            _redisConnection = builder.Connection;
         }
 
         public async Task<IEnumerable<StudentDTO>> GetStudentsPage(string filter, string userFilter, string orderBy, bool descending, int from, int to)
@@ -642,6 +645,19 @@ namespace Share_To_Learn_WEB_API.Services
                         }).ResultsAsync;
 
             return res;
+        }
+
+        public async Task<string> getNextId(bool isImage)
+        {
+           IDatabase db =   _redisConnection.GetDatabase();
+           long result = 0;
+
+           if(isImage)
+                result =  await db.StringIncrementAsync("next.image.id");    
+           else
+                result =  await db.StringIncrementAsync("next.document.id");
+
+            return result.ToString(); 
         }
     }
 }
