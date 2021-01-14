@@ -489,19 +489,19 @@ namespace Share_To_Learn_WEB_API.Services
                    .WithParam("studentId1", studentId1)
                    .AndWhere("ID(st2) = $studentId2")
                    .WithParam("studentId2", studentId2)
-                   .Create("(st1)-[:FRIEND]-(st2)")
+                   .Create("(st1)-[:FRIEND]->(st2)")
                    .ExecuteWithoutResultsAsync();
         }
 
         public async Task RemoveFriend(int studentId1, int studentId2)
         {
             await _client.Cypher
-                   .Match("(st1:Student), (st2:Student),(st1)-[f1:FRIEND]->(st2), (st2)-[f2:FRIEND]->(st1)")
+                   .Match("(st1:Student)-[f1:FRIEND]-(st2:Student)")
                    .Where("ID(st1) = $studentId1")
                    .WithParam("studentId1", studentId1)
                    .AndWhere("ID(st2) = $studentId2")
                    .WithParam("studentId2", studentId2)
-                   .Delete("f1, f2")
+                   .Delete("f1")
                    .ExecuteWithoutResultsAsync();
         }
 
