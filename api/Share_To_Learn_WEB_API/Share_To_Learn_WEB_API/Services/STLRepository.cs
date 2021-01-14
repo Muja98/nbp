@@ -6,16 +6,20 @@ using Share_To_Learn_WEB_API.Entities;
 using Neo4jClient;
 using Share_To_Learn_WEB_API.DTOs;
 using Neo4jClient.Cypher;
+using StackExchange.Redis;
+using Share_To_Learn_WEB_API.RedisConnection;
 
 namespace Share_To_Learn_WEB_API.Services
 {
     public class STLRepository : ISTLRepository
     {  
         private readonly IGraphClient _client;
+        private readonly IConnectionMultiplexer _redisConnection;
 
-        public STLRepository(IGraphClient client)
+        public STLRepository(IGraphClient client, IRedisConnectionBuilder builder)
         {
             _client = client;
+            _redisConnection = builder.Connection;
         }
 
         public async Task<IEnumerable<StudentDTO>> GetStudentsPage(string filter, string userFilter, string orderBy, bool descending, int from, int to)
@@ -642,6 +646,46 @@ namespace Share_To_Learn_WEB_API.Services
                         }).ResultsAsync;
 
             return res;
+        }
+
+        public async Task SendMessage(Message message)
+        {
+            var values = new NameValueEntry[]
+            {
+                new NameValueEntry("sender", message.Sender),
+                new NameValueEntry("senderId", message.SenderId),
+                new NameValueEntry("receiver", message.Receiver),
+                new NameValueEntry("receiverId", message.ReceiverId),
+                new NameValueEntry("content", message.Content)
+            };
+            IDatabase redisDB = _redisConnection.GetDatabase();
+            int biggerId = message.SenderId > message.ReceiverId ? message.SenderId : message.ReceiverId;
+            int smallerId = message.SenderId < message.ReceiverId ? message.SenderId : message.ReceiverId;
+            await redisDB.StreamAddAsync($"messages:{biggerId}:{smallerId}:chat", values);
+        }
+
+        public async Task<IEnumerable<MessageDTO>> ReceiveMessage(int senderId, int receiverId, string from, int count)
+        {
+            List<MessageDTO> retMessages = new List<MessageDTO>();
+            int biggerId = senderId > receiverId ? senderId : receiverId;
+            int smallerId = senderId < receiverId ? senderId : receiverId;
+            string channelName = $"messages:{biggerId}:{smallerId}:chat";
+            IDatabase redisDb = _redisConnection.GetDatabase();
+            var messages = await redisDb.StreamRangeAsync(channelName, minId: "-", maxId: from, count: count, messageOrder: Order.Descending);
+            foreach(var message in messages)
+            {
+                MessageDTO mess = new MessageDTO
+                {
+                    Id = message.Id,
+                    Sender = message.Values.FirstOrDefault(value => value.Name == "sender").Value,
+                    SenderId = int.Parse(message.Values.FirstOrDefault(value => value.Name == "senderId").Value),
+                    Receiver = message.Values.FirstOrDefault(value => value.Name == "receiver").Value,
+                    ReceiverId = int.Parse(message.Values.FirstOrDefault(value => value.Name == "receiverId").Value),
+                    Content = message.Values.FirstOrDefault(value => value.Name == "content").Value
+                };
+                retMessages.Add(mess);
+            }
+            return retMessages;
         }
     }
 }
