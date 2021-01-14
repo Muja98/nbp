@@ -9,6 +9,8 @@ using Neo4jClient;
 using Share_To_Learn_WEB_API.Services;
 using Share_To_Learn_WEB_API.DTOs;
 using Microsoft.AspNetCore.Http;
+using StackExchange.Redis;
+using Share_To_Learn_WEB_API.RedisConnection;
 
 namespace Share_To_Learn_WEB_API.Controllers
 {
@@ -17,10 +19,13 @@ namespace Share_To_Learn_WEB_API.Controllers
     public class StudentController : ControllerBase
     {
         private readonly ISTLRepository _repository;
+        private readonly IConnectionMultiplexer _redisConnection;
 
-        public StudentController(ISTLRepository repository)
+        public StudentController(ISTLRepository repository, IRedisConnectionBuilder builder)
         {
             _repository = repository;
+            _redisConnection = builder.Connection;
+           
         }
 
         [HttpGet()]
@@ -64,10 +69,15 @@ namespace Share_To_Learn_WEB_API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> CreateStudent([FromBody] StudentRegisterDTO newStudent)
         {
+           
             newStudent.Password = AuthentificationService.EncryptPassword(newStudent.Password);
             string base64Image = newStudent.Student.ProfilePicturePath;
-            if(!string.IsNullOrEmpty(base64Image))
-                newStudent.Student.ProfilePicturePath = FileManagerService.SaveImageToFile(base64Image);
+            if (!string.IsNullOrEmpty(base64Image))
+            { 
+                string imageFileId = await _repository.getNextId(true);
+                newStudent.Student.ProfilePicturePath = FileManagerService.SaveImageToFile(base64Image, imageFileId);
+            }
+
             if (await _repository.CreateNonExistingStudent(newStudent))
             {
                 StudentDTO student = await _repository.StudentExists(newStudent.Student.Email);
@@ -107,7 +117,8 @@ namespace Share_To_Learn_WEB_API.Controllers
    
             if (!res)
                 return BadRequest("Student doesnt exist!");
-            updatedStudent.ProfilePicturePath = FileManagerService.SaveImageToFile(updatedStudent.ProfilePicturePath);
+            string imageFileId = await _repository.getNextId(true);
+            updatedStudent.ProfilePicturePath = FileManagerService.SaveImageToFile(updatedStudent.ProfilePicturePath, imageFileId);
             await _repository.UpdateStudent(studentId, updatedStudent);
             return Ok(updatedStudent);
         }
@@ -134,15 +145,23 @@ namespace Share_To_Learn_WEB_API.Controllers
         }
 
         [HttpPost]
-        [Route("{studentId1}/student/{studentId2}")]
-        public async Task<ActionResult> AddFriend(int studentId1, int studentId2)
+        [Route("friendship/sender/{senderId}/receiver/{receiverId}/request/{requestId}")]
+        public async Task<ActionResult> AcceptFriendRequest(int senderId, int receiverId, string requestId)
         {
-            bool res1 = await _repository.StudentExists(studentId1);
-            bool res2 = await _repository.StudentExists(studentId2);
+            string channelName = $"messages:{receiverId}:friend_request";
+
+            IDatabase redisDB = _redisConnection.GetDatabase();
+            long deletedMessages = await redisDB.StreamDeleteAsync(channelName, new RedisValue[] { new RedisValue(requestId) });
+
+            if(deletedMessages != 1)
+                return BadRequest("There is problem on server");
+
+            bool res1 = await _repository.StudentExists(senderId);
+            bool res2 = await _repository.StudentExists(receiverId);
 
             if(res1&&res2)
             {
-                await _repository.AddFriend(studentId1, studentId2);
+                await _repository.AddFriend(senderId, receiverId);
                 return Ok();
             }
             else
@@ -232,6 +251,25 @@ namespace Share_To_Learn_WEB_API.Controllers
             StudentDTO student = await _repository.GetSpecificStudent(studentId);
             return Ok(student);
         }
+
+        [HttpPost]
+        [Route("friend_request/sender/{senderId}/receiver/{receiverId}")]
+        public async Task<ActionResult> SendFriendRequest(int senderId, int receiverId, [FromBody] Student sender)
+        {
+            string channelName = $"messages:{receiverId}:friend_request";
+
+            var values = new NameValueEntry[]
+            {
+                new NameValueEntry("sender_id", senderId),
+                new NameValueEntry("sender_first_name", sender.FirstName),
+                new NameValueEntry("sender_last_name", sender.LastName),
+                new NameValueEntry("sender_email", sender.Email)
+            };
+
+            IDatabase redisDB = _redisConnection.GetDatabase();
+            var messageId =  await redisDB.StreamAddAsync(channelName, values);
+
+            return Ok("request successfuly sent");
+        }    
     }
 }
-

@@ -648,6 +648,7 @@ namespace Share_To_Learn_WEB_API.Services
             return res;
         }
 
+
         public async Task SendMessage(Message message)
         {
             var values = new NameValueEntry[]
@@ -686,6 +687,19 @@ namespace Share_To_Learn_WEB_API.Services
                 retMessages.Add(mess);
             }
             return retMessages;
+        }
+        
+        public async Task<string> getNextId(bool isImage)
+        {
+           IDatabase db =   _redisConnection.GetDatabase();
+           long result = 0;
+
+           if(isImage)
+                result =  await db.StringIncrementAsync("next.image.id");    
+           else
+                result =  await db.StringIncrementAsync("next.document.id");
+
+            return result.ToString(); 
         }
     }
 }
