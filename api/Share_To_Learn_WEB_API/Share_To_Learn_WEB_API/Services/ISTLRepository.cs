@@ -57,5 +57,8 @@ namespace Share_To_Learn_WEB_API.Services
         Task<IEnumerable<DocumentDTO>> GetDocuments(int groupId, string filter);
         Task<string> GetDocumentsPath(int documentId);
         Task<int> GetFriendsCount(string filter, int userId);
+
+        Task<string> getNextId(bool isImage);
+
     }
 }

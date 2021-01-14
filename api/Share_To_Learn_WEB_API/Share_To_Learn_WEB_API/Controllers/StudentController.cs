@@ -25,6 +25,7 @@ namespace Share_To_Learn_WEB_API.Controllers
         {
             _repository = repository;
             _redisConnection = builder.Connection;
+           
         }
 
         [HttpGet()]
@@ -68,10 +69,15 @@ namespace Share_To_Learn_WEB_API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> CreateStudent([FromBody] StudentRegisterDTO newStudent)
         {
+           
             newStudent.Password = AuthentificationService.EncryptPassword(newStudent.Password);
             string base64Image = newStudent.Student.ProfilePicturePath;
-            if(!string.IsNullOrEmpty(base64Image))
-                newStudent.Student.ProfilePicturePath = FileManagerService.SaveImageToFile(base64Image);
+            if (!string.IsNullOrEmpty(base64Image))
+            { 
+                string imageFileId = await _repository.getNextId(true);
+                newStudent.Student.ProfilePicturePath = FileManagerService.SaveImageToFile(base64Image, imageFileId);
+            }
+
             if (await _repository.CreateNonExistingStudent(newStudent))
             {
                 StudentDTO student = await _repository.StudentExists(newStudent.Student.Email);
@@ -111,7 +117,8 @@ namespace Share_To_Learn_WEB_API.Controllers
    
             if (!res)
                 return BadRequest("Student doesnt exist!");
-            updatedStudent.ProfilePicturePath = FileManagerService.SaveImageToFile(updatedStudent.ProfilePicturePath);
+            string imageFileId = await _repository.getNextId(true);
+            updatedStudent.ProfilePicturePath = FileManagerService.SaveImageToFile(updatedStudent.ProfilePicturePath, imageFileId);
             await _repository.UpdateStudent(studentId, updatedStudent);
             return Ok(updatedStudent);
         }
@@ -263,15 +270,6 @@ namespace Share_To_Learn_WEB_API.Controllers
             var messageId =  await redisDB.StreamAddAsync(channelName, values);
 
             return Ok("request successfuly sent");
-        }
-
-        //[HttpDelete]
-        //[Route("friend_request/{requestId}")]
-        //public async Task<ActionResult> DeleteFriendRequest(int requestId)
-        //{
-
-        //    return Ok();
-        //}
-
+        }    
     }
 }
