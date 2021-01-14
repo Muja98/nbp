@@ -486,7 +486,7 @@ namespace Share_To_Learn_WEB_API.Services
                    .WithParam("studentId1", studentId1)
                    .AndWhere("ID(st2) = $studentId2")
                    .WithParam("studentId2", studentId2)
-                   .Create("(st1)-[:FRIEND]-(st2)")
+                   .Create("(st1)-[:FRIEND]->(st2)")
                    .ExecuteWithoutResultsAsync();
         }
 

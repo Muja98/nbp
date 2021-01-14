@@ -30,6 +30,8 @@ namespace Share_To_Learn_WEB_API.Controllers
                 pribaviti instancu baze: IDatabase redisDB = _redisConnection.GetDatabase();
                 Nakon pribavljanja, koristiti je po uputstvima iz dokumentacije.
         ------------------------------------------------------*/
+        /*
+         * Hvala ti o svevisnji Trivune!*/
 
         public GroupController(ISTLRepository repository, IRedisConnectionBuilder builder)
         {
