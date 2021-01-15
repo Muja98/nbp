@@ -9,6 +9,8 @@ using Neo4jClient;
 using Share_To_Learn_WEB_API.Services;
 using Share_To_Learn_WEB_API.DTOs;
 using Microsoft.AspNetCore.Http;
+using StackExchange.Redis;
+using Share_To_Learn_WEB_API.RedisConnection;
 
 namespace Share_To_Learn_WEB_API.Controllers
 {
@@ -18,10 +20,9 @@ namespace Share_To_Learn_WEB_API.Controllers
     {
         private readonly ISTLRepository _repository;
 
-        public StudentController(ISTLRepository repository)
+        public StudentController(ISTLRepository repository, IRedisConnectionBuilder builder)
         {
             _repository = repository;
-           
         }
 
         [HttpGet()]
@@ -141,20 +142,21 @@ namespace Share_To_Learn_WEB_API.Controllers
         }
 
         [HttpPost]
-        [Route("{studentId1}/student/{studentId2}")]
-        public async Task<ActionResult> AddFriend(int studentId1, int studentId2)
+        [Route("friendship/sender/{senderId}/receiver/{receiverId}/request/{requestId}")]
+        public async Task<ActionResult> AcceptFriendRequest(int senderId, int receiverId, string requestId)
         {
-            bool res1 = await _repository.StudentExists(studentId1);
-            bool res2 = await _repository.StudentExists(studentId2);
+            await _repository.DeleteFriendRequest(receiverId, requestId);
+
+            bool res1 = await _repository.StudentExists(senderId);
+            bool res2 = await _repository.StudentExists(receiverId);
 
             if(res1&&res2)
             {
-                await _repository.AddFriend(studentId1, studentId2);
+                await _repository.AddFriend(senderId, receiverId);
                 return Ok();
             }
             else
                 return BadRequest("Student doesnt exist!");
-
         }
 
         [HttpDelete]
@@ -240,8 +242,20 @@ namespace Share_To_Learn_WEB_API.Controllers
             return Ok(student);
         }
 
-
-    
+        [HttpPost]
+        [Route("friend_request/sender/{senderId}/receiver/{receiverId}")]
+        public async Task<ActionResult> SendFriendRequest(int senderId, int receiverId, [FromBody] Request sender)
+        {
+            await _repository.SendFriendRequest(senderId, receiverId, sender);
+            return Ok("request successfuly sent");
+        }
+        
+        [HttpGet]
+        [Route("friend_request/receiver/{receiverId}")]
+        public async Task<ActionResult> GetFriendRequests(int receiverId)
+        {
+            var result = await _repository.GetFriendRequests(receiverId);
+            return Ok(result);
+        }
     }
 }
-

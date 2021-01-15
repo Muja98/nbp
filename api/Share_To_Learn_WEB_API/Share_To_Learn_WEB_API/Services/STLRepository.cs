@@ -15,6 +15,7 @@ namespace Share_To_Learn_WEB_API.Services
     {  
         private readonly IGraphClient _client;
         private readonly IConnectionMultiplexer _redisConnection;
+
         public STLRepository(IGraphClient client, IRedisConnectionBuilder builder)
         {
             _client = client;
@@ -647,6 +648,47 @@ namespace Share_To_Learn_WEB_API.Services
             return res;
         }
 
+
+        public async Task SendMessage(Message message)
+        {
+            var values = new NameValueEntry[]
+            {
+                new NameValueEntry("sender", message.Sender),
+                new NameValueEntry("senderId", message.SenderId),
+                new NameValueEntry("receiver", message.Receiver),
+                new NameValueEntry("receiverId", message.ReceiverId),
+                new NameValueEntry("content", message.Content)
+            };
+            IDatabase redisDB = _redisConnection.GetDatabase();
+            int biggerId = message.SenderId > message.ReceiverId ? message.SenderId : message.ReceiverId;
+            int smallerId = message.SenderId < message.ReceiverId ? message.SenderId : message.ReceiverId;
+            await redisDB.StreamAddAsync($"messages:{biggerId}:{smallerId}:chat", values);
+        }
+
+        public async Task<IEnumerable<MessageDTO>> ReceiveMessage(int senderId, int receiverId, string from, int count)
+        {
+            List<MessageDTO> retMessages = new List<MessageDTO>();
+            int biggerId = senderId > receiverId ? senderId : receiverId;
+            int smallerId = senderId < receiverId ? senderId : receiverId;
+            string channelName = $"messages:{biggerId}:{smallerId}:chat";
+            IDatabase redisDb = _redisConnection.GetDatabase();
+            var messages = await redisDb.StreamRangeAsync(channelName, minId: "-", maxId: from, count: count, messageOrder: Order.Descending);
+            foreach(var message in messages)
+            {
+                MessageDTO mess = new MessageDTO
+                {
+                    Id = message.Id,
+                    Sender = message.Values.FirstOrDefault(value => value.Name == "sender").Value,
+                    SenderId = int.Parse(message.Values.FirstOrDefault(value => value.Name == "senderId").Value),
+                    Receiver = message.Values.FirstOrDefault(value => value.Name == "receiver").Value,
+                    ReceiverId = int.Parse(message.Values.FirstOrDefault(value => value.Name == "receiverId").Value),
+                    Content = message.Values.FirstOrDefault(value => value.Name == "content").Value
+                };
+                retMessages.Add(mess);
+            }
+            return retMessages;
+        }
+        
         public async Task<string> getNextId(bool isImage)
         {
            IDatabase db =   _redisConnection.GetDatabase();
@@ -658,6 +700,61 @@ namespace Share_To_Learn_WEB_API.Services
                 result =  await db.StringIncrementAsync("next.document.id");
 
             return result.ToString(); 
+        }
+
+        public async Task DeleteFriendRequest(int receiverId, string requestId)
+        {
+            string channelName = $"messages:{receiverId}:friend_request";
+
+            IDatabase redisDB = _redisConnection.GetDatabase();
+            long deletedMessages = await redisDB.StreamDeleteAsync(channelName, new RedisValue[] { new RedisValue(requestId) });
+        }
+
+        public async Task SendFriendRequest(int senderId, int receiverId, Request sender)
+        {
+            string channelName = $"messages:{receiverId}:friend_request";
+
+            var values = new NameValueEntry[]
+            {
+                new NameValueEntry("sender_id", senderId),
+                new NameValueEntry("sender_first_name", sender.FirstName),
+                new NameValueEntry("sender_last_name", sender.LastName),
+                new NameValueEntry("sender_email", sender.Email)
+            };
+
+            IDatabase redisDB = _redisConnection.GetDatabase();
+            var messageId = await redisDB.StreamAddAsync(channelName, values);
+        }
+
+        public async Task<IEnumerable<RequestDTO>> GetFriendRequests(int receiverId)
+        {
+            string channelName = $"messages:{receiverId}:friend_request";
+            IDatabase redisDB = _redisConnection.GetDatabase();
+
+            var requests = await redisDB.StreamReadAsync(channelName, "0-0");
+
+            IList<RequestDTO> result = new List<RequestDTO>();
+
+            foreach (var request in requests)
+            {
+                result.Add(
+                    new RequestDTO
+                    {
+                        Id = request.Id,
+                        Request = new Request
+                        {
+                            Id = int.Parse(request.Values.FirstOrDefault(value => value.Name == "sender_id").Value),
+                            FirstName = request.Values.FirstOrDefault(value => value.Name == "sender_first_name").Value,
+                            LastName = request.Values.FirstOrDefault(value => value.Name == "sender_last_name").Value,
+                            Email = request.Values.FirstOrDefault(value => value.Name == "sender_email").Value
+                        }
+
+                    }
+
+                );
+            }
+
+            return result;
         }
     }
 }
