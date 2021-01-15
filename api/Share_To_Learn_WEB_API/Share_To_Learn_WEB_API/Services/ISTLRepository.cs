@@ -61,6 +61,9 @@ namespace Share_To_Learn_WEB_API.Services
 
         Task SendMessage(Message message);
         Task<IEnumerable<MessageDTO>> ReceiveMessage(int senderId, int receiverId, string from, int count);
+        Task StartConversationTemp(ConversationParticipantsDTO participants);
+        Task<IEnumerable<StudentDTO>> GetStudentsInChatWith(int studentId);
+        Task<IEnumerable<int>> GetIdsStudentsInChatWith(int studentId);
 
         Task<string> getNextId(bool isImage);
         Task DeleteFriendRequest(int receiverId, string requestId);
