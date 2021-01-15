@@ -756,5 +756,68 @@ namespace Share_To_Learn_WEB_API.Services
 
             return result;
         }
+
+        public async Task StartConversationTemp(ConversationParticipantsDTO participants)
+        {
+            string senderSetKey = $"student:{participants.Sender.Id}:chats";
+            string receiverSetKey = $"student:{participants.Receiver.Id}:chats";
+            Student sender = participants.Sender.Student;
+            Student receiver = participants.Receiver.Student;
+
+            string senderSetValue = $"{participants.Receiver.Id}_{receiver.FirstName}_{receiver.LastName}_{receiver.DateOfBirth.ToShortDateString()}_{receiver.Email}_{receiver.ProfilePicturePath}";
+            string receiverSetValue = $"{participants.Sender.Id}_{sender.FirstName}_{sender.LastName}_{sender.DateOfBirth.ToShortDateString()}_{sender.Email}_{sender.ProfilePicturePath}";
+
+            double score = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+
+            SortedSetEntry[] senderSetEntry = new SortedSetEntry[]{ new SortedSetEntry(senderSetValue, score) };
+            SortedSetEntry[] receiverSetEntry = new SortedSetEntry[] { new SortedSetEntry(receiverSetValue, score) };
+
+            IDatabase redisDB = _redisConnection.GetDatabase();
+            await redisDB.SortedSetAddAsync(senderSetKey, senderSetEntry);
+            await redisDB.SortedSetAddAsync(receiverSetKey, receiverSetEntry);
+        }
+
+        public async Task<IEnumerable<StudentDTO>> GetStudentsInChatWith(int studentId)
+        {
+            List<StudentDTO> students = new List<StudentDTO>();
+            string setKey = $"student:{studentId}:chats";
+            IDatabase redisDB = _redisConnection.GetDatabase();
+            var studentSetEntries = await redisDB.SortedSetRangeByRankAsync(setKey, 0, -1, Order.Descending);
+            foreach (var entry in studentSetEntries)
+            {
+                string entryString = entry;
+                string[] parsedEntryElements = entryString.Split('_');
+                StudentDTO student = new StudentDTO
+                {
+                    Id = int.Parse(parsedEntryElements[0]),
+                    Student = new Student
+                    {
+                        FirstName = parsedEntryElements[1],
+                        LastName = parsedEntryElements[2],
+                        DateOfBirth = DateTime.Parse(parsedEntryElements[3]),
+                        Email = parsedEntryElements[4],
+                        ProfilePicturePath = FileManagerService.LoadImageFromFile(parsedEntryElements[5])
+                    }
+                };
+                students.Add(student);
+            }
+            return students;
+        }
+
+        public async Task<IEnumerable<int>> GetIdsStudentsInChatWith(int studentId)
+        {
+            List<int> studentIds = new List<int>();
+            string setKey = $"student:{studentId}:chats";
+            IDatabase redisDB = _redisConnection.GetDatabase();
+            var studentSetEntries = await redisDB.SortedSetRangeByRankAsync(setKey, 0, -1, Order.Descending);
+            foreach (var entry in studentSetEntries)
+            {
+                string entryString = entry;
+                string[] parsedEntryElements = entryString.Split('_');
+                int id = int.Parse(parsedEntryElements[0]);
+                studentIds.Add(id);
+            }
+            return studentIds;
+        }
     }
 }
