@@ -19,13 +19,10 @@ namespace Share_To_Learn_WEB_API.Controllers
     public class StudentController : ControllerBase
     {
         private readonly ISTLRepository _repository;
-        private readonly IConnectionMultiplexer _redisConnection;
 
         public StudentController(ISTLRepository repository, IRedisConnectionBuilder builder)
         {
             _repository = repository;
-            _redisConnection = builder.Connection;
-           
         }
 
         [HttpGet()]
@@ -148,13 +145,7 @@ namespace Share_To_Learn_WEB_API.Controllers
         [Route("friendship/sender/{senderId}/receiver/{receiverId}/request/{requestId}")]
         public async Task<ActionResult> AcceptFriendRequest(int senderId, int receiverId, string requestId)
         {
-            string channelName = $"messages:{receiverId}:friend_request";
-
-            IDatabase redisDB = _redisConnection.GetDatabase();
-            long deletedMessages = await redisDB.StreamDeleteAsync(channelName, new RedisValue[] { new RedisValue(requestId) });
-
-            if(deletedMessages != 1)
-                return BadRequest("There is problem on server");
+            await _repository.DeleteFriendRequest(receiverId, requestId);
 
             bool res1 = await _repository.StudentExists(senderId);
             bool res2 = await _repository.StudentExists(receiverId);
@@ -166,7 +157,6 @@ namespace Share_To_Learn_WEB_API.Controllers
             }
             else
                 return BadRequest("Student doesnt exist!");
-
         }
 
         [HttpDelete]
@@ -254,22 +244,18 @@ namespace Share_To_Learn_WEB_API.Controllers
 
         [HttpPost]
         [Route("friend_request/sender/{senderId}/receiver/{receiverId}")]
-        public async Task<ActionResult> SendFriendRequest(int senderId, int receiverId, [FromBody] Student sender)
+        public async Task<ActionResult> SendFriendRequest(int senderId, int receiverId, [FromBody] Request sender)
         {
-            string channelName = $"messages:{receiverId}:friend_request";
-
-            var values = new NameValueEntry[]
-            {
-                new NameValueEntry("sender_id", senderId),
-                new NameValueEntry("sender_first_name", sender.FirstName),
-                new NameValueEntry("sender_last_name", sender.LastName),
-                new NameValueEntry("sender_email", sender.Email)
-            };
-
-            IDatabase redisDB = _redisConnection.GetDatabase();
-            var messageId =  await redisDB.StreamAddAsync(channelName, values);
-
+            await _repository.SendFriendRequest(senderId, receiverId, sender);
             return Ok("request successfuly sent");
-        }    
+        }
+        
+        [HttpGet]
+        [Route("friend_request/receiver/{receiverId}")]
+        public async Task<ActionResult> GetFriendRequests(int receiverId)
+        {
+            var result = await _repository.GetFriendRequests(receiverId);
+            return Ok(result);
+        }
     }
 }

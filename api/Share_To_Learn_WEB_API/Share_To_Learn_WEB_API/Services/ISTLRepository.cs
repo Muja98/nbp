@@ -63,6 +63,8 @@ namespace Share_To_Learn_WEB_API.Services
         Task<IEnumerable<MessageDTO>> ReceiveMessage(int senderId, int receiverId, string from, int count);
 
         Task<string> getNextId(bool isImage);
-
+        Task DeleteFriendRequest(int receiverId, string requestId);
+        Task SendFriendRequest(int senderId, int receiverId, Request sender);
+        Task<IEnumerable<RequestDTO>> GetFriendRequests(int receiverId);
     }
 }

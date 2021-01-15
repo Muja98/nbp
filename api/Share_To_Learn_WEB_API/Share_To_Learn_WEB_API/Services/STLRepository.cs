@@ -701,5 +701,60 @@ namespace Share_To_Learn_WEB_API.Services
 
             return result.ToString(); 
         }
+
+        public async Task DeleteFriendRequest(int receiverId, string requestId)
+        {
+            string channelName = $"messages:{receiverId}:friend_request";
+
+            IDatabase redisDB = _redisConnection.GetDatabase();
+            long deletedMessages = await redisDB.StreamDeleteAsync(channelName, new RedisValue[] { new RedisValue(requestId) });
+        }
+
+        public async Task SendFriendRequest(int senderId, int receiverId, Request sender)
+        {
+            string channelName = $"messages:{receiverId}:friend_request";
+
+            var values = new NameValueEntry[]
+            {
+                new NameValueEntry("sender_id", senderId),
+                new NameValueEntry("sender_first_name", sender.FirstName),
+                new NameValueEntry("sender_last_name", sender.LastName),
+                new NameValueEntry("sender_email", sender.Email)
+            };
+
+            IDatabase redisDB = _redisConnection.GetDatabase();
+            var messageId = await redisDB.StreamAddAsync(channelName, values);
+        }
+
+        public async Task<IEnumerable<RequestDTO>> GetFriendRequests(int receiverId)
+        {
+            string channelName = $"messages:{receiverId}:friend_request";
+            IDatabase redisDB = _redisConnection.GetDatabase();
+
+            var requests = await redisDB.StreamReadAsync(channelName, "0-0");
+
+            IList<RequestDTO> result = new List<RequestDTO>();
+
+            foreach (var request in requests)
+            {
+                result.Add(
+                    new RequestDTO
+                    {
+                        Id = request.Id,
+                        Request = new Request
+                        {
+                            Id = int.Parse(request.Values.FirstOrDefault(value => value.Name == "sender_id").Value),
+                            FirstName = request.Values.FirstOrDefault(value => value.Name == "sender_first_name").Value,
+                            LastName = request.Values.FirstOrDefault(value => value.Name == "sender_last_name").Value,
+                            Email = request.Values.FirstOrDefault(value => value.Name == "sender_email").Value
+                        }
+
+                    }
+
+                );
+            }
+
+            return result;
+        }
     }
 }
