@@ -22,10 +22,10 @@ namespace Share_To_Learn_WEB_API.Services
             _redisConnection = builder.Connection;
         }
 
-        public async Task<IEnumerable<StudentDTO>> GetStudentsPage(string filter, string userFilter, string orderBy, bool descending, int from, int to)
+        public async Task<IEnumerable<StudentDTO>> GetStudentsPage(string filter, string userFilter, string orderBy, bool descending, int from, int to, int user)
         {
             var a = _client.Cypher
-                        .Match("(s:Student)")
+                        .Match($"(s1:Student), (s2:Student)")
                         .Where(userFilter);
 
             if (!string.IsNullOrEmpty(filter))
@@ -33,8 +33,9 @@ namespace Share_To_Learn_WEB_API.Services
 
             ICypherFluentQuery<StudentDTO> ret = a.Return(() => new StudentDTO
             {
-                Id = Return.As<int>("ID(s)"),
-                Student = Return.As<Student>("s")
+                Id = Return.As<int>("ID(s1)"),
+                IsFriend = Return.As<bool>("exists((s1)-[:FRIEND]-(s2))"),
+                Student = Return.As<Student>("s1")
             });
 
             ret = ret.OrderBy(orderBy);
@@ -565,6 +566,7 @@ namespace Share_To_Learn_WEB_API.Services
             ICypherFluentQuery<StudentDTO> ret = a.Return(() => new StudentDTO
             {
                 Id = Return.As<int>("ID(friend)"),
+                IsFriend = Return.As<bool>("true"),
                 Student = Return.As<Student>("friend")
             });
 
@@ -589,7 +591,7 @@ namespace Share_To_Learn_WEB_API.Services
         public async Task<int> GetFriendsCount(string filter, int userId)
         {
             var a = _client.Cypher
-            .Match("(st1: Student), (s:Student), (st1)-[r:FRIEND]->(s)")
+            .Match("(st1: Student), (s:Student), (st1)-[r:FRIEND]-(s)")
             .Where("ID(st1) = $userId")
             .WithParam("userId", userId);
 

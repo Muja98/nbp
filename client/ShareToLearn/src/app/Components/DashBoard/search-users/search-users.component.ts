@@ -1,6 +1,7 @@
 import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Student } from 'src/app/Model/student';
+import { MessageService } from 'src/app/Service/message.service';
 import { StudentService } from 'src/app/Service/student.service';
 
 @Component({
@@ -21,8 +22,9 @@ export class SearchUsersComponent implements OnInit {
   public perPage:number;
   public pagesVisited:number;
   private userId:string;
+  private inChatWith:number[];
 
-  constructor(private service:StudentService) { }
+  constructor(private studentService:StudentService, private messageService:MessageService) { }
 
   ngOnInit(): void {
     this.userId = JSON.parse(localStorage.getItem('user'))['id'];
@@ -34,6 +36,7 @@ export class SearchUsersComponent implements OnInit {
     this.getUsersCount(params);
     params = params.set('from', "0").set('to', String(this.perPage));
     this.getUsers(params, false);
+    this.getIdsStudentsInChatWith();
   }
 
   handleSearch():void {
@@ -65,8 +68,22 @@ export class SearchUsersComponent implements OnInit {
       this.pagesVisited = this.page;
   }
 
+  isLoaded(): boolean {
+    if((!this.usersToShow) || (!this.users) || (!this.inChatWith))
+      return false;
+    if(this.users.length < ((this.page - 1) * this.perPage + 1))
+      return false;
+    return true;
+  }
+
+  canChatWith(user:Student): boolean {
+    if(this.inChatWith.includes(user.id))
+      return false;
+    return true;
+  }
+
   private getUsers(params:any, append:boolean):void {
-    this.service.getFilteredStudents(params).subscribe(
+    this.studentService.getFilteredStudents(params).subscribe(
       result => {
         this.users = append ? this.users.concat(result) : result
         const startInd = (this.page - 1) * this.perPage;
@@ -76,8 +93,14 @@ export class SearchUsersComponent implements OnInit {
   }
 
   private getUsersCount(params:any):void {
-    this.service.getFilteredStudentsCount(params).subscribe(
+    this.studentService.getFilteredStudentsCount(params).subscribe(
       result => this.fullNumberOfUsers = parseInt(String(result))
     );
+  }
+
+  private getIdsStudentsInChatWith() {
+    this.messageService.getIdsStudentsInChatWith(parseInt(this.userId)).subscribe(
+      result => this.inChatWith = result
+    )
   }
 }

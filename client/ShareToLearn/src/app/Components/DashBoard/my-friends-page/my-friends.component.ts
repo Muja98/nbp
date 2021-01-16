@@ -1,6 +1,7 @@
 import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Student } from 'src/app/Model/student';
+import { MessageService } from 'src/app/Service/message.service';
 import { StudentService } from 'src/app/Service/student.service';
 
 @Component({
@@ -21,8 +22,9 @@ export class MyFriendsComponent implements OnInit {
     public perPage:number;
     private userId:string;
     public fullNumberOfFriends:number;
+    private inChatWith:number[];
 
-    constructor(private service:StudentService) { }
+    constructor(private studentService:StudentService, private messageService:MessageService) { }
 
     ngOnInit(): void {
         console.log("onInit method");
@@ -38,11 +40,12 @@ export class MyFriendsComponent implements OnInit {
         this.getFriendsCount(params);
         params = params.set('from', "0").set('to', String(this.perPage));
         this.getFriends(params, false);
+        this.getIdsStudentsInChatWith();
     }
 
     public getFriends(params:any, append:boolean): void {
         debugger
-        this.service.getFilteredFriends(params).subscribe(
+        this.studentService.getFilteredFriends(params).subscribe(
             result => {
               this.friends = append ? this.friends.concat(result) : result
               const startInd = (this.page - 1) * this.perPage;
@@ -53,9 +56,29 @@ export class MyFriendsComponent implements OnInit {
 
     public getFriendsCount(params:any):void {
         debugger
-        this.service.getFilteredFriendsCount(params).subscribe(
+        this.studentService.getFilteredFriendsCount(params).subscribe(
           result => this.fullNumberOfFriends = parseInt(String(result))
         );
+    }
+
+    private getIdsStudentsInChatWith() {
+      this.messageService.getIdsStudentsInChatWith(parseInt(this.userId)).subscribe(
+        result => this.inChatWith = result
+      )
+    }
+
+    isLoaded(): boolean {
+      if((!this.friendsToShow) || (!this.friends) || (!this.inChatWith))
+        return false;
+      if(this.friends.length < ((this.page - 1) * this.perPage + 1))
+        return false;
+      return true;
+    }
+
+    canChatWith(user:Student): boolean {
+      if(this.inChatWith.includes(user.id))
+        return false;
+      return true;
     }
 
     handlePageChange():void {

@@ -2,40 +2,47 @@
     <div class="row pb-5">
         <h1>Search users</h1>
     </div>
-    <div class="row pb-3">
-        <ngb-pagination 
-            [collectionSize]="fullNumberOfUsers" [(page)]="page" [pageSize] = "perPage"
-            (pageChange)="handlePageChange()" aria-label="Users pagination">
-        </ngb-pagination>
-    </div>
-    <div class="row">
-        <div class="col-7" >
-            <app-student-info-element *ngFor='let user of usersToShow' [studentObject]='user'></app-student-info-element>
+    <div *ngIf="isLoaded()">
+        <div class="row pb-3">
+            <ngb-pagination 
+                [collectionSize]="fullNumberOfUsers" [(page)]="page" [pageSize] = "perPage"
+                (pageChange)="handlePageChange()" aria-label="Users pagination">
+            </ngb-pagination>
         </div>
-        <div class="col-5">
-            <div class="mb-3">
-                <label for="inputGroupName" class="form-label">First name</label>
-                <input class="form-control" id="inputGroupName" [(ngModel)]="userFirstName">
+        <div class="row">
+            <div class="col-7" >
+                <app-student-info-element *ngFor='let user of usersToShow' [studentObject]='user' [canChatWith]='canChatWith(user)'></app-student-info-element>
             </div>
-            <div class="mb-3">
-                <label for="inputGroupField" class="form-label">Last name</label>
-                <input class="form-control" id="inputGroupField" [(ngModel)]="userLastName">
+            <div class="col-5">
+                <div class="mb-3">
+                    <label for="inputGroupName" class="form-label">First name</label>
+                    <input class="form-control" id="inputGroupName" [(ngModel)]="userFirstName">
+                </div>
+                <div class="mb-3">
+                    <label for="inputGroupField" class="form-label">Last name</label>
+                    <input class="form-control" id="inputGroupField" [(ngModel)]="userLastName">
+                </div>
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="checkNameSort" [(ngModel)]="orderByName">
+                    <label class="form-check-label" for="checkNameSort">Sort by name</label>
+                </div>
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="checkSortDesc" [(ngModel)]="orderDescending">
+                    <label class="form-check-label" for="checkSortDesc">Sort descending</label>
+                </div>
+                <button (click)="handleSearch()" class="btn btn-primary">Search</button>
             </div>
-            <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="checkNameSort" [(ngModel)]="orderByName">
-                <label class="form-check-label" for="checkNameSort">Sort by name</label>
-            </div>
-            <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="checkSortDesc" [(ngModel)]="orderDescending">
-                <label class="form-check-label" for="checkSortDesc">Sort descending</label>
-            </div>
-            <button (click)="handleSearch()" class="btn btn-primary">Search</button>
+        </div>
+        <div class="row pt-3">
+            <ngb-pagination 
+                [collectionSize]="fullNumberOfUsers" [(page)]="page" [pageSize] = "perPage"
+                (pageChange)="handlePageChange()" aria-label="Users pagination">
+            </ngb-pagination>
         </div>
     </div>
-    <div class="row pt-3">
-        <ngb-pagination 
-            [collectionSize]="fullNumberOfUsers" [(page)]="page" [pageSize] = "perPage"
-            (pageChange)="handlePageChange()" aria-label="Users pagination">
-        </ngb-pagination>
+    <div class="container d-flex justify-content-center align-items-center" style="height: 300px;" *ngIf="!isLoaded()">
+        <div class="spinner-border" role="status" >
+          <span class="sr-only">Loading...</span>
+        </div>
     </div>
 </div>

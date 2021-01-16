@@ -9,7 +9,7 @@ namespace Share_To_Learn_WEB_API.Services
 {
     public interface ISTLRepository
     {
-        Task<IEnumerable<StudentDTO>> GetStudentsPage(string filter, string userFilter, string orderBy, bool descending, int from, int to);
+        Task<IEnumerable<StudentDTO>> GetStudentsPage(string filter, string userFilter, string orderBy, bool descending, int from, int to, int user);
         Task<int> GetStudentsCount(string filter, string userFilter);
         Task<StudentDTO> StudentExists(string email);
         Task CreateStudent(Student newStudent);
