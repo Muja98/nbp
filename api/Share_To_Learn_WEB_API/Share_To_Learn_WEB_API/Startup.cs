@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Neo4jClient;
 using Share_To_Learn_WEB_API.RedisConnection;
 using Share_To_Learn_WEB_API.Services;
+using Share_To_Learn_WEB_API.HubConfig;
 
 namespace Share_To_Learn_WEB_API
 {
@@ -47,8 +48,15 @@ namespace Share_To_Learn_WEB_API
             {
                 options.AddPolicy("CORS", builder =>
                 {
-                    builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+                    builder.AllowAnyHeader()
+                   .AllowAnyMethod()
+                   .SetIsOriginAllowed((host) => true)
+                   .AllowCredentials();
                 });
+            });
+            services.AddSignalR(options =>
+            {
+                options.EnableDetailedErrors = true;
             });
         }
 
@@ -62,16 +70,23 @@ namespace Share_To_Learn_WEB_API
 
             app.UseHttpsRedirection();
 
+            
+
             app.UseRouting();
+
 
             app.UseCors("CORS");
 
             app.UseAuthorization();
 
+   
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<MessageHub>("chat");
             });
+
+
         }
     }
 }

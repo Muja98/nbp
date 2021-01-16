@@ -1,0 +1,35 @@
+<div class="container-flex pb-5 ">
+    <div class="row pt-3 pb-3" style="cursor: pointer;">
+        <div class="col-1">
+            <img src="assets\profilePicture.jpg" height="50px" width="50px" class="rounded-circle" alt="profilePicture.jpg">
+        </div>
+        <div class="col-10 pt-2 ">
+            <h5>Stefan Stamenkovic</h5>
+        </div>
+    </div>
+    <div class="row rounded "  style=" height: 600px; ">
+        <div class="col d-flex flex-column" style="background-color: #eeeeee;">
+            <div class="row pr-4 pl-4" style="height: 91%; min-height: 530px; max-height: 530px; overflow-y:auto;" #scrollMe [scrollTop]="scrollMe.scrollHeight">
+                <div  class="col d-flex flex-column-reverse  pt-5 pb-5 pl-2 pr-2">
+                    <div class="container-flex" *ngFor="let message of messageArray.slice().reverse()">
+                        <div *ngIf="message.SenderId !== userId" class="row justify-content-start pr-5" >
+                            <div class="col-6 rounded pt-3 mt-3" style="background-color: #B0B0B0; height: auto;">
+                                <p style="color: white; font-weight: 500;">{{message.Content}}</p>
+                            </div>  
+                        </div>
+                        <div *ngIf="message.SenderId === userId" class="row justify-content-end pl-5 mt-3">
+                            <div class="col-6 rounded pt-3" style="background-color: #0084ff; height: auto;">
+                                <p style="color: white; font-weight: 500;">{{message.Content}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row  pt-1 pb-5 pr-3 pl-3" style="min-height: 50px; max-height: 50px;">
+                <div class="col-12 " style="border-radius: 30px; background-color: #B0B0B0;">
+                    <input class="pl-3 w-100" [(ngModel)]="messsageText" (keyup.enter)="handleAddMessage()"  style="background-color:transparent; border:none; outline: none; overflow: auto; color: white; font-weight: 500;" placeholder="Aa">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

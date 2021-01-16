@@ -1,3 +1,5 @@
+import { StudentContainerComponent } from './messanger/student-container/student-container.component';
+import { MessageContainerComponent } from './messanger/message-container/message-container.component';
 import { MyFriendsComponent } from './my-friends-page/my-friends.component';
 import { GroupInfoComponent } from './group-info/group-info.component';
 import { MyGroupsComponent } from './my-groups-page/my-groups-list.component';
@@ -37,7 +39,9 @@ import { OtherUsersGroupsPageComponent } from './other-users-groups-page/other-u
                  SearchUsersComponent,
                  GroupDocumentComponent,
                  MyFriendsComponent,
-                 OtherUsersGroupsPageComponent
+                 OtherUsersGroupsPageComponent,
+                 MessageContainerComponent,
+                 StudentContainerComponent
   ],
 
   imports: [
@@ -56,7 +60,8 @@ import { OtherUsersGroupsPageComponent } from './other-users-groups-page/other-u
         {path:'group-component', component:GroupDocumentComponent},
         {path:'my-friends', component:MyFriendsComponent},
         {path:'profile/:studentId', component:ProfileComponent},
-        {path:'student-groups/:studentId', component:OtherUsersGroupsPageComponent}
+        {path:'student-groups/:studentId', component:OtherUsersGroupsPageComponent},
+        {path:'messanger', component:StudentContainerComponent}
       ]}]),
       NgbModule
   ]
