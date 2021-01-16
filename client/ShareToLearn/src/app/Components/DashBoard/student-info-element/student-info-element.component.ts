@@ -11,6 +11,7 @@ import { DomSanitizer } from '@angular/platform-browser'
 })
 export class StudentInfoElementComponent implements OnInit {
   @Input() studentObject:Student;
+  @Input() canChatWith:boolean;
   public student:any;
   public safeImgUrl:string;
 
@@ -34,5 +35,9 @@ export class StudentInfoElementComponent implements OnInit {
     let storageStudentId = this.service.getStudentFromStorage()['id'];
     routePart = (storageStudentId == this.studentObject.id) ? "" : ("/" + this.studentObject.id)
     this.router.navigate(["dashboard/profile" + routePart])
+  }
+
+  handleStartChat(): void {
+    console.log("chat started")
   }
 }
