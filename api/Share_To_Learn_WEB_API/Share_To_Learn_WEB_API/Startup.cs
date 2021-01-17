@@ -15,6 +15,7 @@ using Neo4jClient;
 using Share_To_Learn_WEB_API.RedisConnection;
 using Share_To_Learn_WEB_API.Services;
 using Share_To_Learn_WEB_API.HubConfig;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Share_To_Learn_WEB_API
 {
@@ -58,6 +59,8 @@ namespace Share_To_Learn_WEB_API
             {
                 options.EnableDetailedErrors = true;
             });
+
+         
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

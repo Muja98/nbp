@@ -8,6 +8,8 @@ using Share_To_Learn_WEB_API.DTOs;
 using Neo4jClient.Cypher;
 using StackExchange.Redis;
 using Share_To_Learn_WEB_API.RedisConnection;
+using Microsoft.AspNetCore.SignalR;
+using Share_To_Learn_WEB_API.HubConfig;
 
 namespace Share_To_Learn_WEB_API.Services
 {
@@ -15,11 +17,12 @@ namespace Share_To_Learn_WEB_API.Services
     {  
         private readonly IGraphClient _client;
         private readonly IConnectionMultiplexer _redisConnection;
-
-        public STLRepository(IGraphClient client, IRedisConnectionBuilder builder)
+        private readonly IHubContext<MessageHub> _hub;
+        public STLRepository(IGraphClient client, IRedisConnectionBuilder builder, IHubContext<MessageHub> hub)
         {
-            _client = client;
+            _client = client; 
             _redisConnection = builder.Connection;
+            _hub = hub;
         }
 
         public async Task<IEnumerable<StudentDTO>> GetStudentsPage(string filter, string userFilter, string orderBy, bool descending, int from, int to, int user)
@@ -665,6 +668,10 @@ namespace Share_To_Learn_WEB_API.Services
             int biggerId = message.SenderId > message.ReceiverId ? message.SenderId : message.ReceiverId;
             int smallerId = message.SenderId < message.ReceiverId ? message.SenderId : message.ReceiverId;
             await redisDB.StreamAddAsync($"messages:{biggerId}:{smallerId}:chat", values);
+            ////////////////
+            
+            string groupName = "peraIzika";
+            _ = _hub.Clients.Group(groupName).SendAsync("ReceiveMessage", message);
         }
 
         public async Task<IEnumerable<MessageDTO>> ReceiveMessage(int senderId, int receiverId, string from, int count)

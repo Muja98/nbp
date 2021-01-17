@@ -29,33 +29,56 @@ export class MessageContainerComponent implements OnInit {
   public user:any;
   public userId:number = 0;
   public _hubConnection: signalR.HubConnection;
-  public sendMessage(): void {
-    this._hubConnection
-      .invoke('sendToAll', {
-        Sender:this.message.Sender,
-        SenderId: this.message.SenderId,
-        Receiver:this.message.Receiver, 
-        ReceiverId:this.message.ReceiverId,
-        Content:this.messsageText
-      })
-      .then(() => this.messsageText = '')
-      .catch(err => console.error(err));
-  }
+
+ 
+
+  
 
   handleAddMessage()
   {
     if(this.messsageText === "")return;
     this.message.Content = this.messsageText;
+
    
-    this.sendMessage();
+
     //this.messageArray.push(this.message);
-    this.messsageText = ""
+   this.http.post("https://localhost:44374/api/messages/send", {
+      Sender:this.message.Sender,
+      SenderId: this.message.SenderId,
+      Receiver:this.message.Receiver, 
+      ReceiverId:this.message.ReceiverId,
+      Content:this.messsageText
+   }).subscribe(()=>{})
+   this.messsageText = "";
+    // this._hubConnection
+    // .invoke('SendMessage', {
+    //   Sender:this.message.Sender,
+    //   SenderId: this.message.SenderId,
+    //   Receiver:this.message.Receiver, 
+    //   ReceiverId:this.message.ReceiverId,
+    //   Content:this.messsageText
+    // }, "peraIzika")
+    // .then(() => this.messsageText = '')
+    // .catch(err => console.error(err));
+
 
   }
-  ngOnInit(): void {
-    
+
+  joinRoom()
+  {
+    this._hubConnection.invoke("JoinRoom", "peraIzika").catch((err)=>{
+      console.log(err)
+    })
+  }
+
+
+  ngOnInit(): void {  
+   // let pomuser = this.userService.getStudentFromStorage();
+
+
     this._hubConnection = new signalR.HubConnectionBuilder()
-    .withUrl("https://localhost:44374/chat")
+    .withUrl("https://localhost:44374/chat", )
+    
     .build()
 
     this._hubConnection
@@ -63,20 +86,42 @@ export class MessageContainerComponent implements OnInit {
       .then(() => console.log('Connection started! :)'))
       .catch(err => console.log('Error while establishing connection :('));
 
-      this._hubConnection.on('sendToAll', (newMessage:any) => {
-        let nm:Message = new Message();
-        nm.Content = newMessage.content;
-        nm.Receiver = newMessage.receiver;
-        nm.ReceiverId = newMessage.receiverId;
-        nm.Sender = newMessage.sender;
-        nm.SenderId = newMessage.senderId;
-        this.messageArray.push(nm);
-        
-      });
+   
+
+    this._hubConnection.on('ReceiveMessage', (newMessage:any) => {
+      console.log(newMessage)
+      let nm:Message = new Message();
+      nm.Content = newMessage.content;
+      nm.Receiver = newMessage.receiver;
+      nm.ReceiverId = newMessage.receiverId;
+      nm.Sender = newMessage.sender;
+      nm.SenderId = newMessage.senderId;
+      this.messageArray.push(nm);
+      
+    });
+   
+  
+  }
+
+
+    //-----------------------------------------------------------
+    // this._hubConnection = new signalR.HubConnectionBuilder()
+    // .withUrl("https://localhost:44374/chat", )
+    
+    // .build()
+
+    // this._hubConnection
+    //   .start()
+    //   .then(() => console.log('Connection started! :)'))
+    //   .catch(err => console.log('Error while establishing connection :('));
+
+   
 
 
   }
 
 
 
-}
+
+
+
