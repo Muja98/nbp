@@ -1,10 +1,12 @@
 import { StudentService } from './../../../../Service/student.service';
 import { Message } from './../../../../Model/message';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { signalRService } from './../../../../Service/signalR.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit } from '@angular/core';
 import * as signalR from '@aspnet/signalr';
 import { mainModule } from 'process';
+import { Student } from 'src/app/Model/student';
+import { MessageService } from 'src/app/Service/message.service';
 
 @Component({
   selector: 'app-message-container',
@@ -12,16 +14,8 @@ import { mainModule } from 'process';
   styleUrls: ['./message-container.component.css']
 })
 export class MessageContainerComponent implements OnInit {
-
-  constructor(public signalRService: signalRService, private http: HttpClient, private userService: StudentService) { 
-    this.user = this.userService.getStudentFromStorage();
-    this.userId = parseInt(this.user.id);
-    this.message = new Message();
-    this.message.Sender = this.user.firstName + this.user.lastName;
-    this.message.SenderId = parseInt(this.user.id);
-    this.message.Receiver = "Petar Tebrica";
-    this.message.ReceiverId =  1
-  }
+  @Input() student:Student;
+  @Input() changeStudentEvent: EventEmitter<Student>;
   //public message:string = "";
   public message:Message;
   public messsageText: string = "";
@@ -29,33 +23,69 @@ export class MessageContainerComponent implements OnInit {
   public user:any;
   public userId:number = 0;
   public _hubConnection: signalR.HubConnection;
-  public sendMessage(): void {
-    this._hubConnection
-      .invoke('sendToAll', {
-        Sender:this.message.Sender,
-        SenderId: this.message.SenderId,
-        Receiver:this.message.Receiver, 
-        ReceiverId:this.message.ReceiverId,
-        Content:this.messsageText
-      })
-      .then(() => this.messsageText = '')
-      .catch(err => console.error(err));
-  }
+  public imgSrc:string;
+
+  constructor(public signalRService: signalRService, private http: HttpClient, private userService: StudentService, private messageService:MessageService) { }
 
   handleAddMessage()
   {
     if(this.messsageText === "")return;
-    this.message.Content = this.messsageText;
-   
-    this.sendMessage();
-    //this.messageArray.push(this.message);
-    this.messsageText = ""
+    this.message.content = this.messsageText;
 
+    //this.messageArray.push(this.message);
+   this.http.post("https://localhost:44374/api/messages/send", {
+      Sender:this.message.sender,
+      SenderId: this.message.senderId,
+      Receiver:this.message.receiver, 
+      ReceiverId:this.message.receiverId,
+      Content:this.messsageText
+   }).subscribe(()=>{})
+   this.messsageText = "";
+    // this._hubConnection
+    // .invoke('SendMessage', {
+    //   Sender:this.message.Sender,
+    //   SenderId: this.message.SenderId,
+    //   Receiver:this.message.Receiver, 
+    //   ReceiverId:this.message.ReceiverId,
+    //   Content:this.messsageText
+    // }, "peraIzika")
+    // .then(() => this.messsageText = '')
+    // .catch(err => console.error(err));
   }
-  ngOnInit(): void {
+
+  
+  joinRoom()
+  {
+    const biggerId = this.message.senderId > this.message.receiverId ? this.message.senderId : this.message.receiverId;
+    const smallerId = this.message.senderId < this.message.receiverId ? this.message.senderId : this.message.receiverId;
+    const channelName = "messages:" + biggerId + ":" + smallerId + ":chat";
+    console.log(channelName);
+    this._hubConnection.invoke("JoinRoom", channelName).catch((err)=>{
+      console.log(err)
+    })
+  }
+
+
+  ngOnInit(): void {  
+    // let pomuser = this.userService.getStudentFromStorage();
+    if(this.changeStudentEvent) {
+      this.changeStudentEvent.subscribe(data => {
+        this.student = data;
+        this.messageArray = []
+        this.setMessageParams();
+        this.getMessages();
+      })
+    }
     
+    this.setMessageParams();
+    
+    if(this.student.student.profilePicturePath)
+      this.imgSrc = 'data:image/png;base64,' + this.student.student.profilePicturePath;
+    else
+      this.imgSrc = "assets/profileDefault.png";
+
     this._hubConnection = new signalR.HubConnectionBuilder()
-    .withUrl("https://localhost:44374/chat")
+    .withUrl("https://localhost:44374/chat", )
     .build()
 
     this._hubConnection
@@ -63,20 +93,62 @@ export class MessageContainerComponent implements OnInit {
       .then(() => console.log('Connection started! :)'))
       .catch(err => console.log('Error while establishing connection :('));
 
-      this._hubConnection.on('sendToAll', (newMessage:any) => {
-        let nm:Message = new Message();
-        nm.Content = newMessage.content;
-        nm.Receiver = newMessage.receiver;
-        nm.ReceiverId = newMessage.receiverId;
-        nm.Sender = newMessage.sender;
-        nm.SenderId = newMessage.senderId;
-        this.messageArray.push(nm);
-        
-      });
+   
+    this._hubConnection.on('ReceiveMessage', (newMessage:any) => {
+      console.log(newMessage)
+      let nm:Message = new Message();
+      nm.content = newMessage.content;
+      nm.receiver = newMessage.receiver;
+      nm.receiverId = newMessage.receiverId;
+      nm.sender = newMessage.sender;
+      nm.senderId = newMessage.senderId;
+      this.messageArray.push(nm);
+      
+    });
+   
+    this.getMessages();
+  }
+
+  private getMessages() {
+    let params = new HttpParams()
+      .set('senderId', String(this.message.senderId))
+      .set('receiverId', String(this.message.receiverId))
+      .set('from', encodeURIComponent('+')).set('count', "20")
+    this.messageService.getMessagePortion(params).subscribe(result => {
+      let tempMessages = result.reverse()
+      this.messageArray = tempMessages.concat(this.messageArray);
+    })
+  }
+
+  private setMessageParams() {
+    this.user = this.userService.getStudentFromStorage();
+    this.userId = parseInt(this.user.id);
+    this.message = new Message();
+    this.message.sender = this.user.firstName + " " + this.user.lastName;
+    this.message.senderId = parseInt(this.user.id);
+    this.message.receiver = this.student.student.firstName + " " + this.student.student.lastName;
+    this.message.receiverId =  this.student.id;
+  }
+
+
+    //-----------------------------------------------------------
+    // this._hubConnection = new signalR.HubConnectionBuilder()
+    // .withUrl("https://localhost:44374/chat", )
+    
+    // .build()
+
+    // this._hubConnection
+    //   .start()
+    //   .then(() => console.log('Connection started! :)'))
+    //   .catch(err => console.log('Error while establishing connection :('));
+
+   
 
 
   }
 
 
 
-}
+
+
+

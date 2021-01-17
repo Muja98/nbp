@@ -8,6 +8,10 @@ using Share_To_Learn_WEB_API.DTOs;
 using Neo4jClient.Cypher;
 using StackExchange.Redis;
 using Share_To_Learn_WEB_API.RedisConnection;
+using Microsoft.AspNetCore.SignalR;
+using Share_To_Learn_WEB_API.HubConfig;
+using System.Text.Json;
+using System.Text;
 
 namespace Share_To_Learn_WEB_API.Services
 {
@@ -15,11 +19,12 @@ namespace Share_To_Learn_WEB_API.Services
     {  
         private readonly IGraphClient _client;
         private readonly IConnectionMultiplexer _redisConnection;
-
-        public STLRepository(IGraphClient client, IRedisConnectionBuilder builder)
+        private readonly IHubContext<MessageHub> _hub;
+        public STLRepository(IGraphClient client, IRedisConnectionBuilder builder, IHubContext<MessageHub> hub)
         {
-            _client = client;
+            _client = client; 
             _redisConnection = builder.Connection;
+            _hub = hub;
         }
 
         public async Task<IEnumerable<StudentDTO>> GetStudentsPage(string filter, string userFilter, string orderBy, bool descending, int from, int to, int user)
@@ -664,6 +669,14 @@ namespace Share_To_Learn_WEB_API.Services
             int biggerId = message.SenderId > message.ReceiverId ? message.SenderId : message.ReceiverId;
             int smallerId = message.SenderId < message.ReceiverId ? message.SenderId : message.ReceiverId;
             await redisDB.StreamAddAsync($"messages:{biggerId}:{smallerId}:chat", values);
+            ////////////////
+
+            var jsonMessage = JsonSerializer.Serialize(message);
+            ISubscriber chatPubSub = _redisConnection.GetSubscriber();
+            await chatPubSub.PublishAsync("friend.requests", jsonMessage);
+
+            //string groupName = "peraIzika";
+            //_ = _hub.Clients.Group(groupName).SendAsync("ReceiveMessage", message);
         }
 
         public async Task<IEnumerable<MessageDTO>> ReceiveMessage(int senderId, int receiverId, string from, int count)
@@ -673,6 +686,7 @@ namespace Share_To_Learn_WEB_API.Services
             int smallerId = senderId < receiverId ? senderId : receiverId;
             string channelName = $"messages:{biggerId}:{smallerId}:chat";
             IDatabase redisDb = _redisConnection.GetDatabase();
+            from = Uri.UnescapeDataString(from);
             var messages = await redisDb.StreamRangeAsync(channelName, minId: "-", maxId: from, count: count, messageOrder: Order.Descending);
             foreach(var message in messages)
             {
@@ -767,8 +781,8 @@ namespace Share_To_Learn_WEB_API.Services
             Student sender = participants.Sender.Student;
             Student receiver = participants.Receiver.Student;
 
-            string senderSetValue = $"{participants.Receiver.Id}_{receiver.FirstName}_{receiver.LastName}_{receiver.DateOfBirth.ToShortDateString()}_{receiver.Email}_{receiver.ProfilePicturePath}";
-            string receiverSetValue = $"{participants.Sender.Id}_{sender.FirstName}_{sender.LastName}_{sender.DateOfBirth.ToShortDateString()}_{sender.Email}_{sender.ProfilePicturePath}";
+            var senderSetValue = JsonSerializer.Serialize(participants.Receiver);
+            var receiverSetValue = JsonSerializer.Serialize(participants.Sender);
 
             double score = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 
@@ -788,20 +802,7 @@ namespace Share_To_Learn_WEB_API.Services
             var studentSetEntries = await redisDB.SortedSetRangeByRankAsync(setKey, 0, -1, Order.Descending);
             foreach (var entry in studentSetEntries)
             {
-                string entryString = entry;
-                string[] parsedEntryElements = entryString.Split('_');
-                StudentDTO student = new StudentDTO
-                {
-                    Id = int.Parse(parsedEntryElements[0]),
-                    Student = new Student
-                    {
-                        FirstName = parsedEntryElements[1],
-                        LastName = parsedEntryElements[2],
-                        DateOfBirth = DateTime.Parse(parsedEntryElements[3]),
-                        Email = parsedEntryElements[4],
-                        ProfilePicturePath = FileManagerService.LoadImageFromFile(parsedEntryElements[5])
-                    }
-                };
+                StudentDTO student = JsonSerializer.Deserialize<StudentDTO>(entry);
                 students.Add(student);
             }
             return students;
@@ -815,10 +816,8 @@ namespace Share_To_Learn_WEB_API.Services
             var studentSetEntries = await redisDB.SortedSetRangeByRankAsync(setKey, 0, -1, Order.Descending);
             foreach (var entry in studentSetEntries)
             {
-                string entryString = entry;
-                string[] parsedEntryElements = entryString.Split('_');
-                int id = int.Parse(parsedEntryElements[0]);
-                studentIds.Add(id);
+                StudentDTO student = JsonSerializer.Deserialize<StudentDTO>(entry);
+                studentIds.Add(student.Id);
             }
             return studentIds;
         }
