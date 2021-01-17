@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit } from '@angular/core';
 import { Student } from 'src/app/Model/student';
 import { MessageService } from 'src/app/Service/message.service';
 import { StudentService } from 'src/app/Service/student.service';
@@ -10,6 +10,7 @@ import { StudentService } from 'src/app/Service/student.service';
 })
 export class StudentContainerComponent implements OnInit {
   @Input() students: Student[];
+  public changeStudentEvent: EventEmitter<Student> = new EventEmitter();
   private studentId: number;
   public chosenStudent: Student;
 
@@ -32,6 +33,7 @@ export class StudentContainerComponent implements OnInit {
 
   public changeChatStudent(student:Student) {
     this.chosenStudent = student;
+    this.changeStudentEvent.emit(this.chosenStudent);
   }
 
 }

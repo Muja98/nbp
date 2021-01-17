@@ -13,14 +13,14 @@
             <div class="row pr-4 pl-4" style="height: 91%; min-height: 530px; max-height: 530px; overflow-y:auto;" #scrollMe [scrollTop]="scrollMe.scrollHeight">
                 <div  class="col d-flex flex-column-reverse  pt-5 pb-5 pl-2 pr-2">
                     <div class="container-flex" *ngFor="let message of messageArray.slice().reverse()">
-                        <div *ngIf="message.SenderId !== userId" class="row justify-content-start pr-5" >
+                        <div *ngIf="message.senderId !== userId" class="row justify-content-start pr-5" >
                             <div class="col-6 rounded pt-3 mt-3" style="background-color: #B0B0B0; height: auto;">
-                                <p style="color: white; font-weight: 500;">{{message.Content}}</p>
+                                <p style="color: white; font-weight: 500;">{{message.content}}</p>
                             </div>  
                         </div>
-                        <div *ngIf="message.SenderId === userId" class="row justify-content-end pl-5 mt-3">
+                        <div *ngIf="message.senderId === userId" class="row justify-content-end pl-5 mt-3">
                             <div class="col-6 rounded pt-3" style="background-color: #0084ff; height: auto;">
-                                <p style="color: white; font-weight: 500;">{{message.Content}}</p>
+                                <p style="color: white; font-weight: 500;">{{message.content}}</p>
                             </div>
                         </div>
                     </div>

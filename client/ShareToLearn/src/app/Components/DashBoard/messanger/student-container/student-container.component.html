@@ -20,7 +20,7 @@
             </div>
         </div>
         <div class="col-8  border-start" *ngIf='chosenStudent'>
-            <app-message-container [student]='chosenStudent' ></app-message-container>
+            <app-message-container [student]='chosenStudent' [changeStudentEvent]="changeStudentEvent" ></app-message-container>
         </div>
     </div>
 </div>
