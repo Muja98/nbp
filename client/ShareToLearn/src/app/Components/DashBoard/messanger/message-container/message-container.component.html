@@ -1,10 +1,10 @@
 <div class="container-flex pb-5 ">
     <div class="row pt-3 pb-3" style="cursor: pointer;">
         <div class="col-1">
-            <img src="assets\profilePicture.jpg" height="50px" width="50px" class="rounded-circle" alt="profilePicture.jpg">
+            <img [src]="imgSrc" height="50px" width="50px" class="rounded-circle" alt="profilePicture.jpg">
         </div>
         <div class="col-10 pt-2 ">
-            <h5>Stefan Stamenkovic</h5>
+            <h5>{{ student.student.firstName }} {{ student.student.lastName }}</h5>
         </div>
         <button class="btn btn-success" (click)="joinRoom()">JOIN</button>
     </div>
