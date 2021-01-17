@@ -1,11 +1,12 @@
 import { StudentService } from './../../../../Service/student.service';
 import { Message } from './../../../../Model/message';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { signalRService } from './../../../../Service/signalR.service';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit } from '@angular/core';
 import * as signalR from '@aspnet/signalr';
 import { mainModule } from 'process';
 import { Student } from 'src/app/Model/student';
+import { MessageService } from 'src/app/Service/message.service';
 
 @Component({
   selector: 'app-message-container',
@@ -14,6 +15,7 @@ import { Student } from 'src/app/Model/student';
 })
 export class MessageContainerComponent implements OnInit {
   @Input() student:Student;
+  @Input() changeStudentEvent: EventEmitter<Student>;
   //public message:string = "";
   public message:Message;
   public messsageText: string = "";
@@ -23,19 +25,19 @@ export class MessageContainerComponent implements OnInit {
   public _hubConnection: signalR.HubConnection;
   public imgSrc:string;
 
-  constructor(public signalRService: signalRService, private http: HttpClient, private userService: StudentService) { }
+  constructor(public signalRService: signalRService, private http: HttpClient, private userService: StudentService, private messageService:MessageService) { }
 
   handleAddMessage()
   {
     if(this.messsageText === "")return;
-    this.message.Content = this.messsageText;
+    this.message.content = this.messsageText;
 
     //this.messageArray.push(this.message);
    this.http.post("https://localhost:44374/api/messages/send", {
-      Sender:this.message.Sender,
-      SenderId: this.message.SenderId,
-      Receiver:this.message.Receiver, 
-      ReceiverId:this.message.ReceiverId,
+      Sender:this.message.sender,
+      SenderId: this.message.senderId,
+      Receiver:this.message.receiver, 
+      ReceiverId:this.message.receiverId,
       Content:this.messsageText
    }).subscribe(()=>{})
    this.messsageText = "";
@@ -54,8 +56,8 @@ export class MessageContainerComponent implements OnInit {
   
   joinRoom()
   {
-    const biggerId = this.message.SenderId > this.message.ReceiverId ? this.message.SenderId : this.message.ReceiverId;
-    const smallerId = this.message.SenderId < this.message.ReceiverId ? this.message.SenderId : this.message.ReceiverId;
+    const biggerId = this.message.senderId > this.message.receiverId ? this.message.senderId : this.message.receiverId;
+    const smallerId = this.message.senderId < this.message.receiverId ? this.message.senderId : this.message.receiverId;
     const channelName = "messages:" + biggerId + ":" + smallerId + ":chat";
     console.log(channelName);
     this._hubConnection.invoke("JoinRoom", channelName).catch((err)=>{
@@ -65,14 +67,17 @@ export class MessageContainerComponent implements OnInit {
 
 
   ngOnInit(): void {  
-   // let pomuser = this.userService.getStudentFromStorage();
-    this.user = this.userService.getStudentFromStorage();
-    this.userId = parseInt(this.user.id);
-    this.message = new Message();
-    this.message.Sender = this.user.firstName + " " + this.user.lastName;
-    this.message.SenderId = parseInt(this.user.id);
-    this.message.Receiver = this.student.student.firstName + " " + this.student.student.lastName;
-    this.message.ReceiverId =  this.student.id;
+    // let pomuser = this.userService.getStudentFromStorage();
+    if(this.changeStudentEvent) {
+      this.changeStudentEvent.subscribe(data => {
+        this.student = data;
+        this.messageArray = []
+        this.setMessageParams();
+        this.getMessages();
+      })
+    }
+    
+    this.setMessageParams();
     
     if(this.student.student.profilePicturePath)
       this.imgSrc = 'data:image/png;base64,' + this.student.student.profilePicturePath;
@@ -92,15 +97,37 @@ export class MessageContainerComponent implements OnInit {
     this._hubConnection.on('ReceiveMessage', (newMessage:any) => {
       console.log(newMessage)
       let nm:Message = new Message();
-      nm.Content = newMessage.content;
-      nm.Receiver = newMessage.receiver;
-      nm.ReceiverId = newMessage.receiverId;
-      nm.Sender = newMessage.sender;
-      nm.SenderId = newMessage.senderId;
+      nm.content = newMessage.content;
+      nm.receiver = newMessage.receiver;
+      nm.receiverId = newMessage.receiverId;
+      nm.sender = newMessage.sender;
+      nm.senderId = newMessage.senderId;
       this.messageArray.push(nm);
       
     });
    
+    this.getMessages();
+  }
+
+  private getMessages() {
+    let params = new HttpParams()
+      .set('senderId', String(this.message.senderId))
+      .set('receiverId', String(this.message.receiverId))
+      .set('from', encodeURIComponent('+')).set('count', "20")
+    this.messageService.getMessagePortion(params).subscribe(result => {
+      let tempMessages = result.reverse()
+      this.messageArray = tempMessages.concat(this.messageArray);
+    })
+  }
+
+  private setMessageParams() {
+    this.user = this.userService.getStudentFromStorage();
+    this.userId = parseInt(this.user.id);
+    this.message = new Message();
+    this.message.sender = this.user.firstName + " " + this.user.lastName;
+    this.message.senderId = parseInt(this.user.id);
+    this.message.receiver = this.student.student.firstName + " " + this.student.student.lastName;
+    this.message.receiverId =  this.student.id;
   }
 
 

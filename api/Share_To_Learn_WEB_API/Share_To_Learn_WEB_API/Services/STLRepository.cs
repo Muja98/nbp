@@ -11,6 +11,7 @@ using Share_To_Learn_WEB_API.RedisConnection;
 using Microsoft.AspNetCore.SignalR;
 using Share_To_Learn_WEB_API.HubConfig;
 using System.Text.Json;
+using System.Text;
 
 namespace Share_To_Learn_WEB_API.Services
 {
@@ -686,6 +687,7 @@ namespace Share_To_Learn_WEB_API.Services
             int smallerId = senderId < receiverId ? senderId : receiverId;
             string channelName = $"messages:{biggerId}:{smallerId}:chat";
             IDatabase redisDb = _redisConnection.GetDatabase();
+            from = Uri.UnescapeDataString(from);
             var messages = await redisDb.StreamRangeAsync(channelName, minId: "-", maxId: from, count: count, messageOrder: Order.Descending);
             foreach(var message in messages)
             {
@@ -813,10 +815,8 @@ namespace Share_To_Learn_WEB_API.Services
             var studentSetEntries = await redisDB.SortedSetRangeByRankAsync(setKey, 0, -1, Order.Descending);
             foreach (var entry in studentSetEntries)
             {
-                string entryString = entry;
-                string[] parsedEntryElements = entryString.Split('_');
-                int id = int.Parse(parsedEntryElements[0]);
-                studentIds.Add(id);
+                StudentDTO student = JsonSerializer.Deserialize<StudentDTO>(entry);
+                studentIds.Add(student.Id);
             }
             return studentIds;
         }
