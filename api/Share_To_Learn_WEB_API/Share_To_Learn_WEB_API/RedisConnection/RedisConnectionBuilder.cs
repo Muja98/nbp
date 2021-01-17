@@ -21,7 +21,15 @@ namespace Share_To_Learn_WEB_API.RedisConnection
                     lock (_objectLock)
                     {
                         if (_connection == null)
+                        { 
                             _connection = ConnectionMultiplexer.Connect(ConnectionString);
+                            var friendRequestsPubSub = _connection.GetSubscriber();
+                            friendRequestsPubSub.Subscribe("friend.requests").OnMessage(message =>
+                            {
+                                IDatabase db = _connection.GetDatabase();
+                                db.ListLeftPush("testList", "aaa");
+                            });
+                        }
                     }
                 }
                 return _connection;
