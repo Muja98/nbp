@@ -1,6 +1,7 @@
 import { StudentService } from './../../Service/student.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router'
+import { FriendRequest } from 'src/app/Model/friendrequest';
 
 @Component({
   selector: 'app-dashboard',
@@ -40,8 +41,11 @@ export class DashboardComponent implements OnInit {
       text:"Messanger"
     }
   ]
+  userId:number;
+  friend_requests:FriendRequest[];
 
-  constructor(private router:Router, private userService:StudentService) { }
+
+  constructor(private router:Router, private userService:StudentService, private studentService:StudentService) { }
 
   handleLogOut()
   {
@@ -54,12 +58,25 @@ export class DashboardComponent implements OnInit {
     {
       this.router.navigate(['/login']);
     }
+    this.userId =  JSON.parse(localStorage.getItem('user'))['id'];
+    this.getFriendRequests();
   }
 
   isActive(ind:number):object {
     return {
       'active': this.router.url == this.linkRoot + this.navLinks[ind].link
     }
+  }
+
+  getFriendRequests() {
+    debugger
+    this.studentService.getFriendRequests(this.userId).subscribe(
+      result => { console.log(result); this.friend_requests = result }
+    )
+  }
+
+  removeRequestFromList(id:string) {
+    this.friend_requests = this.friend_requests.filter(obj => obj.id != id);
   }
 
 }

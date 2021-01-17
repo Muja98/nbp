@@ -46,13 +46,13 @@ namespace Share_To_Learn_WEB_API.Services
         public async Task<int> GetStudentsCount(string filter, string userFilter)
         {
             var a = _client.Cypher
-                        .Match("(s:Student)")
+                        .Match($"(s1:Student), (s2:Student)")
                         .Where(userFilter);
 
             if (!string.IsNullOrEmpty(filter))
                 a = a.AndWhere(filter);
 
-            var res = await a.Return<int>("count(s)").ResultsAsync;
+            var res = await a.Return<int>("count(s1)").ResultsAsync;
             return res.Single();
         }
 
@@ -553,11 +553,10 @@ namespace Share_To_Learn_WEB_API.Services
             return res;
         }
 
-
         public async Task<IEnumerable<StudentDTO>> GetFriendsPage(string filter, string userFilter, string orderBy, bool descending, int from, int to)
         {
             var a = _client.Cypher
-                        .Match("(s:Student)-[:FRIEND]-(friend:Student)")
+                        .Match("(s:Student)-[:FRIEND]-(s1:Student)")
                         .Where(userFilter);
 
             if (!string.IsNullOrEmpty(filter))
@@ -565,9 +564,9 @@ namespace Share_To_Learn_WEB_API.Services
 
             ICypherFluentQuery<StudentDTO> ret = a.Return(() => new StudentDTO
             {
-                Id = Return.As<int>("ID(friend)"),
+                Id = Return.As<int>("ID(s1)"),
                 IsFriend = Return.As<bool>("true"),
-                Student = Return.As<Student>("friend")
+                Student = Return.As<Student>("s1")
             });
 
 
@@ -721,7 +720,9 @@ namespace Share_To_Learn_WEB_API.Services
                 new NameValueEntry("sender_id", senderId),
                 new NameValueEntry("sender_first_name", sender.FirstName),
                 new NameValueEntry("sender_last_name", sender.LastName),
-                new NameValueEntry("sender_email", sender.Email)
+                new NameValueEntry("sender_email", sender.Email),
+                new NameValueEntry("sender_profile_picture_path", sender.ProfilePicturePath),
+
             };
 
             IDatabase redisDB = _redisConnection.GetDatabase();
@@ -748,11 +749,11 @@ namespace Share_To_Learn_WEB_API.Services
                             Id = int.Parse(request.Values.FirstOrDefault(value => value.Name == "sender_id").Value),
                             FirstName = request.Values.FirstOrDefault(value => value.Name == "sender_first_name").Value,
                             LastName = request.Values.FirstOrDefault(value => value.Name == "sender_last_name").Value,
-                            Email = request.Values.FirstOrDefault(value => value.Name == "sender_email").Value
+                            Email = request.Values.FirstOrDefault(value => value.Name == "sender_email").Value,
+                            ProfilePicturePath = request.Values.FirstOrDefault(value => value.Name == "sender_profile_picture_path").Value
                         }
 
                     }
-
                 );
             }
 
