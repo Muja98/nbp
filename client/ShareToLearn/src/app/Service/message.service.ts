@@ -17,4 +17,8 @@ export class MessageService {
   getStudentsInChatWith(studentId:number) {
     return this.http.get<Student[]>(URL + "/api/messages/chats/student/" + studentId);
   }
+
+  startChat(firstMessage:string, conversationParticipants:any) {
+    return this.http.post(URL + "/api/messages/add-conversation/temp", conversationParticipants);
+  }
 }

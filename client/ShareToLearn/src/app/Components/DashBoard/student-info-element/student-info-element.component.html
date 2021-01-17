@@ -1,7 +1,7 @@
 <div class="card mt-4" style="max-width: 540px;">
     <div class="row no-gutters">
         <div class="col d-flex justify-content-center align-items-center">
-            <img *ngIf="student.profilePicturePath" [src]="student.profilePicturePath" height="75px" width="75px" class="rounded-circle mt-2 mb-2" alt="profilePicture.jpg">
+            <img  [src]="imgSrc" height="75px" width="75px" class="rounded-circle mt-2 mb-2" alt="profilePicture.jpg">
         </div>
         <div class="col-md-5">
             <div class="card-body">
@@ -15,11 +15,35 @@
                 class="btn btn-outline-primary" style="margin-top: 10px;">
                 View profile
             </button>
-            <button
+            <!-- <button
                 type="button" (click)="handleStartChat()" *ngIf="canChatWith && studentObject.isFriend"
                 class="btn btn-outline-primary" style="margin-top: 10px;">
                 Start chat
-            </button>
+            </button> -->
+            <div class="row" *ngIf="canChatWith && studentObject.isFriend" style="margin-top: 10px;">
+                <div class="col">
+                    <div ngbDropdown class="d-inline-block dropend">
+                        <button class="btn btn-outline-primary" id="dropdownStartChat" ngbDropdownToggle>Start chat</button>
+                        <div ngbDropdownMenu aria-labelledby="dropdownStartChat">
+                            <div class="px-4 py-3">
+                                <div class="form-group">
+                                    <label for="firstMessageText">Send first message</label>
+                                    <textarea 
+                                        class="form-control" aria-label="With textarea" id="firstMessageText"
+                                        style="resize: none; font-size: 14px;" placeholder="Write first message" 
+                                        rows="5" [(ngModel)]="firstMessage">
+                                    </textarea>
+                                </div>
+                                <button 
+                                    type="button" class="btn btn-outline-primary" 
+                                    (click)="handleStartChat()" [disabled]="!firstMessage || firstMessage.length <= 0">
+                                    Send
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

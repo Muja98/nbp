@@ -813,10 +813,8 @@ namespace Share_To_Learn_WEB_API.Services
             var studentSetEntries = await redisDB.SortedSetRangeByRankAsync(setKey, 0, -1, Order.Descending);
             foreach (var entry in studentSetEntries)
             {
-                string entryString = entry;
-                string[] parsedEntryElements = entryString.Split('_');
-                int id = int.Parse(parsedEntryElements[0]);
-                studentIds.Add(id);
+                StudentDTO student = JsonSerializer.Deserialize<StudentDTO>(entry);
+                studentIds.Add(student.Id);
             }
             return studentIds;
         }
