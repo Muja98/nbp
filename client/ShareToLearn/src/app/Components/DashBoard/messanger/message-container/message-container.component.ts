@@ -24,6 +24,8 @@ export class MessageContainerComponent implements OnInit {
   public userId:number = 0;
   public _hubConnection: signalR.HubConnection;
   public imgSrc:string;
+  public loadedMessages:number = 0;
+  public perLoadCount:number = 20;
 
   constructor(public signalRService: signalRService, private http: HttpClient, private userService: StudentService, private messageService:MessageService) { }
 
@@ -72,8 +74,9 @@ export class MessageContainerComponent implements OnInit {
       this.changeStudentEvent.subscribe(data => {
         this.student = data;
         this.messageArray = []
+        this.loadedMessages = 0;
         this.setMessageParams();
-        this.getMessages();
+        this.getMessages(this.perLoadCount, '+', false);
       })
     }
     
@@ -106,16 +109,22 @@ export class MessageContainerComponent implements OnInit {
       
     });
    
-    this.getMessages();
+    this.getMessages(this.perLoadCount, '+', false);
   }
 
-  private getMessages() {
+  public loadMore() {
+    const fromId:string = this.messageArray[0].id;
+    this.getMessages(this.perLoadCount + 1, fromId, true);
+  }
+
+  private getMessages(count:number, from:string, slice:boolean) {
     let params = new HttpParams()
       .set('senderId', String(this.message.senderId))
       .set('receiverId', String(this.message.receiverId))
-      .set('from', encodeURIComponent('+')).set('count', "20")
+      .set('from', encodeURIComponent(from)).set('count', String(count))
     this.messageService.getMessagePortion(params).subscribe(result => {
-      let tempMessages = result.reverse()
+      let tempMessages = slice ? result.slice(1).reverse() : result.reverse()
+      this.loadedMessages += tempMessages.length;
       this.messageArray = tempMessages.concat(this.messageArray);
     })
   }
