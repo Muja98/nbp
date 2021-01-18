@@ -27,12 +27,12 @@ export class GroupService {
     return this.http.post(URL + "/api/groups/" + ownerId, {Name: name, Field: field, Description: description, GroupPicturePath: groupPicturePath});
   }
 
-  getGroupMembers(groupId:number, studentId:number) {
-    return this.http.get<Student[]>(URL + "/api/groups/" + groupId + "/members/student/" + studentId);
+  getGroupMembers(groupId:number, requesterId:number) {
+    return this.http.get<Student[]>(URL + "/api/groups/" + groupId + "/members/requester/" + requesterId);
   }
 
-  getGroupOwner(groupId:number, studentId:number) {
-    return this.http.get<Student>(URL + "/api/groups/" + groupId + "/owner/student/" + studentId);
+  getGroupOwner(groupId:number, requesterId:number) {
+    return this.http.get<Student>(URL + "/api/groups/" + groupId + "/owner/requester/" + requesterId);
   }
 
   joinGroup(studentId:number, groupId:number) {
