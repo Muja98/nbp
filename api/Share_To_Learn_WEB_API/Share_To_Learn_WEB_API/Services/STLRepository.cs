@@ -668,6 +668,7 @@ namespace Share_To_Learn_WEB_API.Services
             int biggerId = message.SenderId > message.ReceiverId ? message.SenderId : message.ReceiverId;
             int smallerId = message.SenderId < message.ReceiverId ? message.SenderId : message.ReceiverId;
             await redisDB.StreamAddAsync($"messages:{biggerId}:{smallerId}:chat", values);
+
             ////////////////
             
             string groupName = "peraIzika";
