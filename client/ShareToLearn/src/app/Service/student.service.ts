@@ -106,8 +106,8 @@ export class StudentService {
     return this.http.get(URL + "/api/student/friend-count", {'params': params});
   }
 
-  getSpecificStudent(studentId:number) {
-    return this.http.get<Student>(URL + "/api/student/student/" + studentId);
+  getSpecificStudent(studentId:number, requesterId:number) {
+    return this.http.get<Student>(URL + "/api/student/" + studentId + "/requester/" + requesterId);
   }
 
   getFriendRequests(studentId:number) {

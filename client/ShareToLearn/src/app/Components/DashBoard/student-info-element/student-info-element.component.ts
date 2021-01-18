@@ -56,7 +56,7 @@ export class StudentInfoElementComponent implements OnInit {
     }
     
     const receiver = this.studentObject;
-    this.messageService.startChat(this.firstMessage, {'sender': sender, 'receiver': receiver}).subscribe(result => {
+    this.messageService.startChat({'sender': sender, 'receiver': receiver, 'firstMessage': this.firstMessage}).subscribe(result => {
       this.router.navigate(["/dashboard/messanger"])
     });
   }
@@ -75,5 +75,11 @@ export class StudentInfoElementComponent implements OnInit {
 
 
     this.studentService.sendFriendRequest(currentUser.id, this.studentObject.id, request);
+  }
+
+  public canSendFriendRequest():boolean {
+    if ((this.studentService.getStudentFromStorage()['id'] != String(this.studentObject.id)) && !this.studentObject.isFriend)
+      return true;
+    return false;
   }
 }
