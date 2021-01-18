@@ -5,6 +5,6 @@ export class Message
     receiver: string = "";
     receiverId: number = 0;
     content:string = "";
-
+    id:string = "";
     constructor(){}
 }
