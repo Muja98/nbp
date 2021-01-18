@@ -119,4 +119,8 @@ export class StudentService {
   deleteFriendRequest(receiverId:number, requestId:string) {
     this.http.delete(URL + "/api/student/friend_request/receiver/" + receiverId + "/request/" + requestId).subscribe(()=>{});
   }
+  sendFriendRequest(senderId:number, receiverId:number, request:FriendRequest) {
+    this.http.post(URL + "/api/student/friend_request/sender/" + senderId + "/receiver/" + receiverId, 
+    {firstName: request.request.firstName, lastName: request.request.lastName, email: request.request.email, profilePicturePath:request.request.profilePicturePath}).subscribe(()=>{});
+  }
 }

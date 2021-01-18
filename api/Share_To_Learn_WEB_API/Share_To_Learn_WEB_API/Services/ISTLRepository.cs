@@ -61,7 +61,7 @@ namespace Share_To_Learn_WEB_API.Services
 
         Task SendMessage(Message message);
         Task<IEnumerable<MessageDTO>> ReceiveMessage(int senderId, int receiverId, string from, int count);
-        Task StartConversationTemp(ConversationParticipantsDTO participants);
+        Task StartConversation(ConversationDTO participants);
         Task<IEnumerable<StudentDTO>> GetStudentsInChatWith(int studentId);
         Task<IEnumerable<int>> GetIdsStudentsInChatWith(int studentId);
 
@@ -69,5 +69,6 @@ namespace Share_To_Learn_WEB_API.Services
         Task DeleteFriendRequest(int receiverId, string requestId);
         Task SendFriendRequest(int senderId, int receiverId, Request sender);
         Task<IEnumerable<RequestDTO>> GetFriendRequests(int receiverId);
+        Task SetTimeToLiveForStream(int senderId, int receiverId);
     }
 }

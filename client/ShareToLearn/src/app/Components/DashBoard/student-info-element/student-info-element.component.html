@@ -1,4 +1,4 @@
-<div class="card mt-4" style="max-width: 540px;">
+<div class="card mt-4" style="max-width: 600px;">
     <div class="row no-gutters">
         <div class="col d-flex justify-content-center align-items-center">
             <img  [src]="imgSrc" height="75px" width="75px" class="rounded-circle mt-2 mb-2" alt="profilePicture.jpg">
@@ -14,6 +14,11 @@
                 type="button" (click)="handleViewStudentProfile()"
                 class="btn btn-outline-primary" style="margin-top: 10px;">
                 View profile
+            </button>
+            <button *ngIf="!studentObject.isFriend"
+                type="button" (click)="handleSendFriendRequest()"
+                class="btn btn-outline-primary" style="margin-top: 10px;">
+                Send friend request
             </button>
             <!-- <button
                 type="button" (click)="handleStartChat()" *ngIf="canChatWith && studentObject.isFriend"
