@@ -56,7 +56,7 @@ export class StudentInfoElementComponent implements OnInit {
     }
     
     const receiver = this.studentObject;
-    this.messageService.startChat(this.firstMessage, {'sender': sender, 'receiver': receiver}).subscribe(result => {
+    this.messageService.startChat({'sender': sender, 'receiver': receiver, 'firstMessage': this.firstMessage}).subscribe(result => {
       this.router.navigate(["/dashboard/messanger"])
     });
   }

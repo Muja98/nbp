@@ -2,6 +2,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { StudentService } from './../../../Service/student.service';
 import { Student } from './../../../Model/student';
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { FriendRequest } from 'src/app/Model/friendrequest';
+import { MessageService } from 'src/app/Service/message.service';
 
 @Component({
   selector: 'app-profile',
@@ -18,14 +20,16 @@ export class ProfileComponent implements OnInit, OnDestroy {
   public imgSrc:string;
   public imgSrcPom:string;
   private sub:any;
+  private inChatWith:number[];
+  public firstMessage:string;
 
-  constructor(private service:StudentService,private router:Router, private route:ActivatedRoute) {
+  constructor(private studentService:StudentService,private router:Router, private route:ActivatedRoute, private messageService:MessageService) {
     
    }
   
   handleSetStudent():void
   {
-    this.tempStudent = this.service.getStudentFromStorage();
+    this.tempStudent = this.studentService.getStudentFromStorage();
     this.student.student.firstName = this.tempStudent.firstName;
     if(this.student.student.firstName === this.tempStudent.lastName)
       this.student.student.lastName = "";
@@ -106,13 +110,71 @@ export class ProfileComponent implements OnInit, OnDestroy {
       else
         this.student.student.dateOfBirth = this.dateOfBirth
      
-      this.service.editStudent(this.student);
-      this.service.logoutStudent();
+      this.studentService.editStudent(this.student);
+      this.studentService.logoutStudent();
       this.router.navigate(['/login'])
   }
 
   handleViewStudentGroups(): void {
     this.router.navigate(['dashboard/student-groups/' + this.studentId]);
+  }
+
+  handleSendFriendRequest(): void {
+    debugger
+    let currentUser = this.studentService.getStudentFromStorage();
+
+    var request = new FriendRequest();
+    request.request.id = currentUser.id;
+    request.request.firstName = currentUser.firstName;
+    request.request.lastName = currentUser.lastName;
+    request.request.email = currentUser.email;
+    request.request.profilePicturePath = currentUser.profilePicturePath;
+
+
+    this.studentService.sendFriendRequest(currentUser.id, this.student.id, request);
+  }
+
+  handleStartChat(): void {
+    console.log(this.firstMessage)
+    const studentFromStorage = this.studentService.getStudentFromStorage();
+    const sender = new Student();
+    sender.id = parseInt(studentFromStorage['id']);
+    sender.isFriend = true;
+    sender.student = {
+      firstName: studentFromStorage['firstName'],
+      lastName: studentFromStorage['lastName'],
+      dateOfBirth: new Date(studentFromStorage['dateOfBirth']),
+      email: studentFromStorage['email'],
+      profilePicturePath: String(studentFromStorage['profilePicturePath'])
+    }
+    
+    const receiver = this.student;
+    this.messageService.startChat({'sender': sender, 'receiver': receiver, 'firstMessage': this.firstMessage}).subscribe(result => {
+      this.router.navigate(["/dashboard/messanger"])
+    });
+  }
+
+  public isLoaded(): boolean {
+    if(this.studentId) {
+      if(this.student && this.inChatWith)
+        return true
+      return false
+    }
+    else {
+      if(this.student)
+        return true
+      return false
+    }
+  }
+
+  public canChatWith(): boolean {
+    return this.inChatWith.includes(this.studentId);
+  }
+
+  private getIdsStudentsInChatWith() {
+    this.messageService.getIdsStudentsInChatWith(parseInt(this.studentService.getStudentFromStorage()['id'])).subscribe(
+      result => this.inChatWith = result
+    )
   }
 
   
@@ -131,13 +193,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.pomStudent.student.dateOfBirth = this.student.student.dateOfBirth;
       }
       else {
-        this.service.getSpecificStudent(this.studentId).subscribe(
+        this.studentService.getSpecificStudent(this.studentId, parseInt(this.studentService.getStudentFromStorage()['id'])).subscribe(
           result => {
             this.student = result;
             this.imgSrc = 'data:image/png;base64,' + this.student.student.profilePicturePath;
             this.dateOfBirth = new Date(this.student.student.dateOfBirth);
           }
         )
+
+        this.getIdsStudentsInChatWith();
       }
     })
   }

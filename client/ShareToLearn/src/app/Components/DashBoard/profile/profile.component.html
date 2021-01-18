@@ -1,5 +1,5 @@
 <div class="container p-5">
-    <div *ngIf="student">
+    <div *ngIf="isLoaded()">
         <div class="row justify-content-center" style="padding-top: 130px;" >
             <div class="col-lg-9  col-sm-12 " >
                 <div class="row  flex-row  flex-wrap " >
@@ -45,6 +45,35 @@
                                 class="btn btn-outline-primary" style="margin-top: 10px;">
                                 View user's groups
                             </button>
+                            <button
+                                type="button" (click)="handleSendFriendRequest()" *ngIf="!student.isFriend"
+                                class="btn btn-outline-primary" style="margin-top: 10px; margin-left: 10px">
+                                Send friend request
+                            </button>
+                            <div class="row" *ngIf="canChatWith() && studentObject.isFriend" style="margin-top: 10px;">
+                                <div class="col">
+                                    <div ngbDropdown class="d-inline-block dropend">
+                                        <button class="btn btn-outline-primary" id="dropdownStartChat" ngbDropdownToggle>Start chat</button>
+                                        <div ngbDropdownMenu aria-labelledby="dropdownStartChat">
+                                            <div class="px-4 py-3">
+                                                <div class="form-group">
+                                                    <label for="firstMessageText">Send first message</label>
+                                                    <textarea 
+                                                        class="form-control" aria-label="With textarea" id="firstMessageText"
+                                                        style="resize: none; font-size: 14px;" placeholder="Write first message" 
+                                                        rows="5" [(ngModel)]="firstMessage">
+                                                    </textarea>
+                                                </div>
+                                                <button 
+                                                    type="button" class="btn btn-outline-primary" 
+                                                    (click)="handleStartChat()" [disabled]="!firstMessage || firstMessage.length <= 0">
+                                                    Send
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="row pt-5" *ngIf="!studentId">
                                 <input type="file"  (change)="onUploadChange($event)" accept=".png, .jpg, .jpeg, .pdf" />
@@ -59,7 +88,7 @@
             </div>
         </div>
     </div>
-    <div class="spinner-border" role="status" *ngIf="!student">
+    <div class="spinner-border" role="status" *ngIf="!isLoaded()">
         <span class="sr-only">Loading...</span>
     </div>     
 </div> 
