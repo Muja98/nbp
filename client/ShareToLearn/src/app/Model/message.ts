@@ -1,10 +1,10 @@
 export class Message
 {
-    Sender:string = "";
-    SenderId:number = 0;
-    Receiver: string = "";
-    ReceiverId: number = 0;
-    Content:string = "";
-
+    sender:string = "";
+    senderId:number = 0;
+    receiver: string = "";
+    receiverId: number = 0;
+    content:string = "";
+    id:string = "";
     constructor(){}
 }

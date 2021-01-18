@@ -11,5 +11,6 @@ namespace Share_To_Learn_WEB_API.Entities
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
+        public string ProfilePicturePath { get; set; }
     }
 }

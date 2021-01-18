@@ -1,0 +1,26 @@
+<div class="card" style="max-width: 300px;">
+    <div class="row no-gutters  d-flex justify-content-around">
+        <div class="col-2 d-flex justify-content-center align-items-center">
+            <img *ngIf="request.request.profilePicturePath" [src]="request.request.profilePicturePath" height="40px" width="40px" class="rounded-circle mt-1 mb-1" alt="profilePicture.jpg">
+        </div>
+        <div class="col">
+            <div class="card-body">
+                <h6> {{ request.request.firstName }} {{request.request.lastName }} </h6>
+            </div>
+        </div>
+    </div>
+    <div class="row no-gutters d-flex justify-content-around md-2" style="margin-bottom: 10px;">
+        <div class="col">
+            <button type="button" class="btn btn-outline-success" 
+                 (click)="handleAccept()">
+                Accept
+            </button>
+        </div>
+        <div class="col">
+            <button type="button" class="btn btn-outline-danger pd-2"
+                (click)="handleDelete()">
+                Delete
+            </button>
+        </div>
+    </div>
+</div>

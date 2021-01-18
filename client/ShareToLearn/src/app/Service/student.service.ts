@@ -1,3 +1,4 @@
+import { FriendRequest } from 'src/app/Model/friendrequest';
 import { Student } from './../Model/student';
 import { Injectable } from '@angular/core';
 import URL from '../../API/api';
@@ -5,6 +6,7 @@ import {HttpClient} from '@angular/common/http';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
 import { getLocaleDateTimeFormat } from '@angular/common';
+import { request } from 'http';
 
 
 @Injectable({
@@ -106,5 +108,15 @@ export class StudentService {
 
   getSpecificStudent(studentId:number) {
     return this.http.get<Student>(URL + "/api/student/student/" + studentId);
+  }
+
+  getFriendRequests(studentId:number) {
+    return this.http.get<FriendRequest[]>(URL + "/api/student/friend_request/receiver/" + studentId);
+  }
+  acceptFriendRequest(senderId:number, receiverId:number, requestId:string) {
+    this.http.post(URL + "/api/student/friendship/sender/" + senderId + "/receiver/"+ receiverId + "/request/" + requestId, {}).subscribe(()=>{});
+  }
+  deleteFriendRequest(receiverId:number, requestId:string) {
+    this.http.delete(URL + "/api/student/friend_request/receiver/" + receiverId + "/request/" + requestId).subscribe(()=>{});
   }
 }

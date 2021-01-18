@@ -29,8 +29,8 @@ namespace Share_To_Learn_WEB_API.Controllers
         public async Task<ActionResult> GetFilteredStudents([FromQuery]string firstName, [FromQuery]string lastName, [FromQuery]bool orderByName, [FromQuery]bool descending , int from, int to, int user)
         {
             string userFilter = "(not ID(s1)=" + user + ") and ID(s2)=" + user;
-            string whereFirstName = string.IsNullOrEmpty(firstName) ? "" : ("s.FirstName=~\"(?i).*" + firstName + ".*\"");
-            string whereLastName = string.IsNullOrEmpty(lastName) ? "" : ("s.LastName=~\"(?i).*" + lastName + ".*\"");
+            string whereFirstName = string.IsNullOrEmpty(firstName) ? "" : ("s1.FirstName=~\"(?i).*" + firstName + ".*\"");
+            string whereLastName = string.IsNullOrEmpty(lastName) ? "" : ("s1.LastName=~\"(?i).*" + lastName + ".*\"");
             string where = "";
             if (!string.IsNullOrEmpty(whereFirstName) && !string.IsNullOrEmpty(whereLastName))
                 where += whereFirstName + " AND " + whereLastName;
@@ -124,9 +124,9 @@ namespace Share_To_Learn_WEB_API.Controllers
         [Route("student-count")]
         public async Task<ActionResult> GetFilteredStudentsCount([FromQuery] string firstName, [FromQuery] string lastName, [FromQuery] int user)
         {
-            string userFilter = "not ID(s)=" + user;
-            string whereFirstName = string.IsNullOrEmpty(firstName) ? "" : ("s.FirstName=~\"(?i).*" + firstName + ".*\"");
-            string whereLastName = string.IsNullOrEmpty(lastName) ? "" : ("s.LastName=~\"(?i).*" + lastName + ".*\"");
+            string userFilter = "(not ID(s1)=" + user + ") and ID(s2)=" + user;
+            string whereFirstName = string.IsNullOrEmpty(firstName) ? "" : ("s1.FirstName=~\"(?i).*" + firstName + ".*\"");
+            string whereLastName = string.IsNullOrEmpty(lastName) ? "" : ("s1.LastName=~\"(?i).*" + lastName + ".*\"");
             string where = "";
             if (!string.IsNullOrEmpty(whereFirstName) && !string.IsNullOrEmpty(whereLastName))
                 where += whereFirstName + " AND " + whereLastName;
@@ -180,8 +180,8 @@ namespace Share_To_Learn_WEB_API.Controllers
         public async Task<ActionResult> GetFilteredFriends([FromQuery] string firstName, [FromQuery] string lastName, [FromQuery] bool orderByName, [FromQuery] bool descending, int from, int to, int user)
         {
             string userFilter = "ID(s)=" + user;
-            string whereFirstName = string.IsNullOrEmpty(firstName) ? "" : ("s.FirstName=~\"(?i).*" + firstName + ".*\"");
-            string whereLastName = string.IsNullOrEmpty(lastName) ? "" : ("s.LastName=~\"(?i).*" + lastName + ".*\"");
+            string whereFirstName = string.IsNullOrEmpty(firstName) ? "" : ("s1.FirstName=~\"(?i).*" + firstName + ".*\"");
+            string whereLastName = string.IsNullOrEmpty(lastName) ? "" : ("s1.LastName=~\"(?i).*" + lastName + ".*\"");
             string where = "";
             if (!string.IsNullOrEmpty(whereFirstName) && !string.IsNullOrEmpty(whereLastName))
                 where += whereFirstName + " AND " + whereLastName;
@@ -193,16 +193,16 @@ namespace Share_To_Learn_WEB_API.Controllers
             string order = "";
             if (!orderByName)
             {
-                order += "ID(s)";
+                order += "ID(s1)";
                 if (descending)
                     order += " desc";
             }
             else
             {
                 if (descending)
-                    order += "s.FirstName desc, s.LastName desc";
+                    order += "s1.FirstName desc, s1.LastName desc";
                 else
-                    order += "s.FirstName, s.LastName";
+                    order += "s1.FirstName, s1.LastName";
             }
             IEnumerable<StudentDTO> students;
 
@@ -256,6 +256,14 @@ namespace Share_To_Learn_WEB_API.Controllers
         {
             var result = await _repository.GetFriendRequests(receiverId);
             return Ok(result);
+        }
+
+        [HttpDelete]
+        [Route("friend_request/receiver/{receiverId}/request/{requestId}")]
+        public async Task<IActionResult> DeleteFriendRequest(int receiverId, string requestId)
+        {
+            await _repository.DeleteFriendRequest(receiverId, requestId);
+            return Ok("request deleted succesfull!");
         }
     }
 }

@@ -12,6 +12,15 @@
           <a style="color:white; font-weight: 500;" class="nav-link" [ngClass]="isActive(i)" [routerLink]="linkRoot + link.link"> {{ link.text }} </a>
         </li>
       </ul>
+      <div class="btn-group mr-3">
+        <button type="button" class="btn btn-primary">Friend requests</button>
+        <div class="btn-group" ngbDropdown role="group" aria-label="Button group with nested dropdown">
+          <button class="btn btn-primary dropdown-toggle-split" ngbDropdownToggle></button>
+          <div class="dropdown-menu" ngbDropdownMenu>
+            <app-friend-requests *ngFor='let request of friend_requests' [userId]='userId' [request]='request' (changed)="removeRequestFromList($event)"></app-friend-requests>
+          </div>
+        </div>
+      </div>
       <div (click)="handleLogOut()" class="col-1 d-flex justify-content-center align-items-center" style="cursor: pointer;">
         <p style="position: relative; top: 5px; color:white; font-weight: 500;">Log Out</p>
       </div>
