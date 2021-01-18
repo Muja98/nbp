@@ -4,6 +4,7 @@ import {HttpClient} from '@angular/common/http';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
 import { Group } from '../Model/group';
+import { Student } from '../Model/student';
 
 @Injectable({
   providedIn: 'root'
@@ -26,12 +27,12 @@ export class GroupService {
     return this.http.post(URL + "/api/groups/" + ownerId, {Name: name, Field: field, Description: description, GroupPicturePath: groupPicturePath});
   }
 
-  getGroupMembers(groupId:number) {
-    return this.http.get(URL + "/api/groups/" + groupId + "/members");
+  getGroupMembers(groupId:number, studentId:number) {
+    return this.http.get<Student[]>(URL + "/api/groups/" + groupId + "/members/student/" + studentId);
   }
 
-  getGroupOwner(groupId:number) {
-    return this.http.get(URL + "/api/groups/" + groupId + "/owner");
+  getGroupOwner(groupId:number, studentId:number) {
+    return this.http.get<Student>(URL + "/api/groups/" + groupId + "/owner/student/" + studentId);
   }
 
   joinGroup(studentId:number, groupId:number) {

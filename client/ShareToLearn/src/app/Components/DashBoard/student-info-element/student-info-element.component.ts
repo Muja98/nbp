@@ -76,4 +76,10 @@ export class StudentInfoElementComponent implements OnInit {
 
     this.studentService.sendFriendRequest(currentUser.id, this.studentObject.id, request);
   }
+
+  public canSendFriendRequest():boolean {
+    if ((this.studentService.getStudentFromStorage()['id'] != String(this.studentObject.id)) && !this.studentObject.isFriend)
+      return true;
+    return false;
+  }
 }

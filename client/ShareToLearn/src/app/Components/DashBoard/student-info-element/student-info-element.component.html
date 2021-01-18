@@ -15,16 +15,11 @@
                 class="btn btn-outline-primary" style="margin-top: 10px;">
                 View profile
             </button>
-            <button *ngIf="!studentObject.isFriend"
+            <button *ngIf="canSendFriendRequest()"
                 type="button" (click)="handleSendFriendRequest()"
                 class="btn btn-outline-primary" style="margin-top: 10px;">
                 Send friend request
             </button>
-            <!-- <button
-                type="button" (click)="handleStartChat()" *ngIf="canChatWith && studentObject.isFriend"
-                class="btn btn-outline-primary" style="margin-top: 10px;">
-                Start chat
-            </button> -->
             <div class="row" *ngIf="canChatWith && studentObject.isFriend" style="margin-top: 10px;">
                 <div class="col">
                     <div ngbDropdown class="d-inline-block dropend">

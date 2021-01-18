@@ -408,28 +408,38 @@ namespace Share_To_Learn_WEB_API.Services
                     .ExecuteWithoutResultsAsync();
         }
 
-        public async Task<IEnumerable<StudentDTO>> GetGroupMembers(int groupId)
+        public async Task<IEnumerable<StudentDTO>> GetGroupMembers(int groupId, int studentId)
         {
             return await _client.Cypher
-                    .Match("(s:Student)-[:MEMBER]-(g:Group)")
-                    .Where("ID(g) = $groupId")
-                    .WithParam("groupId", groupId)
+                    .Match("(s:Student)-[:MEMBER]-(g:Group), (s1:Student)")
+                    .Where("ID(g) = $groupId AND ID(s1) = $studentId")
+                    .WithParams(new
+                    {
+                        groupId = groupId,
+                        studentId = studentId
+                    })
                     .Return(() => new StudentDTO
                     {
                         Id = Return.As<int>("ID(s)"),
+                        IsFriend = Return.As<bool>("exists((s1)-[:FRIEND]-(s))"),
                         Student = Return.As<Student>("s")
                     }).ResultsAsync;
         }
 
-        public async Task<StudentDTO> GetGroupOwner(int groupId)
+        public async Task<StudentDTO> GetGroupOwner(int groupId, int studentId)
         {
             var res = await _client.Cypher
-                    .Match("(s:Student)-[:OWNER]-(g:Group)")
-                    .Where("ID(g) = $groupId")
-                    .WithParam("groupId", groupId)
+                    .Match("(s:Student)-[:OWNER]-(g:Group), (s1:Student)")
+                    .Where("ID(g) = $groupId AND ID(s1) = $studentId")
+                    .WithParams(new
+                    {
+                        groupId = groupId,
+                        studentId = studentId
+                    })
                     .Return(() => new StudentDTO
                     {
                         Id = Return.As<int>("ID(s)"),
+                        IsFriend = Return.As<bool>("exists((s1)-[:FRIEND]-(s))"),
                         Student = Return.As<Student>("s")
                     }).ResultsAsync;
 

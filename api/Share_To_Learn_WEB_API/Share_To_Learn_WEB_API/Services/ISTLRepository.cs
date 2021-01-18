@@ -39,8 +39,8 @@ namespace Share_To_Learn_WEB_API.Services
         Task DeleteComment(int commentId);
         Task UpdateComment(int commentId, Comment comment);
 
-        Task<IEnumerable<StudentDTO>> GetGroupMembers(int groupId);
-        Task<StudentDTO> GetGroupOwner(int groupId);
+        Task<IEnumerable<StudentDTO>> GetGroupMembers(int groupId, int studentId);
+        Task<StudentDTO> GetGroupOwner(int groupId, int studentId);
         Task<StudentDTO> GetSpecificStudent(int studentId);
         Task<string> GetStudentGroupRelationship(int studentId, int groupId);
         Task<string> GetGroupImage(int groupId);

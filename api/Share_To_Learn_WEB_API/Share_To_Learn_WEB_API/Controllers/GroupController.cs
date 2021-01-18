@@ -171,10 +171,10 @@ namespace Share_To_Learn_WEB_API.Controllers
 
         
         [HttpGet]
-        [Route("{groupId}/members")]
-        public async Task<ActionResult> GetGroupMembers(int groupId)
+        [Route("{groupId}/members/student/{studentId}")]
+        public async Task<ActionResult> GetGroupMembers(int groupId, int studentId)
         {
-            var result = await _repository.GetGroupMembers(groupId);
+            var result = await _repository.GetGroupMembers(groupId, studentId);
 
             foreach(StudentDTO s in result)
                 s.Student.ProfilePicturePath = FileManagerService.LoadImageFromFile(s.Student.ProfilePicturePath);
@@ -183,10 +183,10 @@ namespace Share_To_Learn_WEB_API.Controllers
         }
 
         [HttpGet]
-        [Route("{groupId}/owner")]
-        public async Task<ActionResult> GetGroupOwner(int groupId)
+        [Route("{groupId}/owner/student/{studentId}")]
+        public async Task<ActionResult> GetGroupOwner(int groupId, int studentId)
         {
-            var result = await _repository.GetGroupOwner(groupId);
+            var result = await _repository.GetGroupOwner(groupId, studentId);
             result.Student.ProfilePicturePath = FileManagerService.LoadImageFromFile(result.Student.ProfilePicturePath);
             return Ok(result);
         }
