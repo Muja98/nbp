@@ -34,7 +34,7 @@ namespace Share_To_Learn_WEB_API.RedisConnection
                         { 
                             _connection = ConnectionMultiplexer.Connect(ConnectionString);
                             var friendRequestsPubSub = _connection.GetSubscriber();
-                            friendRequestsPubSub.Subscribe("friend.requests").OnMessage(message =>
+                            friendRequestsPubSub.Subscribe("chat.messages").OnMessage(message =>
                             {
                                 Message deserializedMessage = JsonSerializer.Deserialize<Message>(message.Message);
                                 int biggerId = deserializedMessage.SenderId > deserializedMessage.ReceiverId ? deserializedMessage.SenderId : deserializedMessage.ReceiverId;

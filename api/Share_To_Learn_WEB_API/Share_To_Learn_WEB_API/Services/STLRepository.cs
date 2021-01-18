@@ -673,7 +673,7 @@ namespace Share_To_Learn_WEB_API.Services
 
             var jsonMessage = JsonSerializer.Serialize(message);
             ISubscriber chatPubSub = _redisConnection.GetSubscriber();
-            await chatPubSub.PublishAsync("friend.requests", jsonMessage);
+            await chatPubSub.PublishAsync("chat.messages", jsonMessage);
 
             //string groupName = "peraIzika";
             //_ = _hub.Clients.Group(groupName).SendAsync("ReceiveMessage", message);
