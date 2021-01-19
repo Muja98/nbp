@@ -50,7 +50,7 @@
                                 class="btn btn-outline-primary" style="margin-top: 10px; margin-left: 10px">
                                 Send friend request
                             </button>
-                            <div class="row" *ngIf="canChatWith() && studentObject.isFriend" style="margin-top: 10px;">
+                            <div class="row" *ngIf="canChatWith() && student.isFriend" style="margin-top: 10px;">
                                 <div class="col">
                                     <div ngbDropdown class="d-inline-block dropend">
                                         <button class="btn btn-outline-primary" id="dropdownStartChat" ngbDropdownToggle>Start chat</button>

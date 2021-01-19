@@ -44,7 +44,6 @@ namespace Share_To_Learn_WEB_API.RedisConnection
                                 _ = _hub.Clients.Group(groupName).SendAsync("ReceiveMessage", deserializedMessage);
                             });
 
-
                             var subPatternChannel = new RedisChannel("__keyevent@0__:*", RedisChannel.PatternMode.Pattern);
                             redisPubSub.Subscribe(subPatternChannel).OnMessage(message =>
                             {
@@ -84,7 +83,13 @@ namespace Share_To_Learn_WEB_API.RedisConnection
                                     }
                                     
                                 }
-                                
+
+                                redisPubSub.Subscribe("friendship.requests").OnMessage(message =>
+                                {
+                                    Message deserializedMessage = JsonSerializer.Deserialize<Message>(message.Message);
+                                    string groupName = $"requests:{deserializedMessage.ReceiverId}:fiendship";
+                                    _ = _hub.Clients.Group(groupName).SendAsync("ReceiveFriendRequests", deserializedMessage);
+                                });
                             });
                         }
                     }
