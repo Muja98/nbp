@@ -408,28 +408,38 @@ namespace Share_To_Learn_WEB_API.Services
                     .ExecuteWithoutResultsAsync();
         }
 
-        public async Task<IEnumerable<StudentDTO>> GetGroupMembers(int groupId)
+        public async Task<IEnumerable<StudentDTO>> GetGroupMembers(int groupId, int requesterId)
         {
             return await _client.Cypher
-                    .Match("(s:Student)-[:MEMBER]-(g:Group)")
-                    .Where("ID(g) = $groupId")
-                    .WithParam("groupId", groupId)
+                    .Match("(s:Student)-[:MEMBER]-(g:Group), (s1:Student)")
+                    .Where("ID(g) = $groupId AND ID(s1) = $requesterId")
+                    .WithParams(new
+                    {
+                        groupId = groupId,
+                        requesterId = requesterId
+                    })
                     .Return(() => new StudentDTO
                     {
                         Id = Return.As<int>("ID(s)"),
+                        IsFriend = Return.As<bool>("exists((s1)-[:FRIEND]-(s))"),
                         Student = Return.As<Student>("s")
                     }).ResultsAsync;
         }
 
-        public async Task<StudentDTO> GetGroupOwner(int groupId)
+        public async Task<StudentDTO> GetGroupOwner(int groupId, int requesterId)
         {
             var res = await _client.Cypher
-                    .Match("(s:Student)-[:OWNER]-(g:Group)")
-                    .Where("ID(g) = $groupId")
-                    .WithParam("groupId", groupId)
+                    .Match("(s:Student)-[:OWNER]-(g:Group), (s1:Student)")
+                    .Where("ID(g) = $groupId AND ID(s1) = $requesterId")
+                    .WithParams(new
+                    {
+                        groupId = groupId,
+                        requesterId = requesterId
+                    })
                     .Return(() => new StudentDTO
                     {
                         Id = Return.As<int>("ID(s)"),
+                        IsFriend = Return.As<bool>("exists((s1)-[:FRIEND]-(s))"),
                         Student = Return.As<Student>("s")
                     }).ResultsAsync;
 
@@ -606,15 +616,20 @@ namespace Share_To_Learn_WEB_API.Services
             return res.Single();
         }
 
-        public async Task<StudentDTO> GetSpecificStudent(int studentId)
+        public async Task<StudentDTO> GetSpecificStudent(int studentId, int requesterId)
         {
             var student = await _client.Cypher
-                    .Match("(s:Student)")
-                    .Where("ID(s) = $studentId")
-                    .WithParam("studentId", studentId)
+                    .Match("(s:Student), (s1:Student)")
+                    .Where("ID(s) = $studentId AND ID(s1) = $requesterId")
+                    .WithParams(new
+                    {
+                        studentId = studentId,
+                        requesterId = requesterId
+                    })
                     .Return(() => new StudentDTO
                     {
                         Id = Return.As<int>("ID(s)"),
+                        IsFriend = Return.As<bool>("exists((s)-[:FRIEND]-(s1))"),
                         Student = Return.As<Student>("s")
                     }).ResultsAsync;
             return student.Single();
@@ -674,7 +689,7 @@ namespace Share_To_Learn_WEB_API.Services
 
             var jsonMessage = JsonSerializer.Serialize(message);
             ISubscriber chatPubSub = _redisConnection.GetSubscriber();
-            await chatPubSub.PublishAsync("friend.requests", jsonMessage);
+            await chatPubSub.PublishAsync("chat.messages", jsonMessage);
 
             //string groupName = "peraIzika";
             //_ = _hub.Clients.Group(groupName).SendAsync("ReceiveMessage", message);
@@ -775,7 +790,7 @@ namespace Share_To_Learn_WEB_API.Services
             return result;
         }
 
-        public async Task StartConversationTemp(ConversationParticipantsDTO participants)
+        public async Task StartConversation(ConversationDTO participants)
         {
             string senderSetKey = $"student:{participants.Sender.Id}:chats";
             string receiverSetKey = $"student:{participants.Receiver.Id}:chats";
@@ -828,6 +843,15 @@ namespace Share_To_Learn_WEB_API.Services
             IDatabase redisDB = _redisConnection.GetDatabase();
             string key = "messages:" + biggerId + ":" + smallerId + ":chat";
             await redisDB.KeyDeleteAsync(key);
+        }
+        public async Task SetTimeToLiveForStream(int senderId, int receiverId)
+        {
+            IDatabase redisDB = _redisConnection.GetDatabase();
+
+            int biggerId = senderId > receiverId ? senderId : receiverId;
+            int smallerId = senderId < receiverId ? senderId : receiverId;
+
+            await redisDB.KeyExpireAsync($"messages:{biggerId}:{smallerId}:chat", new TimeSpan(0, 2, 30));
         }
     }
 }

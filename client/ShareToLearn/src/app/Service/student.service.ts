@@ -104,8 +104,8 @@ export class StudentService {
     return this.http.get(URL + "/api/student/friend-count", {'params': params});
   }
 
-  getSpecificStudent(studentId:number) {
-    return this.http.get<Student>(URL + "/api/student/student/" + studentId);
+  getSpecificStudent(studentId:number, requesterId:number) {
+    return this.http.get<Student>(URL + "/api/student/" + studentId + "/requester/" + requesterId);
   }
 
   getFriendRequests(studentId:number) {
@@ -116,5 +116,9 @@ export class StudentService {
   }
   deleteFriendRequest(receiverId:number, requestId:string) {
     this.http.delete(URL + "/api/student/friend_request/receiver/" + receiverId + "/request/" + requestId).subscribe(()=>{});
+  }
+  sendFriendRequest(senderId:number, receiverId:number, request:FriendRequest) {
+    this.http.post(URL + "/api/student/friend_request/sender/" + senderId + "/receiver/" + receiverId, 
+    {firstName: request.request.firstName, lastName: request.request.lastName, email: request.request.email, profilePicturePath:request.request.profilePicturePath}).subscribe(()=>{});
   }
 }

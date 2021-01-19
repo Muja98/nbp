@@ -42,11 +42,23 @@ namespace Share_To_Learn_WEB_API.Controllers
 
         [HttpPost]
         [Route("add-conversation/temp")]
-        public async Task<ActionResult> AddConversationTemp([FromBody] ConversationParticipantsDTO participants)
+        public async Task<ActionResult> StartConversation([FromBody] ConversationDTO participants)
         {
             try
             { 
-                await _repository.StartConversationTemp(participants);
+                await _repository.StartConversation(participants);
+                var message = new Message
+                {
+                    Sender = $"{participants.Sender.Student.FirstName} {participants.Sender.Student.LastName}",
+                    SenderId = participants.Sender.Id,
+                    Receiver = $"{participants.Receiver.Student.FirstName} {participants.Receiver.Student.LastName}",
+                    ReceiverId = participants.Receiver.Id,
+                    Content = participants.FirstMessage
+                };
+
+                await _repository.SendMessage(message);
+                await _repository.SetTimeToLiveForStream(participants.Sender.Id, participants.Receiver.Id);
+
                 return Ok();
             }
             catch(Exception ex)

@@ -235,10 +235,10 @@ namespace Share_To_Learn_WEB_API.Controllers
         }
 
         [HttpGet]
-        [Route("student/{studentId}")]
-        public async Task<ActionResult> GetSpecificStudent(int studentId)
+        [Route("{studentId}/requester/{requesterId}")]
+        public async Task<ActionResult> GetSpecificStudent(int studentId, int requesterId)
         {
-            StudentDTO student = await _repository.GetSpecificStudent(studentId);
+            StudentDTO student = await _repository.GetSpecificStudent(studentId, requesterId);
             return Ok(student);
         }
 

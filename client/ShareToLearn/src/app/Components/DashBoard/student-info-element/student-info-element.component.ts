@@ -1,3 +1,4 @@
+import { FriendRequest } from './../../../Model/friendrequest';
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { Student } from 'src/app/Model/student';
@@ -55,8 +56,30 @@ export class StudentInfoElementComponent implements OnInit {
     }
     
     const receiver = this.studentObject;
-    this.messageService.startChat(this.firstMessage, {'sender': sender, 'receiver': receiver}).subscribe(result => {
+    this.messageService.startChat({'sender': sender, 'receiver': receiver, 'firstMessage': this.firstMessage}).subscribe(result => {
       this.router.navigate(["/dashboard/messanger"])
     });
+  }
+
+  handleSendFriendRequest(): void {
+    debugger
+    //var userId =  JSON.parse(localStorage.getItem('user'))['id'];
+    let currentUser = this.studentService.getStudentFromStorage();
+
+    var request = new FriendRequest();
+    request.request.id = currentUser.id;
+    request.request.firstName = currentUser.firstName;
+    request.request.lastName = currentUser.lastName;
+    request.request.email = currentUser.email;
+    request.request.profilePicturePath = currentUser.profilePicturePath;
+
+
+    this.studentService.sendFriendRequest(currentUser.id, this.studentObject.id, request);
+  }
+
+  public canSendFriendRequest():boolean {
+    if ((this.studentService.getStudentFromStorage()['id'] != String(this.studentObject.id)) && !this.studentObject.isFriend)
+      return true;
+    return false;
   }
 }

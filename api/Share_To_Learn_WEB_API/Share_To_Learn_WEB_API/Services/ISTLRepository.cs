@@ -39,9 +39,9 @@ namespace Share_To_Learn_WEB_API.Services
         Task DeleteComment(int commentId);
         Task UpdateComment(int commentId, Comment comment);
 
-        Task<IEnumerable<StudentDTO>> GetGroupMembers(int groupId);
-        Task<StudentDTO> GetGroupOwner(int groupId);
-        Task<StudentDTO> GetSpecificStudent(int studentId);
+        Task<IEnumerable<StudentDTO>> GetGroupMembers(int groupId, int requesterId);
+        Task<StudentDTO> GetGroupOwner(int groupId, int requesterId);
+        Task<StudentDTO> GetSpecificStudent(int studentId, int requesterId);
         Task<string> GetStudentGroupRelationship(int studentId, int groupId);
         Task<string> GetGroupImage(int groupId);
 
@@ -61,7 +61,7 @@ namespace Share_To_Learn_WEB_API.Services
 
         Task SendMessage(Message message);
         Task<IEnumerable<MessageDTO>> ReceiveMessage(int senderId, int receiverId, string from, int count);
-        Task StartConversationTemp(ConversationParticipantsDTO participants);
+        Task StartConversation(ConversationDTO participants);
         Task<IEnumerable<StudentDTO>> GetStudentsInChatWith(int studentId);
         Task<IEnumerable<int>> GetIdsStudentsInChatWith(int studentId);
 
@@ -71,5 +71,6 @@ namespace Share_To_Learn_WEB_API.Services
         Task<IEnumerable<RequestDTO>> GetFriendRequests(int receiverId);
 
         Task DeleteConversation(int biggerId, int smallerId);
+        Task SetTimeToLiveForStream(int senderId, int receiverId);
     }
 }
