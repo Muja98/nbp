@@ -39,6 +39,7 @@
                         class="btn btn-outline-primary" style="margin-top: 10px;">
                         Visit group page
                     </button>
+                    <button class="btn btn-outline-danger mt-1" *ngIf="canDelete" (click)="handleDeleteGroup()">Delete group</button>
                 </div>
             </div>
         </div>

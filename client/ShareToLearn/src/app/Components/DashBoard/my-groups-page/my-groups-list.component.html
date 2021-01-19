@@ -7,7 +7,7 @@
                 </div>
             </div>      
             <div class="card" style="margin-top: 5; background-color: transparent; border: 0;" *ngFor='let group of ownerships' >
-                <app-group-element style="cursor: pointer;" [group]='group' [showMore]='false' [canJoin]='false' [canLeave]='false'></app-group-element>
+                    <app-group-element style="cursor: pointer;" [group]='group' [canDelete]="true" [showMore]='false' [canJoin]='false' [canLeave]='false'></app-group-element>
             </div>
         </div>
         <div class="col"> 

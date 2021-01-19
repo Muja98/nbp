@@ -28,7 +28,11 @@ namespace Share_To_Learn_WEB_API.Controllers
        
         public async Task<ActionResult> GetAllPosts(int groupId)
         {
-            var result = await _repository.GetAllPosts(groupId);
+            IEnumerable<PostDTO> result = await _repository.GetAllPosts(groupId);
+            foreach(PostDTO r in result)
+            {
+                r.Student.Student.ProfilePicturePath = FileManagerService.LoadImageFromFile(r.Student.Student.ProfilePicturePath);
+            }
             return Ok(result);
         }
 

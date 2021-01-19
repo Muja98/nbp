@@ -64,4 +64,9 @@ export class GroupService {
   getStudentGroups(studentId:number) {
     return this.http.get<Group[]>(URL + "/api/groups/student/" + studentId + "/groups");
   }
+
+  deleteGroup(groupId:number)
+  {
+    this.http.delete(URL+"/api/groups/"+groupId).subscribe(()=>{})
+  }
 }

@@ -25,8 +25,6 @@ import { GroupDocumentComponent } from './group-document/group-document.componen
 import { OtherUsersGroupsPageComponent } from './other-users-groups-page/other-users-groups-page.component';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {StoreModule} from '@ngrx/store';
-import {reducer} from '../ngrx/reducers/friendRequest.reducer';
 
 
 @NgModule({
@@ -59,9 +57,6 @@ import {reducer} from '../ngrx/reducers/friendRequest.reducer';
     BrowserAnimationsModule,
     ToastrModule.forRoot({
       timeOut: 5000
-    })
-    StoreModule.forRoot({
-      friendRequest: reducer
     }),
     RouterModule.forRoot([
       {path:'dashboard', component:DashboardComponent, children:[
