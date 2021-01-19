@@ -68,6 +68,8 @@ namespace Share_To_Learn_WEB_API.Services
         Task<string> getNextId(bool isImage);
         Task DeleteFriendRequest(int receiverId, string requestId);
         Task SendFriendRequest(int senderId, int receiverId, Request sender);
+        Task<IEnumerable<int>> GetFriendRequestSends(int senderId);
+
         Task<IEnumerable<RequestDTO>> GetFriendRequests(int receiverId);
 
         Task DeleteConversation(int biggerId, int smallerId);

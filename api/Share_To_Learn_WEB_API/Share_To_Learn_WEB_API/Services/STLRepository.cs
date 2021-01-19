@@ -757,7 +757,24 @@ namespace Share_To_Learn_WEB_API.Services
 
             IDatabase redisDB = _redisConnection.GetDatabase();
             var messageId = await redisDB.StreamAddAsync(channelName, values);
+
+            //Dodatna funkcija
+            await redisDB.SetAddAsync("friend:" + senderId + ":request", receiverId);
         }
+
+        public async Task<IEnumerable<int>> GetFriendRequestSends(int senderId)
+        {
+            IDatabase redisDB = _redisConnection.GetDatabase();
+            var result = await redisDB.SetMembersAsync("friend:" + senderId + ":request");
+
+            IList<int> arr = new List<int>();
+
+            foreach (var res in result)
+                arr.Add(Convert.ToInt32(res));
+
+            return arr;
+        }
+
 
         public async Task<IEnumerable<RequestDTO>> GetFriendRequests(int receiverId)
         {
@@ -853,5 +870,7 @@ namespace Share_To_Learn_WEB_API.Services
 
             await redisDB.KeyExpireAsync($"messages:{biggerId}:{smallerId}:chat", new TimeSpan(0, 2, 30));
         }
+
+       
     }
 }
