@@ -26,4 +26,9 @@ export class MessageService {
   getMessagePortion(params:any) {
     return this.http.get<Message[]>(URL + "/api/messages/receive", {'params': params})
   }
+
+  deleteMessage(biggerId:number, smallerId:number)
+  {
+     this.http.delete(URL+"/api/messages/deleteConversation/user/"+biggerId+"/"+smallerId).subscribe(()=>{});
+  }
 }

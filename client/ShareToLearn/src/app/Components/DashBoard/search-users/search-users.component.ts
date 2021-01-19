@@ -1,5 +1,6 @@
 import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Student } from 'src/app/Model/student';
 import { MessageService } from 'src/app/Service/message.service';
 import { StudentService } from 'src/app/Service/student.service';
@@ -24,7 +25,14 @@ export class SearchUsersComponent implements OnInit {
   private userId:string;
   private inChatWith:number[];
 
-  constructor(private studentService:StudentService, private messageService:MessageService) { }
+  friendRequests: Observable<number[]>; 
+
+  constructor(private studentService:StudentService, private messageService:MessageService) {
+
+   }
+
+
+
 
   ngOnInit(): void {
     this.userId = JSON.parse(localStorage.getItem('user'))['id'];

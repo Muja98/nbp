@@ -22,6 +22,7 @@ export class StudentContainerComponent implements OnInit {
 
   constructor(private toastr:ToastrService, public signalRService: signalRService, private messageService: MessageService, private studentService:StudentService) { }
 
+
   ngOnInit(): void {
     this.studentId = this.studentService.getStudentFromStorage()['id'];
     this.messageService.getStudentsInChatWith(this.studentId).subscribe(result => {

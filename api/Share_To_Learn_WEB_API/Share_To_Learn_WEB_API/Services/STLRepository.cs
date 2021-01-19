@@ -838,6 +838,12 @@ namespace Share_To_Learn_WEB_API.Services
             return studentIds;
         }
 
+        public async Task DeleteConversation(int biggerId, int smallerId)
+        {
+            IDatabase redisDB = _redisConnection.GetDatabase();
+            string key = "messages:" + biggerId + ":" + smallerId + ":chat";
+            await redisDB.KeyDeleteAsync(key);
+        }
         public async Task SetTimeToLiveForStream(int senderId, int receiverId)
         {
             IDatabase redisDB = _redisConnection.GetDatabase();

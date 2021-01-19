@@ -69,6 +69,8 @@ namespace Share_To_Learn_WEB_API.Services
         Task DeleteFriendRequest(int receiverId, string requestId);
         Task SendFriendRequest(int senderId, int receiverId, Request sender);
         Task<IEnumerable<RequestDTO>> GetFriendRequests(int receiverId);
+
+        Task DeleteConversation(int biggerId, int smallerId);
         Task SetTimeToLiveForStream(int senderId, int receiverId);
     }
 }
