@@ -40,7 +40,7 @@ namespace Share_To_Learn_WEB_API.RedisConnection
                                 Message deserializedMessage = JsonSerializer.Deserialize<Message>(message.Message);
                                 int biggerId = deserializedMessage.SenderId > deserializedMessage.ReceiverId ? deserializedMessage.SenderId : deserializedMessage.ReceiverId;
                                 int smallerId = deserializedMessage.SenderId < deserializedMessage.ReceiverId ? deserializedMessage.SenderId : deserializedMessage.ReceiverId;
-                                string groupName = $"messages:{biggerId}:{smallerId}:chat";
+                                string groupName = $"messages:{deserializedMessage.ReceiverId}:chat";
                                 _ = _hub.Clients.Group(groupName).SendAsync("ReceiveMessage", deserializedMessage);
                             });
 
