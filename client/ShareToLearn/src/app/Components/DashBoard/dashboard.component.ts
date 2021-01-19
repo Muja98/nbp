@@ -83,6 +83,8 @@ export class DashboardComponent implements OnInit {
         this._hubConnection.invoke("JoinRoom", channelName).catch((err)=>{
           console.log(err)
         })
+
+
       })
       .catch(err => console.log('Error while establishing connection :('));
 
@@ -95,6 +97,8 @@ export class DashboardComponent implements OnInit {
         this.toastr.info("New message from " + newMessage['sender'], "mess");    
       }
     });
+
+    
   }
 
   isActive(ind:number):object {

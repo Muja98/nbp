@@ -30,8 +30,9 @@ export class PostComponent implements OnInit {
     this.handleGetComment();
   }
 
-  handleReturnImage(string:String):any
+  handleReturnImage(string:any):any
   {
+  
     return "data:image/png;base64,"+string
   }
 

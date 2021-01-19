@@ -14,6 +14,7 @@ export class GroupElementComponent implements OnInit {
   @Input() showMore: boolean;
   @Input() canJoin: boolean;
   @Input() canLeave: boolean;
+  @Input() canDelete: boolean;
 
   public isCollapsed = true;
   private studentId:number;
@@ -25,7 +26,12 @@ export class GroupElementComponent implements OnInit {
     this.studentId = this.studentService.getStudentFromStorage()['id'];
     if(this.group.group.groupPicturePath !== null && this.group.group.groupPicturePath !== undefined && this.group.group.groupPicturePath!=="")
       this.groupImage = 'data:image/png;base64,'+ this.group.group.groupPicturePath;
+    console.log(this.group)
+  }
 
+  handleDeleteGroup():void{
+    this.groupService.deleteGroup(this.group.id)
+    window.location.reload();
   }
 
   handleGroupJoin(): void {

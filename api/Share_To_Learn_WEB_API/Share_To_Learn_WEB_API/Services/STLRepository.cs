@@ -871,6 +871,23 @@ namespace Share_To_Learn_WEB_API.Services
             await redisDB.KeyExpireAsync($"messages:{biggerId}:{smallerId}:chat", new TimeSpan(0, 2, 30));
         }
 
-       
+        public async Task DeleteGroup(int groupId)
+        {
+           await _client.Cypher
+                .Match("(gr:Group),(ps:Post),(st:Student),(co:Comment)," +
+                "(st)-[:WROTECOMMENT]->(co),(co)-[:STOREDIN]->(ps),(ps) -[:BELONG]->(gr)" )
+                .Where("ID(gr) = $groupId")
+                .WithParam("groupId", groupId)
+                .DetachDelete("co")
+                .ExecuteWithoutResultsAsync();
+
+            await _client.Cypher
+                .Match(" (gr:Group),(ps:Post),(dc:Document)," +
+                "(ps)-[:BELONG]->(gr),(gr) -[:CONTAINS]->(dc)")
+                .Where("ID(gr) = $groupId")
+                .WithParam("groupId", groupId)
+                .DetachDelete("gr,ps,dc")
+                .ExecuteWithoutResultsAsync();
+        }
     }
 }

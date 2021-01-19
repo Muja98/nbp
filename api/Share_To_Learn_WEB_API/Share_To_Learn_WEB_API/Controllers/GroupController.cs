@@ -216,5 +216,14 @@ namespace Share_To_Learn_WEB_API.Controllers
             path = FileManagerService.LoadImageFromFile(path);
             return Ok(new { image = path });
         }
+
+        [HttpDelete]
+        [Route ("{groupId}")]
+
+        public async Task<ActionResult> deleteGroup(int groupId)
+        {
+            await _repository.DeleteGroup(groupId);         
+            return Ok();
+        }
     }
 }

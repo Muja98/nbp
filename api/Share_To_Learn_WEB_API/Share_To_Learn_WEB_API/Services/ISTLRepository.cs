@@ -16,6 +16,7 @@ namespace Share_To_Learn_WEB_API.Services
         Task<bool> CreateNonExistingStudent(StudentRegisterDTO newStudent);
         Task<string> GetPassword(string email);
         Task CreateGroup(int ownerId, Group newGroup);
+        Task DeleteGroup(int groupId);
         Task<bool> CheckIfStudentIsMemberOfAGroup(int studentId, int groupId);
         Task AddStudentToGroup(int studentId, int groupId);
         Task RemoveStudentFromGroup(int studentId, int groupId);
