@@ -1,4 +1,12 @@
 <div class="container">
+    <h1>PERA</h1>
+    <button class="btn btn-success" (click)="addFriendRequest(1)">Add number</button>
+    <div *ngFor="let item of friendRequests | async" class="row">
+        <p>{{item}}</p>
+    </div>
+</div>
+
+<div class="container">
     <div class="row pb-5">
         <h1>Search users</h1>
     </div>

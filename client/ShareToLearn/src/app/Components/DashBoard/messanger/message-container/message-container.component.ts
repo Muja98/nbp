@@ -13,7 +13,7 @@ import { MessageService } from 'src/app/Service/message.service';
   templateUrl: './message-container.component.html',
   styleUrls: ['./message-container.component.css']
 })
-export class MessageContainerComponent implements OnInit {
+export class MessageContainerComponent implements OnInit  {
   @Input() student:Student;
   @Input() changeStudentEvent: EventEmitter<Student>;
   //public message:string = "";
@@ -27,8 +27,11 @@ export class MessageContainerComponent implements OnInit {
   public loadedMessages:number = 0;
   public perLoadCount:number = 20;
 
-  constructor(public signalRService: signalRService, private http: HttpClient, private userService: StudentService, private messageService:MessageService) { }
+  constructor(public signalRService: signalRService, private http: HttpClient, private userService: StudentService, private messageService:MessageService  ) {
 
+   }
+
+  
   handleAddMessage()
   {
     if(this.messsageText === "")return;
@@ -43,16 +46,23 @@ export class MessageContainerComponent implements OnInit {
       Content:this.messsageText
    }).subscribe(()=>{})
    this.messsageText = "";
-    // this._hubConnection
-    // .invoke('SendMessage', {
-    //   Sender:this.message.Sender,
-    //   SenderId: this.message.SenderId,
-    //   Receiver:this.message.Receiver, 
-    //   ReceiverId:this.message.ReceiverId,
-    //   Content:this.messsageText
-    // }, "peraIzika")
-    // .then(() => this.messsageText = '')
-    // .catch(err => console.error(err));
+
+  }
+
+  deleteConverasation()
+  {
+      let user =  this.userService.getStudentFromStorage().id;
+      let chatFriend = this.student.id
+
+      let bigger:number = 0;
+      let smaller:number = 0;
+      
+      bigger = parseInt( user>chatFriend? user:chatFriend );
+      smaller = parseInt( user<chatFriend? user:chatFriend );
+
+      this.messageService.deleteMessage(bigger,smaller);
+      this.messageArray = [];
+      window.location.reload();
   }
 
   
@@ -66,6 +76,7 @@ export class MessageContainerComponent implements OnInit {
       console.log(err)
     })
   }
+
 
 
   ngOnInit(): void {  

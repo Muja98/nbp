@@ -78,8 +78,6 @@ export class StudentService {
 
   editStudent(student:Student)
   {
-    
-  
    
     this.http.put(URL + "/api/student/"+student.id,{
       FirstName : student.student.firstName,

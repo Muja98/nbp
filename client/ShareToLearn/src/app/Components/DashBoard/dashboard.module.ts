@@ -23,6 +23,10 @@ import { StudentInfoElementComponent } from './student-info-element/student-info
 import { SearchUsersComponent } from './search-users/search-users.component';
 import { GroupDocumentComponent } from './group-document/group-document.component';
 import { OtherUsersGroupsPageComponent } from './other-users-groups-page/other-users-groups-page.component';
+
+import {StoreModule} from '@ngrx/store';
+import {reducer} from '../ngrx/reducers/friendRequest.reducer';
+
 @NgModule({
   declarations: [
                  MainPageComponent,
@@ -50,6 +54,9 @@ import { OtherUsersGroupsPageComponent } from './other-users-groups-page/other-u
     CommonModule,
     FormsModule,
     BrowserModule,
+    StoreModule.forRoot({
+      friendRequest: reducer
+    }),
     RouterModule.forRoot([
       {path:'dashboard', component:DashboardComponent, children:[
         {path:'main',component:MainPageComponent},

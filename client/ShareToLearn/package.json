@@ -23,6 +23,7 @@
     "@aspnet/signalr": "^1.1.4",
     "@auth0/angular-jwt": "^5.0.2",
     "@ng-bootstrap/ng-bootstrap": "^8.0.0",
+    "@ngrx/store": "^10.1.2",
     "boostrap": "^2.0.0",
     "bootstrap": "^4.5.3",
     "font-awesome": "^4.7.0",

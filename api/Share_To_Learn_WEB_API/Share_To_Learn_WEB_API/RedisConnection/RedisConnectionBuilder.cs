@@ -44,36 +44,47 @@ namespace Share_To_Learn_WEB_API.RedisConnection
                                 _ = _hub.Clients.Group(groupName).SendAsync("ReceiveMessage", deserializedMessage);
                             });
 
-                            redisPubSub.Subscribe("__keyevent@0__:expired").OnMessage(message =>
-                            {
-                                string keyName = message.Message;
-                                string[] keyNameParts = keyName.Split(':');
-                                int biggerId = int.Parse(keyNameParts[1]), smallerId = int.Parse(keyNameParts[2]);
-                                string setKeyBigger = $"student:{biggerId}:chats";
-                                string setKeySmaller = $"student:{smallerId}:chats";
-                                IDatabase redisDB = _connection.GetDatabase();
-                                var setEntriesBigger = redisDB.SortedSetRangeByRank(setKeyBigger, 0, -1, Order.Descending);
-                                var setEntriesSmaller = redisDB.SortedSetRangeByRank(setKeySmaller, 0, -1, Order.Descending);
-                                
-                                foreach (var entry in setEntriesBigger)
-                                {
-                                    StudentDTO student = JsonSerializer.Deserialize<StudentDTO>(entry);
-                                    if(student.Id == smallerId)
-                                    {
-                                        redisDB.SortedSetRemove(setKeyBigger, JsonSerializer.Serialize(student));
-                                        break;
-                                    }
-                                }
 
-                                foreach (var entry in setEntriesSmaller)
+                            var subPatternChannel = new RedisChannel("__keyevent@0__:*", RedisChannel.PatternMode.Pattern);
+                            redisPubSub.Subscribe(subPatternChannel).OnMessage(message =>
+                            {
+                                string str = message.Channel;
+                                if(str == "__keyevent@0__:expired" || str == "__keyevent@0__:del")
                                 {
-                                    StudentDTO student = JsonSerializer.Deserialize<StudentDTO>(entry);
-                                    if (student.Id == biggerId)
+                                    string keyName = message.Message;
+                                    string[] keyNameParts = keyName.Split(':');
+                                    if(keyNameParts.Length==4 && keyNameParts[0]=="messages" && keyNameParts[3]=="chat")
                                     {
-                                        redisDB.SortedSetRemove(setKeySmaller, JsonSerializer.Serialize(student));
-                                        break;
+                                        int biggerId = int.Parse(keyNameParts[1]), smallerId = int.Parse(keyNameParts[2]);
+                                        string setKeyBigger = $"student:{biggerId}:chats";
+                                        string setKeySmaller = $"student:{smallerId}:chats";
+                                        IDatabase redisDB = _connection.GetDatabase();
+                                        var setEntriesBigger = redisDB.SortedSetRangeByRank(setKeyBigger, 0, -1, Order.Descending);
+                                        var setEntriesSmaller = redisDB.SortedSetRangeByRank(setKeySmaller, 0, -1, Order.Descending);
+
+                                        foreach (var entry in setEntriesBigger)
+                                        {
+                                            StudentDTO student = JsonSerializer.Deserialize<StudentDTO>(entry);
+                                            if (student.Id == smallerId)
+                                            {
+                                                redisDB.SortedSetRemove(setKeyBigger, JsonSerializer.Serialize(student));
+                                                break;
+                                            }
+                                        }
+
+                                        foreach (var entry in setEntriesSmaller)
+                                        {
+                                            StudentDTO student = JsonSerializer.Deserialize<StudentDTO>(entry);
+                                            if (student.Id == biggerId)
+                                            {
+                                                redisDB.SortedSetRemove(setKeySmaller, JsonSerializer.Serialize(student));
+                                                break;
+                                            }
+                                        }
                                     }
+                                    
                                 }
+                                
                             });
                         }
                     }
@@ -83,3 +94,4 @@ namespace Share_To_Learn_WEB_API.RedisConnection
         }
     }
 }
+

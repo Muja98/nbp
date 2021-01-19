@@ -14,7 +14,9 @@ export class StudentContainerComponent implements OnInit {
   private studentId: number;
   public chosenStudent: Student;
 
-  constructor(private messageService: MessageService, private studentService:StudentService) { }
+  constructor(private messageService: MessageService, private studentService:StudentService) {
+   
+   }
 
   ngOnInit(): void {
     this.studentId = this.studentService.getStudentFromStorage()['id'];

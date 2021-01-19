@@ -70,5 +70,14 @@ namespace Share_To_Learn_WEB_API.Controllers
             var ids = await _repository.GetIdsStudentsInChatWith(studentId);
             return Ok(ids);
         }
+
+        [HttpDelete]
+        [Route("deleteConversation/user/{biggerId}/{smallerId}")]
+        
+        public async Task<IActionResult> DeleteConversation(int biggerId, int smallerId)
+        {
+            await _repository.DeleteConversation(biggerId, smallerId);
+            return Ok();
+        }
     }
 }
