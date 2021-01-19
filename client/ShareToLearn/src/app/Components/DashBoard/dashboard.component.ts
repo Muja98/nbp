@@ -2,6 +2,9 @@ import { StudentService } from './../../Service/student.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router'
 import { FriendRequest } from 'src/app/Model/friendrequest';
+import { signalRService } from './../../Service/signalR.service';
+import * as signalR from '@aspnet/signalr';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,6 +13,7 @@ import { FriendRequest } from 'src/app/Model/friendrequest';
 })
 export class DashboardComponent implements OnInit {
   public isCollapsed = true;
+  public _hubConnection: signalR.HubConnection;
   public linkRoot = "/dashboard"
   public navLinks = [
     {
@@ -45,7 +49,12 @@ export class DashboardComponent implements OnInit {
   friend_requests:FriendRequest[];
 
 
-  constructor(private router:Router, private userService:StudentService, private studentService:StudentService) { }
+  constructor(
+    private toastr:ToastrService,
+    public signalRService: signalRService, 
+    private router:Router, 
+    private userService:StudentService, 
+    private studentService:StudentService) { }
 
   handleLogOut()
   {
@@ -58,8 +67,34 @@ export class DashboardComponent implements OnInit {
     {
       this.router.navigate(['/login']);
     }
+    console.log(this.router.url)
     this.userId =  JSON.parse(localStorage.getItem('user'))['id'];
     this.getFriendRequests();
+
+    this._hubConnection = new signalR.HubConnectionBuilder()
+    .withUrl("https://localhost:44374/chat", )
+    .build()
+
+    this._hubConnection
+      .start()
+      .then(() => {
+        console.log('Connection started! :)')
+        const channelName = "messages:" + this.userId + ":chat";
+        this._hubConnection.invoke("JoinRoom", channelName).catch((err)=>{
+          console.log(err)
+        })
+      })
+      .catch(err => console.log('Error while establishing connection :('));
+
+    
+
+   
+    this._hubConnection.on('ReceiveMessage', (newMessage:any) => {
+      console.log(newMessage)
+      if(this.router.url != "/dashboard/messanger") {
+        this.toastr.info("New message from " + newMessage['sender'], "mess");    
+      }
+    });
   }
 
   isActive(ind:number):object {

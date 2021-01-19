@@ -23,9 +23,11 @@ import { StudentInfoElementComponent } from './student-info-element/student-info
 import { SearchUsersComponent } from './search-users/search-users.component';
 import { GroupDocumentComponent } from './group-document/group-document.component';
 import { OtherUsersGroupsPageComponent } from './other-users-groups-page/other-users-groups-page.component';
-
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {StoreModule} from '@ngrx/store';
 import {reducer} from '../ngrx/reducers/friendRequest.reducer';
+
 
 @NgModule({
   declarations: [
@@ -54,6 +56,10 @@ import {reducer} from '../ngrx/reducers/friendRequest.reducer';
     CommonModule,
     FormsModule,
     BrowserModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      timeOut: 5000
+    })
     StoreModule.forRoot({
       friendRequest: reducer
     }),
