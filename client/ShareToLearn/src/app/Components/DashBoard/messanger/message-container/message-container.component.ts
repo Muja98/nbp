@@ -16,7 +16,7 @@ import { MessageService } from 'src/app/Service/message.service';
 export class MessageContainerComponent implements OnInit {
   @Input() student:Student;
   @Input() changeStudentEvent: EventEmitter<Student>;
-  //public message:string = "";
+  @Input() newMessageEvent: EventEmitter<Message>;
   public message:Message;
   public messsageText: string = "";
   public messageArray: Array<Message> = [];
@@ -34,38 +34,28 @@ export class MessageContainerComponent implements OnInit {
     if(this.messsageText === "")return;
     this.message.content = this.messsageText;
 
-    //this.messageArray.push(this.message);
-   this.http.post("https://localhost:44374/api/messages/send", {
+    this.messageArray.push(JSON.parse(JSON.stringify(this.message)));
+    this.http.post("https://localhost:44374/api/messages/send", {
       Sender:this.message.sender,
       SenderId: this.message.senderId,
       Receiver:this.message.receiver, 
       ReceiverId:this.message.receiverId,
       Content:this.messsageText
-   }).subscribe(()=>{})
-   this.messsageText = "";
-    // this._hubConnection
-    // .invoke('SendMessage', {
-    //   Sender:this.message.Sender,
-    //   SenderId: this.message.SenderId,
-    //   Receiver:this.message.Receiver, 
-    //   ReceiverId:this.message.ReceiverId,
-    //   Content:this.messsageText
-    // }, "peraIzika")
-    // .then(() => this.messsageText = '')
-    // .catch(err => console.error(err));
+    }).subscribe(()=>{})
+    this.messsageText = "";
   }
 
   
-  joinRoom()
-  {
-    const biggerId = this.message.senderId > this.message.receiverId ? this.message.senderId : this.message.receiverId;
-    const smallerId = this.message.senderId < this.message.receiverId ? this.message.senderId : this.message.receiverId;
-    const channelName = "messages:" + biggerId + ":" + smallerId + ":chat";
-    console.log(channelName);
-    this._hubConnection.invoke("JoinRoom", channelName).catch((err)=>{
-      console.log(err)
-    })
-  }
+  // joinRoom()
+  // {
+  //   const biggerId = this.message.senderId > this.message.receiverId ? this.message.senderId : this.message.receiverId;
+  //   const smallerId = this.message.senderId < this.message.receiverId ? this.message.senderId : this.message.receiverId;
+  //   const channelName = "messages:" + this.message.senderId + ":chat";
+  //   console.log(channelName);
+  //   this._hubConnection.invoke("JoinRoom", channelName).catch((err)=>{
+  //     console.log(err)
+  //   })
+  // }
 
 
   ngOnInit(): void {  
@@ -79,6 +69,12 @@ export class MessageContainerComponent implements OnInit {
         this.getMessages(this.perLoadCount, '+', false);
       })
     }
+
+    if(this.newMessageEvent) {
+      this.newMessageEvent.subscribe(mess => {
+        this.messageArray.push(mess);
+      })
+    }
     
     this.setMessageParams();
     
@@ -87,27 +83,30 @@ export class MessageContainerComponent implements OnInit {
     else
       this.imgSrc = "assets/profileDefault.png";
 
-    this._hubConnection = new signalR.HubConnectionBuilder()
-    .withUrl("https://localhost:44374/chat", )
-    .build()
+    // this._hubConnection = new signalR.HubConnectionBuilder()
+    // .withUrl("https://localhost:44374/chat", )
+    // .build()
 
-    this._hubConnection
-      .start()
-      .then(() => console.log('Connection started! :)'))
-      .catch(err => console.log('Error while establishing connection :('));
+    // this._hubConnection
+    //   .start()
+    //   .then(() => {
+    //     console.log('Connection started! :)')
+    //     this.joinRoom()
+    //   })
+    //   .catch(err => console.log('Error while establishing connection :('));
 
    
-    this._hubConnection.on('ReceiveMessage', (newMessage:any) => {
-      console.log(newMessage)
-      let nm:Message = new Message();
-      nm.content = newMessage.content;
-      nm.receiver = newMessage.receiver;
-      nm.receiverId = newMessage.receiverId;
-      nm.sender = newMessage.sender;
-      nm.senderId = newMessage.senderId;
-      this.messageArray.push(nm);
+    // this._hubConnection.on('ReceiveMessage', (newMessage:any) => {
+    //   console.log(newMessage)
+    //   let nm:Message = new Message();
+    //   nm.content = newMessage.content;
+    //   nm.receiver = newMessage.receiver;
+    //   nm.receiverId = newMessage.receiverId;
+    //   nm.sender = newMessage.sender;
+    //   nm.senderId = newMessage.senderId;
+    //   this.messageArray.push(nm);
       
-    });
+    // });
    
     this.getMessages(this.perLoadCount, '+', false);
   }

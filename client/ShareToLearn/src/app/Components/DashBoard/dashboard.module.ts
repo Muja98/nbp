@@ -23,6 +23,9 @@ import { StudentInfoElementComponent } from './student-info-element/student-info
 import { SearchUsersComponent } from './search-users/search-users.component';
 import { GroupDocumentComponent } from './group-document/group-document.component';
 import { OtherUsersGroupsPageComponent } from './other-users-groups-page/other-users-groups-page.component';
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 @NgModule({
   declarations: [
                  MainPageComponent,
@@ -50,6 +53,10 @@ import { OtherUsersGroupsPageComponent } from './other-users-groups-page/other-u
     CommonModule,
     FormsModule,
     BrowserModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      timeOut: 5000
+    }),
     RouterModule.forRoot([
       {path:'dashboard', component:DashboardComponent, children:[
         {path:'main',component:MainPageComponent},
