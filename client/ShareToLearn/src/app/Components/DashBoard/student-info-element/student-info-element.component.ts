@@ -63,11 +63,11 @@ export class StudentInfoElementComponent implements OnInit {
 
   handleSendFriendRequest(): void {
     debugger
-    //var userId =  JSON.parse(localStorage.getItem('user'))['id'];
+    var userId =  parseInt(JSON.parse(localStorage.getItem('user'))['id']);
     let currentUser = this.studentService.getStudentFromStorage();
 
     var request = new FriendRequest();
-    request.request.id = currentUser.id;
+    request.request.id = parseInt(currentUser.id);
     request.request.firstName = currentUser.firstName;
     request.request.lastName = currentUser.lastName;
     request.request.email = currentUser.email;

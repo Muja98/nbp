@@ -11,10 +11,11 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
+
 export class DashboardComponent implements OnInit {
   public isCollapsed = true;
   public _hubConnection: signalR.HubConnection;
-  public linkRoot = "/dashboard"
+  public linkRoot = "/dashboard";
   public navLinks = [
     {
       link:"/profile", 
@@ -79,23 +80,32 @@ export class DashboardComponent implements OnInit {
       .start()
       .then(() => {
         console.log('Connection started! :)')
-        const channelName = "messages:" + this.userId + ":chat";
+        const channelName = "channel:" + this.userId;
         this._hubConnection.invoke("JoinRoom", channelName).catch((err)=>{
           console.log(err)
         })
-
-
+        console.log(channelName);
+        // const channelName1 = "requests:" + this.userId +":friendship";
+        // console.log(channelName1);
+        // this._hubConnection.invoke("JoinRoom", channelName1).catch((err)=>{
+        //   console.log(err)
+        // })
       })
       .catch(err => console.log('Error while establishing connection :('));
-
-    
-
    
     this._hubConnection.on('ReceiveMessage', (newMessage:any) => {
       console.log(newMessage)
       if(this.router.url != "/dashboard/messanger") {
         this.toastr.info("New message from " + newMessage['sender'], "mess");    
       }
+    });
+
+    this._hubConnection.on('ReceiveFriendRequests', (newRequest:any) => {
+      console.log(newRequest);
+      debugger
+      var request:FriendRequest = newRequest['requestDTO'];
+      this.friend_requests.push(request);
+      this.toastr.info("You have new friend request!", "mes"); 
     });
 
     
