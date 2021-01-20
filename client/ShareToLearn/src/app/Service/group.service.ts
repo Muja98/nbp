@@ -28,11 +28,12 @@ export class GroupService {
   }
 
   getGroupMembers(groupId:number, requesterId:number) {
-    return this.http.get<Student[]>(URL + "/api/groups/" + groupId + "/members/requester/" + requesterId);
+    //{groupId}/members/student/{studentId}
+    return this.http.get<Student[]>(URL + "/api/groups/"+groupId+"/members/student/"+requesterId);
   }
 
   getGroupOwner(groupId:number, requesterId:number) {
-    return this.http.get<Student>(URL + "/api/groups/" + groupId + "/owner/requester/" + requesterId);
+    return this.http.get<Student>(URL + "/api/groups/"+groupId+"/owner/student/"+requesterId);
   }
 
   joinGroup(studentId:number, groupId:number) {

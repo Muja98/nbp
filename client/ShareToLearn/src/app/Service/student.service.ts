@@ -114,11 +114,16 @@ export class StudentService {
   acceptFriendRequest(senderId:number, receiverId:number, requestId:string) {
     this.http.post(URL + "/api/student/friendship/sender/" + senderId + "/receiver/"+ receiverId + "/request/" + requestId, {}).subscribe(()=>{});
   }
-  deleteFriendRequest(receiverId:number, requestId:string) {
-    this.http.delete(URL + "/api/student/friend_request/receiver/" + receiverId + "/request/" + requestId).subscribe(()=>{});
+  deleteFriendRequest(receiverId:number, requestId:string, senderId:number) {
+    this.http.delete(URL + "/api/student/friend_request/receiver/" + receiverId + "/request/" + requestId+"/sender/"+senderId).subscribe(()=>{});
   }
   sendFriendRequest(senderId:number, receiverId:number, request:FriendRequest) {
     this.http.post(URL + "/api/student/friend_request/sender/" + senderId + "/receiver/" + receiverId, 
     {firstName: request.request.firstName, lastName: request.request.lastName, email: request.request.email, profilePicturePath:request.request.profilePicturePath}).subscribe(()=>{});
+  }
+
+  GetFriendRequestSends(senderId:number)
+  {
+    return this.http.get<number[]>(URL+"/api/student/friend_request/"+senderId);
   }
 }

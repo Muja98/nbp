@@ -24,6 +24,7 @@ export class SearchUsersComponent implements OnInit {
   public pagesVisited:number;
   private userId:string;
   private inChatWith:number[];
+  public friendRequestSendArray:number[];
 
   friendRequests: Observable<number[]>; 
 
@@ -45,6 +46,23 @@ export class SearchUsersComponent implements OnInit {
     params = params.set('from', "0").set('to', String(this.perPage));
     this.getUsers(params, false);
     this.getIdsStudentsInChatWith();
+
+    this.studentService.GetFriendRequestSends(parseInt(this.userId)).subscribe((friendRequests:number[])=>{
+      this.friendRequestSendArray = friendRequests;
+    })
+    
+  }
+
+  checkIfIsFreind(id:number):boolean
+  {
+    let pom:boolean = false;
+    this.friendRequestSendArray.forEach((el:number)=>{
+      if(el === id)
+      {
+        pom =  true;
+      }
+    })
+    return pom;
   }
 
   handleSearch():void {

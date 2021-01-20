@@ -2,11 +2,11 @@
     <div class="row justify-content-between mt-5" *ngIf="isLoaded()">
         <div class="col-5">
             <h2>Members</h2>
-            <app-student-info-element *ngFor='let studentObject of students' [studentObject]='studentObject' [canChatWith]="canChatWith(studentObject)"></app-student-info-element>
+            <app-student-info-element *ngFor='let studentObject of students'[isSent]='checkIfIsFreind(studentObject.id)' [studentObject]='studentObject' [canChatWith]="canChatWith(studentObject)"></app-student-info-element>
         </div>
         <div class="col-5">
             <h2>Owner</h2>
-            <app-student-info-element  [studentObject]='owner' [canChatWith]="canChatWith(owner)"></app-student-info-element>
+            <app-student-info-element  [studentObject]='owner' [isSent]='checkIfIsFreind(owner.id)' [canChatWith]="canChatWith(owner)"></app-student-info-element>
         </div>
     </div>
     <div class="spinner-border" role="status" *ngIf="!isLoaded()">

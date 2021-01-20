@@ -67,7 +67,7 @@ export class DashboardComponent implements OnInit {
     {
       this.router.navigate(['/login']);
     }
-    console.log(this.router.url)
+
     this.userId =  JSON.parse(localStorage.getItem('user'))['id'];
     this.getFriendRequests();
 
@@ -92,7 +92,7 @@ export class DashboardComponent implements OnInit {
 
    
     this._hubConnection.on('ReceiveMessage', (newMessage:any) => {
-      console.log(newMessage)
+    
       if(this.router.url != "/dashboard/messanger") {
         this.toastr.info("New message from " + newMessage['sender'], "mess");    
       }
@@ -110,7 +110,7 @@ export class DashboardComponent implements OnInit {
   getFriendRequests() {
     debugger
     this.studentService.getFriendRequests(this.userId).subscribe(
-      result => { console.log(result); this.friend_requests = result }
+      result => { this.friend_requests = result }
     )
   }
 

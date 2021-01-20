@@ -15,16 +15,25 @@ export class GroupMembersComponent implements OnInit {
   public owner:Student;
   private inChatWith:number[];
   private userId: string;
+  public friendRequestSendArray:number[];
 
   constructor(private groupService:GroupService, private messageService: MessageService, private studentService:StudentService) { }
 
   ngOnInit(): void {
     this.userId = this.studentService.getStudentFromStorage()['id']
+    
+    this.studentService.GetFriendRequestSends(parseInt(this.userId)).subscribe((friendRequests:number[])=>{
+      this.friendRequestSendArray = friendRequests;
+    })
+
     this.groupService.getGroupMembers(this.groupId, parseInt(this.userId)).subscribe(
       result => {
         this.students = result;
+    
       }
     )
+
+    
 
     this.groupService.getGroupOwner(this.groupId, parseInt(this.userId)).subscribe(
       result => {
@@ -35,6 +44,18 @@ export class GroupMembersComponent implements OnInit {
     this.messageService.getIdsStudentsInChatWith(parseInt(this.userId)).subscribe(
       result => this.inChatWith = result
     )
+  }
+
+  checkIfIsFreind(id:number):boolean
+  {
+    let pom:boolean = false;
+    this.friendRequestSendArray.forEach((el:number)=>{
+      if(el === id)
+      {
+        pom =  true;
+      }
+    })
+    return pom;
   }
 
   isLoaded(): boolean {

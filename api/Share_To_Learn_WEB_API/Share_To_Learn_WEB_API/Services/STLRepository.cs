@@ -733,12 +733,13 @@ namespace Share_To_Learn_WEB_API.Services
             return result.ToString(); 
         }
 
-        public async Task DeleteFriendRequest(int receiverId, string requestId)
+        public async Task DeleteFriendRequest(int receiverId, string requestId, int senderId)
         {
             string channelName = $"messages:{receiverId}:friend_request";
 
             IDatabase redisDB = _redisConnection.GetDatabase();
             long deletedMessages = await redisDB.StreamDeleteAsync(channelName, new RedisValue[] { new RedisValue(requestId) });
+            await redisDB.SetRemoveAsync("friend:" + senderId + ":request", requestId);
         }
 
         public async Task SendFriendRequest(int senderId, int receiverId, Request sender)

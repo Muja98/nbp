@@ -11,7 +11,7 @@
         </div>
         <div class="row">
             <div class="col-7" >
-                <app-student-info-element *ngFor='let user of usersToShow' [studentObject]='user' [canChatWith]='canChatWith(user)'></app-student-info-element>
+                <app-student-info-element *ngFor='let user of usersToShow' [isSent]='checkIfIsFreind(user.id)' [studentObject]='user' [canChatWith]='canChatWith(user)'></app-student-info-element>
             </div>
             <div class="col-5">
                 <div class="mb-3">
