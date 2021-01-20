@@ -18,8 +18,7 @@ export class PostService {
 
   createPost(groupID:any, studentId:any, content, date)
   {
-   
-    this.http.post(URL + "/api/posts/"+groupID+"/student/"+studentId, {Content:content, DateOfPublishing:date}).subscribe(()=>{});
+    return this.http.post<Post>(URL + "/api/posts/"+groupID+"/student/"+studentId, {Content:content, DateOfPublishing:date});
   }
 
   getAllComment(postId:any)
@@ -29,7 +28,7 @@ export class PostService {
 
   createComment(postId:any, studentId:any, content)
   {
-    this.http.post(URL + "/api/posts/"+ postId +"/student/"+studentId+"/newComment",{Content:content}).subscribe(()=>{})
+    return this.http.post(URL + "/api/posts/"+ postId +"/student/"+studentId+"/newComment",{Content:content});
   }
 
   deleteComment(commentId:any)

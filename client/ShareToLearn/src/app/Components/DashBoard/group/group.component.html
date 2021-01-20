@@ -29,8 +29,8 @@
     </div>
     <div class="row justify-content-center">
         <div class="col-8">
-            <div class="container-fluid" *ngFor="let post of postArray">
-                <app-post [post]="post"></app-post>
+            <div class="container-fluid" *ngFor="let post of postArray;  index as i ">
+                <app-post (postID)="handleDeletePostFromArray($event)" [index]="i" [post]="post"></app-post>
             </div>
         </div>
         

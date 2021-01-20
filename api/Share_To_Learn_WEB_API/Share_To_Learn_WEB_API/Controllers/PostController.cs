@@ -40,8 +40,9 @@ namespace Share_To_Learn_WEB_API.Controllers
         [Route("{groupId}/student/{studentId}")]
         public async Task<ActionResult> CreatePost(int groupId, int studentId, Post newPost)
         {
-            await _repository.CreatePost(groupId, studentId, newPost);
-            return Ok();
+            PostDTO res = await _repository.CreatePost(groupId, studentId, newPost);
+            res.Student.Student.ProfilePicturePath = FileManagerService.LoadImageFromFile(res.Student.Student.ProfilePicturePath);
+            return Ok(res);
         }
 
         [HttpGet]
@@ -60,8 +61,9 @@ namespace Share_To_Learn_WEB_API.Controllers
         [Route("{postId}/student/{studentId}/newComment")]
         public async Task<IActionResult> CreateComment(int postId, int studentId, Comment newComment)
         {
-            await _repository.CreateComment(postId, studentId, newComment);
-            return Ok();
+            CommentDTO res = await _repository.CreateComment(postId, studentId, newComment);
+            res.Student.Student.ProfilePicturePath = FileManagerService.LoadImageFromFile(res.Student.Student.ProfilePicturePath);
+            return Ok(res);
         }
 
         [HttpDelete]
