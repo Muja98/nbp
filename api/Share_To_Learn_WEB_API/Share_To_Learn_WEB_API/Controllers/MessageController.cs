@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Share_To_Learn_WEB_API.HubConfig;
 using Microsoft.AspNetCore.SignalR;
+using Share_To_Learn_WEB_API.Services.RepositoryContracts;
 
 namespace Share_To_Learn_WEB_API.Controllers
 {
@@ -16,9 +17,9 @@ namespace Share_To_Learn_WEB_API.Controllers
     [ApiController]
     public class MessageController : ControllerBase
     {
-        private readonly ISTLRepository _repository;
+        private readonly IMessageRepository _repository;
         private readonly IHubContext<MessageHub> _hub;
-        public MessageController(ISTLRepository repository, IHubContext<MessageHub> hub)
+        public MessageController(IMessageRepository repository, IHubContext<MessageHub> hub)
         {
             _repository = repository;
             _hub = hub;
