@@ -70,4 +70,14 @@ export class GroupService {
   {
     this.http.delete(URL+"/api/groups/"+groupId).subscribe(()=>{})
   }
+
+  getMemberships(userId:number)
+  {
+    return this.http.get<Group[]>(URL + "/api/groups/student/" + userId + "/memberships");
+  }
+
+  getOwnerships(userId:number)
+  {
+    return this.http.get<Group[]>(URL + "/api/groups/student/" + userId + "/ownerships");
+  }
 }

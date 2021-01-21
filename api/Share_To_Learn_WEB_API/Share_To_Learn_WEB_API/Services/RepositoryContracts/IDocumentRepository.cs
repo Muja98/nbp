@@ -13,6 +13,5 @@ namespace Share_To_Learn_WEB_API.Services.RepositoryContracts
         Task RelateDocumentAndGroup(int groupId, string documentPath);
         Task<IEnumerable<DocumentDTO>> GetDocuments(int groupId, string filter);
         Task<string> GetDocumentsPath(int documentId);
-        Task<string> GetNextDocumentPathId();
     }
 }
