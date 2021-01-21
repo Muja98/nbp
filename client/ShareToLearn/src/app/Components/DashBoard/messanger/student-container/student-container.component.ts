@@ -64,7 +64,7 @@ export class StudentContainerComponent implements OnInit {
 
   joinRoom()
   {
-    const channelName = "messages:" + this.studentId + ":chat";
+    const channelName = "channel:" + this.studentId;
     console.log(channelName);
     this._hubConnection.invoke("JoinRoom", channelName).catch((err)=>{
       console.log(err)

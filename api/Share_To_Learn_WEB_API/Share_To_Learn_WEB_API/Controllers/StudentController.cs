@@ -264,7 +264,7 @@ namespace Share_To_Learn_WEB_API.Controllers
         public async Task<IActionResult> DeleteFriendRequest(int receiverId, string requestId, int senderId)
         {
             await _repository.DeleteFriendRequest(receiverId, requestId, senderId);
-            return Ok("request deleted succesfull!");
+            return Ok();
         }
 
         [HttpGet]
