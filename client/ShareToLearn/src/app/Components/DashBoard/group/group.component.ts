@@ -54,16 +54,18 @@ export class GroupComponent implements OnInit {
   }
 
   ngOnInit(): void {
-      this.tempStudent = this.service.getStudentFromStorage();
-     
-        this.profileImage ="data:image/png;base64,"+this.tempStudent.profilePicturePath;
-      this.student.student.firstName = this.tempStudent.firstName;
-      this.student.student.lastName = this.tempStudent.lastName;
-      this.aroute.paramMap.subscribe(params=>{
-        if(params.get('idGroup')===null){return}
-        this.postService.getAllPosts(parseInt(params.get('idGroup'))).subscribe((posts:Post[])=>{
-          this.postArray = posts;
-        })})
+    this.tempStudent = this.service.getStudentFromStorage();
+    if(this.tempStudent.profilePicturePath && this.tempStudent.profilePicturePath != "")
+      this.profileImage = "data:image/png;base64,"+this.tempStudent.profilePicturePath;
+    else
+      this.profileImage = "assets/profileDefault.png";
+    this.student.student.firstName = this.tempStudent.firstName;
+    this.student.student.lastName = this.tempStudent.lastName;
+    this.aroute.paramMap.subscribe(params=>{
+      if(params.get('idGroup')===null){return}
+      this.postService.getAllPosts(parseInt(params.get('idGroup'))).subscribe((posts:Post[])=>{
+        this.postArray = posts;
+      })})
       
   }
 

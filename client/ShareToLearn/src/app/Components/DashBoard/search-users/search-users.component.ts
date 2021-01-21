@@ -98,7 +98,7 @@ export class SearchUsersComponent implements OnInit {
   isLoaded(): boolean {
     if((!this.usersToShow) || (!this.users) || (!this.inChatWith))
       return false;
-    if(this.users.length < ((this.page - 1) * this.perPage + 1))
+    if(this.users.length < ((this.page - 1) * this.perPage + 1) && (this.users.length > 0))
       return false;
     return true;
   }

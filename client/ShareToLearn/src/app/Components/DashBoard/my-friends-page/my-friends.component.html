@@ -5,11 +5,11 @@
     <div *ngIf="isLoaded()">
         <div class="row justify-content-md-center">
             <div class="col-md-4">
-                <label for="inputGroupName" class="form-label">First name</label>
+                <label for="inputFirstName" class="form-label">First name</label>
                 <input class="form-control" [(ngModel)]="filterFirstName">
             </div>
             <div class="col-md-4">
-                <label for="inputGroupField" class="form-label">Last name</label>
+                <label for="inputLastName" class="form-label">Last name</label>
                 <input class="form-control" [(ngModel)]="filterLastName">
             </div>
         <div class="col pt-5">
@@ -31,8 +31,11 @@
             </ngb-pagination>
         </div>
         <div class="row">
-            <div class="col-7" >
+            <div class="col-7" *ngIf="friends.length > 0">
                 <app-student-info-element *ngFor='let user of friendsToShow' [studentObject]='user' [canChatWith]='canChatWith(user)'></app-student-info-element>
+            </div>
+            <div class="col-7" *ngIf="friends.length <= 0">
+                <p style="font-style: italic; font-weight: bold; font-size: 30px;"> No users found </p>
             </div>
         </div>
         <div class="row mt-3 ml-1">

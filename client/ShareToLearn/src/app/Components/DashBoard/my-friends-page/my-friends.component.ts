@@ -70,7 +70,7 @@ export class MyFriendsComponent implements OnInit {
     isLoaded(): boolean {
       if((!this.friendsToShow) || (!this.friends) || (!this.inChatWith))
         return false;
-      if(this.friends.length < ((this.page - 1) * this.perPage + 1))
+      if(this.friends.length < ((this.page - 1) * this.perPage + 1) && (this.friends.length > 0))
         return false;
       return true;
     }

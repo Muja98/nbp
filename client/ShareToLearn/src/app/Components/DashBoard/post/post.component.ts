@@ -35,8 +35,10 @@ export class PostComponent implements OnInit {
 
   handleReturnImage(string:any):any
   {
-  
-    return "data:image/png;base64,"+string
+    if(string && string != "")
+      return "data:image/png;base64,"+string;
+    else 
+      return "assets/profileDefault.png";
   }
 
   handleGetComment()

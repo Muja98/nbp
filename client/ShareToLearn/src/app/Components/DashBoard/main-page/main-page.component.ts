@@ -69,6 +69,14 @@ export class MainPageComponent implements OnInit {
       this.pagesVisited = this.page;
   }
 
+  isLoaded(): boolean {
+    if((!this.groupsToShow) || (!this.groups))
+      return false;
+    if(this.groups.length < ((this.page - 1) * this.perPage + 1) && (this.groups.length > 0))
+      return false;
+    return true;
+  }
+
   private getGroups(params:any, append:boolean):void {
     this.service.getFilteredGroups(params).subscribe(
       result => {
