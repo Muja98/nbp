@@ -16,7 +16,6 @@ namespace Share_To_Learn_WEB_API.Controllers
     public class DocumentController : ControllerBase
     {
         private readonly IDocumentRepository _repository;
-
         public DocumentController(IDocumentRepository repository)
         {
             _repository = repository;

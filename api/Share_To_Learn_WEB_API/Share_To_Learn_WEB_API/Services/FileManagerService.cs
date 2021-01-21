@@ -64,5 +64,10 @@ namespace Share_To_Learn_WEB_API.Services
                 return  (from file in Directory.EnumerateFiles(@"..\..\Documents", "*.pdf", SearchOption.AllDirectories)
                              select file).Count();
         }
+
+        public static void deleteFile(string filePath)
+        {
+            File.Delete(filePath);
+        }
     }
 }

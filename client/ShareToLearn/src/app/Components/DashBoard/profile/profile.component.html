@@ -84,15 +84,16 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row pt-5" *ngIf="!studentId">
-                                <input type="file"  (change)="onUploadChange($event)" accept=".png, .jpg, .jpeg, .pdf" />
-                        </div>
-                        <div  class="row pt-2" style="font-size:20px;" *ngIf="!studentId">
-                            <div class="col">
-                                <button (click)="handleEditStudent()"  class="btn btn-info" style="position: relative; right: 15px;" >Save changes</button>
-                            </div>
-                        </div>
+                        
                     </div> 
+                    <div class="row pt-5" *ngIf="edit">
+                        <input type="file"  (change)="onUploadChange($event)" accept=".png, .jpg, .jpeg, .pdf" />
+                    </div>
+                    <div  class="row pt-2" style="font-size:20px;" *ngIf="edit">
+                        <div class="col">
+                            <button (click)="handleEditStudent()"  class="btn btn-info" style="position: relative; right: 15px;" >Save changes</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

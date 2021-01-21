@@ -9,6 +9,7 @@ using Share_To_Learn_WEB_API.Entities;
 using Share_To_Learn_WEB_API.RedisConnection;
 using Share_To_Learn_WEB_API.Services;
 using StackExchange.Redis;
+using Share_To_Learn_WEB_API.Services.RepositoryContracts;
 
 namespace Share_To_Learn_WEB_API.Controllers
 {
@@ -18,9 +19,10 @@ namespace Share_To_Learn_WEB_API.Controllers
     {
         private readonly ISTLRepository _repository;
         private readonly IConnectionMultiplexer _redisConnection;
-
-        public GroupController(ISTLRepository repository, IRedisConnectionBuilder builder)
+        private readonly IDocumentRepository _documentrepository;
+        public GroupController(ISTLRepository repository, IRedisConnectionBuilder builder, IDocumentRepository documentrepository)
         {
+            _documentrepository = documentrepository;
             _repository = repository;
             _redisConnection = builder.Connection;
         }
@@ -212,7 +214,19 @@ namespace Share_To_Learn_WEB_API.Controllers
 
         public async Task<ActionResult> deleteGroup(int groupId)
         {
-            await _repository.DeleteGroup(groupId);         
+            string path = await _repository.GetGroupImage(groupId);
+            FileManagerService.deleteFile(path);
+            
+            IEnumerable<DocumentDTO> documents = await _documentrepository.GetDocuments(groupId, "");
+           
+            foreach(DocumentDTO document in documents)
+            {
+
+            }
+               // _repository.GetDocumentsPath(documentId)
+
+            // _repository.GetDocumentsPath(documentId);
+            await _repository.DeleteGroup(groupId);
             return Ok();
         }
     }
