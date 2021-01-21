@@ -66,6 +66,18 @@ export class MessageContainerComponent implements OnInit  {
       this.messageArray = [];
       window.location.reload();
   }
+
+  public imgSrc2(picturePath:string):string {
+    if(picturePath)
+    {
+      if(picturePath.includes('data:image/png;base64,') == true)
+        return picturePath;
+      else
+        return 'data:image/png;base64,' + picturePath;
+    }
+    else
+      return "assets/profileDefault.png";
+  }
   
   ngOnInit(): void {
     if(this.changeStudentEvent) {
@@ -89,9 +101,9 @@ export class MessageContainerComponent implements OnInit  {
     this.setMessageParams();
     
     if(this.student.student.profilePicturePath)
-      this.imgSrc = 'data:image/png;base64,' + this.student.student.profilePicturePath;
+    this.student.student.profilePicturePath = 'data:image/png;base64,' + this.student.student.profilePicturePath;
     else
-      this.imgSrc = "assets/profileDefault.png";
+    this.student.student.profilePicturePath = "assets/profileDefault.png";
 
     this.getMessages(this.perLoadCount, '+', false);
     this.getTimeLeft();

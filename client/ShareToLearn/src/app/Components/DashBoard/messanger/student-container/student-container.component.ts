@@ -50,9 +50,14 @@ export class StudentContainerComponent implements OnInit {
     });
   }
 
-  public imgSrc(picturePath:string) {
+  public imgSrc(picturePath:string):string {
     if(picturePath)
-      return 'data:image/png;base64,' + picturePath;
+    {
+      if(picturePath.includes('data:image/png;base64,') == true)
+        return picturePath;
+      else
+        return 'data:image/png;base64,' + picturePath;
+    }
     else
       return "assets/profileDefault.png";
   }
