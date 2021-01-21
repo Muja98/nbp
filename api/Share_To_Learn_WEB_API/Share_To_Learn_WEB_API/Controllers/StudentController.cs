@@ -11,6 +11,7 @@ using Share_To_Learn_WEB_API.DTOs;
 using Microsoft.AspNetCore.Http;
 using StackExchange.Redis;
 using Share_To_Learn_WEB_API.RedisConnection;
+using Share_To_Learn_WEB_API.Services.RepositoryContracts;
 
 namespace Share_To_Learn_WEB_API.Controllers
 {
@@ -18,9 +19,9 @@ namespace Share_To_Learn_WEB_API.Controllers
     [Route("api/student")]
     public class StudentController : ControllerBase
     {
-        private readonly ISTLRepository _repository;
+        private readonly IStudentRepository _repository;
 
-        public StudentController(ISTLRepository repository, IRedisConnectionBuilder builder)
+        public StudentController(IStudentRepository repository, IRedisConnectionBuilder builder)
         {
             _repository = repository;
         }
