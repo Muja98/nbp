@@ -66,7 +66,6 @@ namespace Share_To_Learn_WEB_API.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> CreateStudent([FromBody] StudentRegisterDTO newStudent)
         {
 
@@ -86,7 +85,7 @@ namespace Share_To_Learn_WEB_API.Controllers
                 return Ok(new JsonResult(token));
             }
             else
-                return BadRequest(new JsonResult("Email taken"));
+                return Ok(new JsonResult("Email taken"));
         }
 
         [HttpPost]
@@ -104,10 +103,10 @@ namespace Share_To_Learn_WEB_API.Controllers
                     return Ok(new JsonResult(token));
                 }
                 else
-                    return BadRequest("Wrong password");
+                    return Ok(new JsonResult("Wrong password"));
             }
             else
-                return BadRequest("Non-existent email");
+                return Ok(new JsonResult("Non-existent email"));
         }
 
         [HttpPut("{studentId}")]
