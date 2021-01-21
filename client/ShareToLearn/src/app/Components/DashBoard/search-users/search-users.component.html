@@ -10,8 +10,11 @@
             </ngb-pagination>
         </div>
         <div class="row">
-            <div class="col-7" >
+            <div class="col-7" *ngIf="users.length > 0">
                 <app-student-info-element *ngFor='let user of usersToShow' [isSent]='checkIfIsFreind(user.id)' [studentObject]='user' [canChatWith]='canChatWith(user)'></app-student-info-element>
+            </div>
+            <div class="col-7" *ngIf="users.length <= 0">
+                <p style="font-style: italic; font-weight: bold; font-size: 30px;"> No users found </p>
             </div>
             <div class="col-5">
                 <div class="mb-3">
