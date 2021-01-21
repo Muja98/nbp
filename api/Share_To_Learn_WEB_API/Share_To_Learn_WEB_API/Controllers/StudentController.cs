@@ -20,10 +20,12 @@ namespace Share_To_Learn_WEB_API.Controllers
     public class StudentController : ControllerBase
     {
         private readonly IStudentRepository _repository;
+        private readonly ISharedRepository _sharedRepository;
 
-        public StudentController(IStudentRepository repository, IRedisConnectionBuilder builder)
+        public StudentController(IStudentRepository repository, ISharedRepository sharedRepository, IRedisConnectionBuilder builder)
         {
             _repository = repository;
+            _sharedRepository = sharedRepository;
         }
 
         [HttpGet()]
@@ -72,7 +74,7 @@ namespace Share_To_Learn_WEB_API.Controllers
             string base64Image = newStudent.Student.ProfilePicturePath;
             if (!string.IsNullOrEmpty(base64Image))
             {
-                string imageFileId = await _repository.getNextId(true);
+                string imageFileId = await _sharedRepository.GetNextImageId();
                 newStudent.Student.ProfilePicturePath = FileManagerService.SaveImageToFile(base64Image, imageFileId);
             }
 
@@ -115,7 +117,7 @@ namespace Share_To_Learn_WEB_API.Controllers
 
             if (!res)
                 return BadRequest("Student doesnt exist!");
-            string imageFileId = await _repository.getNextId(true);
+            string imageFileId = await _sharedRepository.GetNextImageId();
             updatedStudent.ProfilePicturePath = FileManagerService.SaveImageToFile(updatedStudent.ProfilePicturePath, imageFileId);
             await _repository.UpdateStudent(studentId, updatedStudent);
             return Ok(updatedStudent);

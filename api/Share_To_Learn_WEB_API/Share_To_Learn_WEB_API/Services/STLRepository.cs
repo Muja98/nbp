@@ -182,8 +182,6 @@ namespace Share_To_Learn_WEB_API.Services
                .Set("group.GroupPicturePath = $GroupPicturePath")
                .WithParam("GroupPicturePath", updatedGroup.GroupPicturePath)
                .ExecuteWithoutResultsAsync();
-
-               
         }
 
         public async Task UpdateStudent(int studentId, Student updatedStudent)

@@ -43,6 +43,8 @@ namespace Share_To_Learn_WEB_API
             services.AddScoped<IDocumentRepository, DocumentRepository>();
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<IStudentRepository, StudentRepository>();
+            services.AddScoped<IGroupRepository, GroupRepository>();
+            services.AddScoped<ISharedRepository, SharedRepository>();
             services.AddMvc().AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.WriteIndented = true;

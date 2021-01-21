@@ -80,13 +80,5 @@ namespace Share_To_Learn_WEB_API.Services.RepositoryServices
 
             return res.Single();
         }
-
-        public async Task<string> GetNextDocumentPathId()
-        {
-            IDatabase db = _redisConnection.GetDatabase();
-            long result = await db.StringIncrementAsync("next.document.id");
-
-            return result.ToString();
-        }
     }
 }

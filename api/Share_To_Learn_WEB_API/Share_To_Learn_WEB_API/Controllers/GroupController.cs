@@ -8,6 +8,7 @@ using Share_To_Learn_WEB_API.DTOs;
 using Share_To_Learn_WEB_API.Entities;
 using Share_To_Learn_WEB_API.RedisConnection;
 using Share_To_Learn_WEB_API.Services;
+using Share_To_Learn_WEB_API.Services.RepositoryContracts;
 using StackExchange.Redis;
 
 namespace Share_To_Learn_WEB_API.Controllers
@@ -16,12 +17,14 @@ namespace Share_To_Learn_WEB_API.Controllers
     [ApiController]
     public class GroupController : ControllerBase
     {
-        private readonly ISTLRepository _repository;
         private readonly IConnectionMultiplexer _redisConnection;
+        private readonly IGroupRepository _repository;
+        private readonly ISharedRepository _sharedRepository;
 
-        public GroupController(ISTLRepository repository, IRedisConnectionBuilder builder)
+        public GroupController(IGroupRepository repository, ISharedRepository sharedRepository, IRedisConnectionBuilder builder)
         {
             _repository = repository;
+            _sharedRepository = sharedRepository;
             _redisConnection = builder.Connection;
         }
 
@@ -29,7 +32,7 @@ namespace Share_To_Learn_WEB_API.Controllers
         [Route("{ownerId}")]
         public async Task<ActionResult> CreateGroup(int ownerId, Group newGroup)
         {
-            string imageFileId = await _repository.getNextId(true);
+            string imageFileId = await _sharedRepository.GetNextImageId();
             newGroup.GroupPicturePath = FileManagerService.SaveImageToFile(newGroup.GroupPicturePath, imageFileId);
             await _repository.CreateGroup(ownerId, newGroup);
             return Ok();
@@ -44,7 +47,7 @@ namespace Share_To_Learn_WEB_API.Controllers
             if (!res)
                 return BadRequest("Group doesnt exist!");
 
-            string imageFileId = await _repository.getNextId(true);
+            string imageFileId = await _sharedRepository.GetNextImageId();
             newGroup.GroupPicturePath = FileManagerService.SaveImageToFile(newGroup.GroupPicturePath, imageFileId);
             await _repository.UpdateGroup(groupId, newGroup);
             return Ok();
@@ -122,9 +125,6 @@ namespace Share_To_Learn_WEB_API.Controllers
         [Route("student/{studentId}/memberships")]
         public async Task<ActionResult> GetMyMemberships(int studentId)
         {
-            if (!await _repository.StudentExists(studentId))
-                return Ok("Student doesnt exists");
-
             var result = await _repository.GetMemberships(studentId);
 
             foreach (GroupDTO g in result)
@@ -159,7 +159,6 @@ namespace Share_To_Learn_WEB_API.Controllers
             return Ok(result);
         }
 
-        
         [HttpGet]
         [Route("{groupId}/members/student/{studentId}")]
         public async Task<ActionResult> GetGroupMembers(int groupId, int studentId)

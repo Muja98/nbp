@@ -16,17 +16,19 @@ namespace Share_To_Learn_WEB_API.Controllers
     public class DocumentController : ControllerBase
     {
         private readonly IDocumentRepository _repository;
+        private readonly ISharedRepository _sharedRepository;
 
-        public DocumentController(IDocumentRepository repository)
+        public DocumentController(IDocumentRepository repository, ISharedRepository sharedRepository)
         {
             _repository = repository;
+            _sharedRepository = sharedRepository;
         }
 
         [HttpPost]
         [Route("creator/{studentId}/group/{groupId}")]
         public async Task<ActionResult> CreateDocument(int studentId, int groupId,  Document newDocument)
         {
-            string documentFileId = await _repository.GetNextDocumentPathId();
+            string documentFileId = await _sharedRepository.GetNextDocumentId();
             newDocument.DocumentPath = FileManagerService.SaveDocumentToFile(newDocument.DocumentPath, documentFileId);
             await _repository.CreateDocument(studentId, newDocument);
             await _repository.RelateDocumentAndGroup(groupId, newDocument.DocumentPath);
