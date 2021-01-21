@@ -1,17 +1,17 @@
 <div class="card mb-3 border-0">
-    <div class="row g-0" *ngIf="group">
+    <div class="row g-0" *ngIf="group && groupOwner">
       <div class="col-md-4  pt-4 pl-5 pb-5" *ngIf="groupImage.length==0">
         <img src="assets\noImageWhite.png" class="rounded" height="200px" width="60%"  alt="profilePicture.jpg">
-        <input class="mt-2" type="file"  (change)="onUploadChange($event)" accept=".png, .jpg, .jpeg, .pdf" />
+        <input *ngIf="canEditGroup()" class="mt-2" type="file"  (change)="onUploadChange($event)" accept=".png, .jpg, .jpeg, .pdf" />
       </div>
       <div class="col-md-4  pt-4 pl-5 pb-5" *ngIf="groupImage.length>0">
         <img [src]="groupImage" class="rounded" height="250px" width="100%"  alt="profilePicture.jpg">
-        <input class="mt-2" type="file"  (change)="onUploadChange($event)" accept=".png, .jpg, .jpeg, .pdf" />
+        <input *ngIf="canEditGroup()" class="mt-2" type="file"  (change)="onUploadChange($event)" accept=".png, .jpg, .jpeg, .pdf" />
       </div>
       <div class="col-md-8">
         <div class="card-body pl-0">
-          <div class="col pl-0"><input type="text" style="border:none; width: auto; font-weight: 500; font-size: 24px;"  class="form-control" [(ngModel)]="group.group.name"></div>
-          <div class="col d-flex flex-row pt-2 "><p style="position: relative; top:10px; font-weight: 500; ">field:</p> <input style="border:none; width: auto;"  class="form-control pt-2" type="text" [(ngModel)]="group.group.field"></div>
+          <div class="col pl-0"><input [disabled]="!canEditGroup()" type="text" style="border:none; width: auto; font-weight: 500; font-size: 24px;"  class="form-control" [(ngModel)]="group.group.name"></div>
+          <div class="col d-flex flex-row pt-2 "><p style="position: relative; top:10px; font-weight: 500; ">field:</p> <input [disabled]="!canEditGroup()" style="border:none; width: auto;"  class="form-control pt-2" type="text" [(ngModel)]="group.group.field"></div>
       </div>
       <div class="d-flex justify-content-around" style="margin-bottom: 10px;">
             <div class="col">members: {{group.countOfMembers}}</div>
@@ -19,14 +19,14 @@
             <div class="col">comments: {{group.countOfComments}}</div>
       </div>
       <div class="card-body pl-0">
-        <div class="col d-flex flex-row "><p style="position: relative; top:10px; font-weight: 500; ">description:</p> <textarea style="border:none; width: 100%; height: 100px; padding-top: 10px;"  class="form-control  ml-2 mr-2" type="text" [(ngModel)]="group.group.description" ></textarea></div>
+        <div class="col d-flex flex-row "><p style="position: relative; top:10px; font-weight: 500; ">description:</p> <textarea [disabled]="!canEditGroup()" style="border:none; width: 100%; height: 100px; padding-top: 10px;"  class="form-control  ml-2 mr-2" type="text" [(ngModel)]="group.group.description" ></textarea></div>
     </div>
     <div class="row pl-5 justify-content-end pr-5">
-      <button (click)="handleEditGroup()"  class="btn btn-info mb-2" style="position: relative; right: 15px;" >Save changes</button>
+      <button *ngIf="canEditGroup()" (click)="handleEditGroup()"  class="btn btn-info mb-2" style="position: relative; right: 15px;" >Save changes</button>
     </div>
     </div>
   </div>
-  <div class="container d-flex justify-content-center align-items-center" style="height: 300px;"  *ngIf="!group">
+  <div class="container d-flex justify-content-center align-items-center" style="height: 300px;"  *ngIf="!(group && groupOwner)">
     <div class="spinner-border" role="status" >
       <span class="sr-only">Loading...</span>
     </div>
