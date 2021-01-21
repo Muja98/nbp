@@ -80,5 +80,17 @@ namespace Share_To_Learn_WEB_API.Services.RepositoryServices
 
             return res.Single();
         }
+
+        public async Task<IEnumerable<string>> GetDocumentsPaths(int groupId)
+        {
+            var res = await _client.Cypher
+                        .Match("(doc:Document),(gr:Group),(gr)-[:CONTAINS]->(doc)")
+                        .Where("ID(gr) = $groupId")
+                        .WithParam("groupId", groupId)
+                        .Return<string>("doc.DocumentPath")
+                        .ResultsAsync;
+            return res;
+        
+        }
     }
 }

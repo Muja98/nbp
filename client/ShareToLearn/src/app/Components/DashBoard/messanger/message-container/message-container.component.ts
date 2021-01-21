@@ -7,6 +7,7 @@ import * as signalR from '@aspnet/signalr';
 import { mainModule } from 'process';
 import { Student } from 'src/app/Model/student';
 import { MessageService } from 'src/app/Service/message.service';
+import { Time } from '@angular/common';
 
 @Component({
   selector: 'app-message-container',
@@ -26,6 +27,8 @@ export class MessageContainerComponent implements OnInit  {
   public imgSrc:string;
   public loadedMessages:number = 0;
   public perLoadCount:number = 20;
+  public timeLeft:number;
+  private intervalHandler:any;
 
   constructor(public signalRService: signalRService, private http: HttpClient, private userService: StudentService, private messageService:MessageService  ) {
 
@@ -64,29 +67,28 @@ export class MessageContainerComponent implements OnInit  {
       window.location.reload();
   }
 
+  public imgSrc2(picturePath:string):string {
+    if(picturePath)
+    {
+      if(picturePath.includes('data:image/png;base64,') == true)
+        return picturePath;
+      else
+        return 'data:image/png;base64,' + picturePath;
+    }
+    else
+      return "assets/profileDefault.png";
+  }
   
-  // joinRoom()
-  // {
-  //   const biggerId = this.message.senderId > this.message.receiverId ? this.message.senderId : this.message.receiverId;
-  //   const smallerId = this.message.senderId < this.message.receiverId ? this.message.senderId : this.message.receiverId;
-  //   const channelName = "messages:" + this.message.senderId + ":chat";
-  //   console.log(channelName);
-  //   this._hubConnection.invoke("JoinRoom", channelName).catch((err)=>{
-  //     console.log(err)
-  //   })
-  // }
-
-
-
-  ngOnInit(): void {  
-    // let pomuser = this.userService.getStudentFromStorage();
+  ngOnInit(): void {
     if(this.changeStudentEvent) {
       this.changeStudentEvent.subscribe(data => {
+        clearInterval(this.intervalHandler);
         this.student = data;
         this.messageArray = []
         this.loadedMessages = 0;
         this.setMessageParams();
         this.getMessages(this.perLoadCount, '+', false);
+        this.getTimeLeft();
       })
     }
 
@@ -99,41 +101,25 @@ export class MessageContainerComponent implements OnInit  {
     this.setMessageParams();
     
     if(this.student.student.profilePicturePath)
-      this.imgSrc = 'data:image/png;base64,' + this.student.student.profilePicturePath;
+    this.student.student.profilePicturePath = 'data:image/png;base64,' + this.student.student.profilePicturePath;
     else
-      this.imgSrc = "assets/profileDefault.png";
+    this.student.student.profilePicturePath = "assets/profileDefault.png";
 
-    // this._hubConnection = new signalR.HubConnectionBuilder()
-    // .withUrl("https://localhost:44374/chat", )
-    // .build()
-
-    // this._hubConnection
-    //   .start()
-    //   .then(() => {
-    //     console.log('Connection started! :)')
-    //     this.joinRoom()
-    //   })
-    //   .catch(err => console.log('Error while establishing connection :('));
-
-   
-    // this._hubConnection.on('ReceiveMessage', (newMessage:any) => {
-    //   console.log(newMessage)
-    //   let nm:Message = new Message();
-    //   nm.content = newMessage.content;
-    //   nm.receiver = newMessage.receiver;
-    //   nm.receiverId = newMessage.receiverId;
-    //   nm.sender = newMessage.sender;
-    //   nm.senderId = newMessage.senderId;
-    //   this.messageArray.push(nm);
-      
-    // });
-   
     this.getMessages(this.perLoadCount, '+', false);
+    this.getTimeLeft();
   }
 
   public loadMore() {
     const fromId:string = this.messageArray[0].id;
     this.getMessages(this.perLoadCount + 1, fromId, true);
+  }
+
+  public timeDisplayString() {
+    let hours = Math.floor(this.timeLeft/ (60 * 60))
+    let minutes = Math.floor((this.timeLeft % (60 * 60)) / 60);
+    let seconds = Math.floor((this.timeLeft % 60));
+
+    return String(hours) + ":" + String(minutes) + ":" + String(seconds);
   }
 
   private getMessages(count:number, from:string, slice:boolean) {
@@ -158,22 +144,17 @@ export class MessageContainerComponent implements OnInit  {
     this.message.receiverId =  this.student.id;
   }
 
-
-    //-----------------------------------------------------------
-    // this._hubConnection = new signalR.HubConnectionBuilder()
-    // .withUrl("https://localhost:44374/chat", )
-    
-    // .build()
-
-    // this._hubConnection
-    //   .start()
-    //   .then(() => console.log('Connection started! :)'))
-    //   .catch(err => console.log('Error while establishing connection :('));
-
-   
-
-
+  private getTimeLeft() {
+    this.messageService.getConversationTimeLeft(this.userId, this.student.id).subscribe(result => {
+      this.timeLeft = result - 2;
+      this.intervalHandler = setInterval(() => {
+        this.timeLeft -= 1
+        if(this.timeLeft <= 0)
+          clearInterval(this.intervalHandler)
+      }, 1000)
+    })
   }
+}
 
 
 

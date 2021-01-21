@@ -92,7 +92,17 @@ namespace Share_To_Learn_WEB_API.Services.RepositoryServices
             int biggerId = senderId > receiverId ? senderId : receiverId;
             int smallerId = senderId < receiverId ? senderId : receiverId;
 
-            await redisDB.KeyExpireAsync($"messages:{biggerId}:{smallerId}:chat", new TimeSpan(0, 2, 30));
+            await redisDB.KeyExpireAsync($"messages:{biggerId}:{smallerId}:chat", new TimeSpan(48, 0, 0));
+        }
+
+        public async Task<int> GetTimeToLiveForStream(int senderId, int receiverId)
+        {
+            IDatabase redisDB = _redisConnection.GetDatabase();
+
+            int biggerId = senderId > receiverId ? senderId : receiverId;
+            int smallerId = senderId < receiverId ? senderId : receiverId;
+            TimeSpan? timeToLive = await redisDB.KeyTimeToLiveAsync($"messages:{biggerId}:{smallerId}:chat");
+            return (int)timeToLive.Value.TotalSeconds;
         }
 
         public async Task<IEnumerable<StudentDTO>> GetStudentsInChatWith(int studentId)

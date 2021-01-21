@@ -159,7 +159,7 @@ namespace Share_To_Learn_WEB_API.Services.RepositoryContracts
 
             IDatabase redisDB = _redisConnection.GetDatabase();
             long deletedMessages = await redisDB.StreamDeleteAsync(channelName, new RedisValue[] { new RedisValue(requestId) });
-            await redisDB.SetRemoveAsync("friend:" + senderId + ":request", requestId);
+            await redisDB.SetRemoveAsync("friend:" + senderId + ":request", receiverId);
         }
 
         public async Task AddFriend(int studentId1, int studentId2)

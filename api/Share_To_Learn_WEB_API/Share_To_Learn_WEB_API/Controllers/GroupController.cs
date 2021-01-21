@@ -10,6 +10,7 @@ using Share_To_Learn_WEB_API.RedisConnection;
 using Share_To_Learn_WEB_API.Services;
 using Share_To_Learn_WEB_API.Services.RepositoryContracts;
 using StackExchange.Redis;
+using Share_To_Learn_WEB_API.Services.RepositoryContracts;
 
 namespace Share_To_Learn_WEB_API.Controllers
 {
@@ -18,11 +19,13 @@ namespace Share_To_Learn_WEB_API.Controllers
     public class GroupController : ControllerBase
     {
         private readonly IConnectionMultiplexer _redisConnection;
+        private readonly IDocumentRepository _documentrepository;
         private readonly IGroupRepository _repository;
         private readonly ISharedRepository _sharedRepository;
 
-        public GroupController(IGroupRepository repository, ISharedRepository sharedRepository, IRedisConnectionBuilder builder)
+        public GroupController(IGroupRepository repository, ISharedRepository sharedRepository, IRedisConnectionBuilder builder, IDocumentRepository documentrepository)
         {
+            _documentrepository = documentrepository;
             _repository = repository;
             _sharedRepository = sharedRepository;
             _redisConnection = builder.Connection;
@@ -211,7 +214,23 @@ namespace Share_To_Learn_WEB_API.Controllers
 
         public async Task<ActionResult> deleteGroup(int groupId)
         {
-            await _repository.DeleteGroup(groupId);         
+            string patha = await _repository.GetGroupImage(groupId);
+            if(!string.IsNullOrEmpty(patha))
+                FileManagerService.deleteFile(patha);
+
+            IEnumerable<string> paths = await _documentrepository.GetDocumentsPaths(groupId);
+            
+            if(paths!=null)
+            { 
+                foreach (string path in paths) 
+                { 
+                    if(!string.IsNullOrEmpty(path))
+                        FileManagerService.deleteFile(path);
+                }
+            }
+
+            await _repository.DeleteGroup(groupId);
+
             return Ok();
         }
     }

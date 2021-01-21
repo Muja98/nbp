@@ -69,6 +69,14 @@ namespace Share_To_Learn_WEB_API.Controllers
         }
 
         [HttpGet]
+        [Route("time-left/sender/{senderId}/receiver/{receiverId}")]
+        public async Task<ActionResult> GetConversationTimeLeft(int senderId, int receiverId)
+        {
+            var timeLeft = await _repository.GetTimeToLiveForStream(senderId, receiverId);
+            return Ok(timeLeft);
+        }
+
+        [HttpGet]
         [Route("chats/student/{studentId}")]
         public async Task<ActionResult> GetStudentsInChatWith(int studentId)
         {

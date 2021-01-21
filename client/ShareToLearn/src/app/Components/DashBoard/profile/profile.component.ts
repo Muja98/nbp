@@ -11,7 +11,8 @@ import { MessageService } from 'src/app/Service/message.service';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit, OnDestroy {
-  private studentId:number;
+  public studentId:number;
+  public edit:boolean;
   public student:Student;
   public pomStudent:Student;
   public studentChangeFlag:boolean = false;
@@ -196,6 +197,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.sub = this.route.params.subscribe(params => {
       this.studentId = +params['studentId'];
       if(Number.isNaN(this.studentId)) {
+        this.edit = true;
         this.student = new Student();
         this.pomStudent = new Student();
         this.handleSetStudent();
@@ -209,6 +211,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
       }
       else {
+        this.edit = false;
         let id = this.studentService.getStudentFromStorage().id;
         this.studentService.GetFriendRequestSends(id).subscribe((friendRequests:number[])=>{
             this.FriendRequestSendsArray = friendRequests;

@@ -1,17 +1,19 @@
 <div class="container-flex pb-5 ">
-    <div class="row pt-3 pb-3 " style="cursor: pointer;">
+    <div class="row pt-3 pb-3" style="cursor: pointer; flex-wrap:wrap">
         <div class="col-1">
-            <img [src]="imgSrc" height="50px" width="50px" class="rounded-circle" alt="profilePicture.jpg">
+            <img [src]="imgSrc2(student.student.profilePicturePath)" height="50px" width="50px" class="rounded-circle" alt="profilePicture.jpg">
         </div>
         <div class="col-6 pt-2 ">
             <h5>{{ student.student.firstName }} {{ student.student.lastName }}</h5>
         </div>
-        <div class="col-5"> 
+        <div *ngIf="timeLeft > 0" class="col-5"> 
             <button class="btn btn-outline-danger" (click)="deleteConverasation()">Delete Conversation</button>
-            <!-- <button class="btn btn-success" (click)="joinRoom()">JOIN</button> -->
         </div>
     </div>
-    <div class="row rounded "  style=" min-height: 600px; ">
+    <div *ngIf="timeLeft > 0" class="row">
+        <div class="timer">{{ timeDisplayString() }}</div>
+    </div>
+    <div *ngIf="timeLeft > 0" class="row rounded "  style=" min-height: 600px; ">
         <div class="col d-flex flex-column" style="background-color: #eeeeee; min-height: 600px; ">
             <div class="row pr-4 pl-4" style="height: 91%; min-height: 530px; max-height: 530px; overflow-y:auto;" #scrollMe [scrollTop]="scrollMe.scrollHeight">
                 <div  class="col d-flex flex-column-reverse  pt-5 pb-5 pl-2 pr-2">
@@ -41,5 +43,10 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="col-7" *ngIf="timeLeft <= 0">
+        <p style="font-style: italic; font-weight: bold; font-size: 30px;"> 
+            This conversation has expired. Refresh to remove it from available conversations
+         </p>
     </div>
 </div>

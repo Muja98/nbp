@@ -1,5 +1,5 @@
 import { StudentService } from './../../Service/student.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router'
 import { FriendRequest } from 'src/app/Model/friendrequest';
 import { signalRService } from './../../Service/signalR.service';
@@ -12,7 +12,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./dashboard.component.css']
 })
 
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   public isCollapsed = true;
   public _hubConnection: signalR.HubConnection;
   public linkRoot = "/dashboard";
@@ -56,6 +56,10 @@ export class DashboardComponent implements OnInit {
     private router:Router, 
     private userService:StudentService, 
     private studentService:StudentService) { }
+  
+  ngOnDestroy(): void {
+    this._hubConnection.stop().then(() => console.log("Connection stopped."))
+  }
 
   handleLogOut()
   {
@@ -85,18 +89,13 @@ export class DashboardComponent implements OnInit {
           console.log(err)
         })
         console.log(channelName);
-        // const channelName1 = "requests:" + this.userId +":friendship";
-        // console.log(channelName1);
-        // this._hubConnection.invoke("JoinRoom", channelName1).catch((err)=>{
-        //   console.log(err)
-        // })
       })
       .catch(err => console.log('Error while establishing connection :('));
    
     this._hubConnection.on('ReceiveMessage', (newMessage:any) => {
     
       if(this.router.url != "/dashboard/messanger") {
-        this.toastr.info("New message from " + newMessage['sender'], "mess");    
+        this.toastr.info(newMessage['content'], "New message from " + newMessage['sender']);    
       }
     });
 
@@ -105,7 +104,7 @@ export class DashboardComponent implements OnInit {
       debugger
       var request:FriendRequest = newRequest['requestDTO'];
       this.friend_requests.push(request);
-      this.toastr.info("You have new friend request!", "mes"); 
+      this.toastr.info("You have a new friend request!"); 
     });
 
     

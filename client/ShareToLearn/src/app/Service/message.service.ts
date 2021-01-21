@@ -27,8 +27,11 @@ export class MessageService {
     return this.http.get<Message[]>(URL + "/api/messages/receive", {'params': params})
   }
 
-  deleteMessage(biggerId:number, smallerId:number)
-  {
+  deleteMessage(biggerId:number, smallerId:number) {
      this.http.delete(URL+"/api/messages/deleteConversation/user/"+biggerId+"/"+smallerId).subscribe(()=>{});
+  }
+
+  getConversationTimeLeft(senderId:number, receiverId:number) {
+    return this.http.get<number>(URL + "/api/messages/time-left/sender/" + senderId + "/receiver/" + receiverId);
   }
 }
