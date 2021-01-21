@@ -1,5 +1,5 @@
 import { StudentService } from './../../Service/student.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router'
 import { FriendRequest } from 'src/app/Model/friendrequest';
 import { signalRService } from './../../Service/signalR.service';
@@ -12,7 +12,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./dashboard.component.css']
 })
 
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   public isCollapsed = true;
   public _hubConnection: signalR.HubConnection;
   public linkRoot = "/dashboard";
@@ -56,6 +56,10 @@ export class DashboardComponent implements OnInit {
     private router:Router, 
     private userService:StudentService, 
     private studentService:StudentService) { }
+  
+  ngOnDestroy(): void {
+    this._hubConnection.stop().then(() => console.log("Connection stopped."))
+  }
 
   handleLogOut()
   {

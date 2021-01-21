@@ -287,7 +287,7 @@ namespace Share_To_Learn_WEB_API.Services.RepositoryServices
                 .ResultsAsync;
 
             var countOfMembers = await _client.Cypher
-                .Match("(st:Student)-[:MEMBER]-> (g:Group)")
+                .Match("(st:Student)-[rel]-> (g:Group)")
                 .Where("ID(g) = $groupId")
                 .WithParam("groupId", groupId)
                 .Return<int>("count(distinct st)")
