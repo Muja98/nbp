@@ -9,6 +9,7 @@ using Neo4jClient;
 using Share_To_Learn_WEB_API.Services;
 using Share_To_Learn_WEB_API.DTOs;
 using Microsoft.AspNetCore.Http;
+using Share_To_Learn_WEB_API.Services.RepositoryContracts;
 
 namespace Share_To_Learn_WEB_API.Controllers
 {
@@ -17,8 +18,8 @@ namespace Share_To_Learn_WEB_API.Controllers
     public class PostController : ControllerBase
     {
 
-        private readonly ISTLRepository _repository;
-        public PostController(ISTLRepository repository)
+        private readonly IPostRepository _repository;
+        public PostController(IPostRepository repository)
         {
             _repository = repository;
         }
@@ -40,15 +41,16 @@ namespace Share_To_Learn_WEB_API.Controllers
         [Route("{groupId}/student/{studentId}")]
         public async Task<ActionResult> CreatePost(int groupId, int studentId, Post newPost)
         {
-            await _repository.CreatePost(groupId, studentId, newPost);
-            return Ok();
+            PostDTO res = await _repository.CreatePost(groupId, studentId, newPost);
+            res.Student.Student.ProfilePicturePath = FileManagerService.LoadImageFromFile(res.Student.Student.ProfilePicturePath);
+            return Ok(res);
         }
 
         [HttpGet]
         [Route("{postId}/comments")]
         public async Task<ActionResult> GetAllComments(int postId)
         {
-            IEnumerable<CommentDTO> result = await _repository.GetAllComment(postId);
+            IEnumerable<CommentDTO> result = await _repository.GetAllComments(postId);
             foreach(CommentDTO item in result)
             {
                 item.Student.Student.ProfilePicturePath = FileManagerService.LoadImageFromFile(item.Student.Student.ProfilePicturePath);
@@ -60,8 +62,9 @@ namespace Share_To_Learn_WEB_API.Controllers
         [Route("{postId}/student/{studentId}/newComment")]
         public async Task<IActionResult> CreateComment(int postId, int studentId, Comment newComment)
         {
-            await _repository.CreateComment(postId, studentId, newComment);
-            return Ok();
+            CommentDTO res = await _repository.CreateComment(postId, studentId, newComment);
+            res.Student.Student.ProfilePicturePath = FileManagerService.LoadImageFromFile(res.Student.Student.ProfilePicturePath);
+            return Ok(res);
         }
 
         [HttpDelete]

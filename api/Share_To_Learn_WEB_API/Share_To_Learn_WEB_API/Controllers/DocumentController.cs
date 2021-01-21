@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Share_To_Learn_WEB_API.Entities;
 using Share_To_Learn_WEB_API.Services;
 using Share_To_Learn_WEB_API.DTOs;
+using Share_To_Learn_WEB_API.Services.RepositoryContracts;
 
 namespace Share_To_Learn_WEB_API.Controllers
 {
@@ -14,9 +15,9 @@ namespace Share_To_Learn_WEB_API.Controllers
     [ApiController]
     public class DocumentController : ControllerBase
     {
-        private readonly ISTLRepository _repository;
+        private readonly IDocumentRepository _repository;
 
-        public DocumentController(ISTLRepository repository)
+        public DocumentController(IDocumentRepository repository)
         {
             _repository = repository;
         }
@@ -25,7 +26,7 @@ namespace Share_To_Learn_WEB_API.Controllers
         [Route("creator/{studentId}/group/{groupId}")]
         public async Task<ActionResult> CreateDocument(int studentId, int groupId,  Document newDocument)
         {
-            string documentFileId = await _repository.getNextId(false);
+            string documentFileId = await _repository.GetNextDocumentPathId();
             newDocument.DocumentPath = FileManagerService.SaveDocumentToFile(newDocument.DocumentPath, documentFileId);
             await _repository.CreateDocument(studentId, newDocument);
             await _repository.RelateDocumentAndGroup(groupId, newDocument.DocumentPath);

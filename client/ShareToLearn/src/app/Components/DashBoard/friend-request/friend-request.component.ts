@@ -37,8 +37,7 @@ export class FriendRequestComponent implements OnInit {
   }
   
   handleDelete() {
-    debugger
-    this.studentService.deleteFriendRequest(this.userId, this.request.id)
+    this.studentService.deleteFriendRequest(this.userId, this.request.id, this.request.request.id)
     this.changed.emit(this.request.id);
   }
 }

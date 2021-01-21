@@ -321,9 +321,9 @@ namespace Share_To_Learn_WEB_API.Services
             return result;
         }
 
-        public async Task CreatePost(int groupId, int studentId, Post newPost)
+        public async Task <PostDTO> CreatePost(int groupId, int studentId, Post newPost)
         {
-             await _client.Cypher
+            IEnumerable<PostDTO> p =  await _client.Cypher
             .Match("(st:Student), (gr:Group)")
             .Where("ID(gr) = $groupId")
             .WithParam("groupId", groupId)
@@ -332,7 +332,17 @@ namespace Share_To_Learn_WEB_API.Services
             .Create("(st)-[:WRITE]->(ps:Post $newPost)")
             .WithParam("newPost",newPost)
             .Create("(ps)-[:BELONG]->(gr)")
-            .ExecuteWithoutResultsAsync();
+            .With("ps,{Id: ID(st), Student: st} as pst")
+            .Return((gr, pst) => new PostDTO
+            {
+                Id = Return.As<int>("ID(ps)"),
+                Post = Return.As<Post>("ps"),
+                Student = pst.As<StudentDTO>()
+            })
+            .ResultsAsync;
+            PostDTO g = p.Single();
+
+            return g;
         }
         
         public async Task<IEnumerable<CommentDTO>> GetAllComment(int postId)
@@ -352,9 +362,9 @@ namespace Share_To_Learn_WEB_API.Services
             return result;
         }
 
-        public async Task CreateComment(int postId, int studentId, Comment newComment)
+        public async Task<CommentDTO> CreateComment(int postId, int studentId, Comment newComment)
         {
-            await _client.Cypher
+            IEnumerable<CommentDTO> c =  await _client.Cypher
             .Match("(st:Student), (ps:Post)")
             .Where("ID(ps) = $postId")
             .WithParam("postId", postId)
@@ -363,7 +373,18 @@ namespace Share_To_Learn_WEB_API.Services
             .Create("(st)-[:WROTECOMMENT]->(co:Comment $newComment)")
             .WithParam("newComment", newComment)
             .Create("(co)-[:STOREDIN]->(ps)")
-            .ExecuteWithoutResultsAsync();
+            .With("co, {Id: ID(st), Student: st} as pst")
+            .Return((co, pst) => new CommentDTO
+            {
+                Id = Return.As<int>("ID(co)"),
+                Comment = Return.As<Comment>("co"),
+                Student = pst.As<StudentDTO>()
+            })
+            .ResultsAsync;
+
+            CommentDTO g = c.Single();
+
+            return g;
         }
 
         public async Task DeleteComment(int commentId)
@@ -405,6 +426,13 @@ namespace Share_To_Learn_WEB_API.Services
                     .Where("ID(ps) = $postId")
                     .WithParam("postId", postId)
                     .DetachDelete("co, ps")
+                    .ExecuteWithoutResultsAsync();
+
+            await _client.Cypher
+                    .Match("(ps: Post)")
+                    .Where("ID(ps) = $postId")
+                    .WithParam("postId", postId)
+                    .DetachDelete("ps")
                     .ExecuteWithoutResultsAsync();
         }
 
@@ -733,12 +761,13 @@ namespace Share_To_Learn_WEB_API.Services
             return result.ToString(); 
         }
 
-        public async Task DeleteFriendRequest(int receiverId, string requestId)
+        public async Task DeleteFriendRequest(int receiverId, string requestId, int senderId)
         {
             string channelName = $"messages:{receiverId}:friend_request";
 
             IDatabase redisDB = _redisConnection.GetDatabase();
             long deletedMessages = await redisDB.StreamDeleteAsync(channelName, new RedisValue[] { new RedisValue(requestId) });
+            await redisDB.SetRemoveAsync("friend:" + senderId + ":request", requestId);
         }
 
         public async Task SendFriendRequest(int senderId, int receiverId, Request sender)

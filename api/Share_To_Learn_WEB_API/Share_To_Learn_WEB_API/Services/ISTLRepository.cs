@@ -31,12 +31,12 @@ namespace Share_To_Learn_WEB_API.Services
         Task<int> GetGroupsCount(string filters, string userFilter);
 
         Task<IEnumerable<PostDTO>> GetAllPosts(int groupId);
-        Task CreatePost(int groupId, int studentId, Post newPost);
+        Task<PostDTO> CreatePost(int groupId, int studentId, Post newPost);
         Task DeletePost(int postId);
         Task UpdatePost(int postId, Post post);
 
         Task<IEnumerable<CommentDTO>> GetAllComment(int postId);
-        Task CreateComment(int postId, int studentId, Comment newComment);
+        Task<CommentDTO> CreateComment(int postId, int studentId, Comment newComment);
         Task DeleteComment(int commentId);
         Task UpdateComment(int commentId, Comment comment);
 
@@ -67,7 +67,7 @@ namespace Share_To_Learn_WEB_API.Services
         Task<IEnumerable<int>> GetIdsStudentsInChatWith(int studentId);
 
         Task<string> getNextId(bool isImage);
-        Task DeleteFriendRequest(int receiverId, string requestId);
+        Task DeleteFriendRequest(int receiverId, string requestId, int senderId);
         Task SendFriendRequest(int senderId, int receiverId, Request sender);
         Task<IEnumerable<int>> GetFriendRequestSends(int senderId);
 

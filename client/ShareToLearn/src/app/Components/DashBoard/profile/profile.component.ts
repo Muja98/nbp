@@ -22,7 +22,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   private sub:any;
   private inChatWith:number[];
   public firstMessage:string;
-
+  public FriendRequestSendsArray:number[];
+  public frinedRequestFlag:boolean = false;
   constructor(private studentService:StudentService,private router:Router, private route:ActivatedRoute, private messageService:MessageService) {
     
    }
@@ -119,8 +120,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.router.navigate(['dashboard/student-groups/' + this.studentId]);
   }
 
-  handleSendFriendRequest(): void {
-    debugger
+  handleSendFriendRequest(event): void {
+   event.target.disabled = true;
+   event.target.innerText = "Friend request sent";
+
     let currentUser = this.studentService.getStudentFromStorage();
 
     var request = new FriendRequest();
@@ -181,8 +184,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.sub = this.route.params.subscribe(params => {
       this.studentId = +params['studentId'];
-      
-      if(!this.studentId) {
+      if(Number.isNaN(this.studentId)) {
         this.student = new Student();
         this.pomStudent = new Student();
         this.handleSetStudent();
@@ -193,9 +195,21 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.pomStudent.student.dateOfBirth = this.student.student.dateOfBirth;
       }
       else {
+        let id = this.studentService.getStudentFromStorage().id;
+        this.studentService.GetFriendRequestSends(id).subscribe((friendRequests:number[])=>{
+            this.FriendRequestSendsArray = friendRequests;
+        });
         this.studentService.getSpecificStudent(this.studentId, parseInt(this.studentService.getStudentFromStorage()['id'])).subscribe(
           result => {
             this.student = result;
+
+            this.FriendRequestSendsArray.forEach((el:any)=>{
+              if(el===result.id)
+              {
+                this.frinedRequestFlag = true;
+              }
+                
+            })
             this.imgSrc = 'data:image/png;base64,' + this.student.student.profilePicturePath;
             this.dateOfBirth = new Date(this.student.student.dateOfBirth);
           }

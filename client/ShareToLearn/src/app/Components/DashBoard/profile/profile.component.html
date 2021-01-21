@@ -45,10 +45,19 @@
                                 class="btn btn-outline-primary" style="margin-top: 10px;">
                                 View user's groups
                             </button>
-                            <button
-                                type="button" (click)="handleSendFriendRequest()" *ngIf="!student.isFriend"
+                            <div *ngIf="!frinedRequestFlag" style="width: auto;">
+                                <button 
+                                type="button" (click)="handleSendFriendRequest($event)" *ngIf="!student.isFriend"
                                 class="btn btn-outline-primary" style="margin-top: 10px; margin-left: 10px">
                                 Send friend request
+                               </button>
+                            </div>
+
+                            <div *ngIf="frinedRequestFlag" style="width: auto;">
+                                <button 
+                                type="button" disabled *ngIf="!student.isFriend"
+                                class="btn btn-outline-primary" style="margin-top: 10px; margin-left: 10px">
+                                Friend request sent
                             </button>
                             <div class="row" *ngIf="canChatWith() && student.isFriend" style="margin-top: 10px;">
                                 <div class="col">

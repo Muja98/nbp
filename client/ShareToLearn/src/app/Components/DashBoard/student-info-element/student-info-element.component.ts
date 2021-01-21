@@ -14,6 +14,7 @@ import { MessageService } from 'src/app/Service/message.service';
 export class StudentInfoElementComponent implements OnInit {
   @Input() studentObject:Student;
   @Input() canChatWith:boolean;
+  @Input() isSent:boolean;
   public student:any;
   public safeImgUrl:string;
   public firstMessage:string;
@@ -23,6 +24,7 @@ export class StudentInfoElementComponent implements OnInit {
 
   ngOnInit(): void {
     this.student = this.studentObject.student;
+
     if(this.student.profilePicturePath && !String(this.student.profilePicturePath).includes("data:image")
         && !String(this.student.profilePicturePath).includes("assets/profileDefault.png")) {
       this.imgSrc = 
@@ -61,9 +63,11 @@ export class StudentInfoElementComponent implements OnInit {
     });
   }
 
-  handleSendFriendRequest(): void {
-    debugger
-    var userId =  parseInt(JSON.parse(localStorage.getItem('user'))['id']);
+  handleSendFriendRequest(event:any): void {
+  
+    event.target.disabled = true;
+    event.target.innerText = "Friend request sent";
+    //var userId =  JSON.parse(localStorage.getItem('user'))['id'];
     let currentUser = this.studentService.getStudentFromStorage();
 
     var request = new FriendRequest();

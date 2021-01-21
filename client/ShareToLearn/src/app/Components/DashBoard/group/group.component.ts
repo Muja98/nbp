@@ -5,6 +5,8 @@ import { Post } from './../../../Model/post';
 import { Component, OnInit } from '@angular/core';
 import { formatDate } from '@angular/common';
 import { ActivatedRoute } from '@angular/router'
+import { ThrowStmt } from '@angular/compiler';
+import { parse } from 'path';
 @Component({
   selector: 'app-group',
   templateUrl: './group.component.html',
@@ -29,14 +31,22 @@ export class GroupComponent implements OnInit {
   {
     if(this.postText === "")return;
     this.aroute.paramMap.subscribe(params=>{
-      this.postService.createPost(params.get('idGroup'), this.tempStudent.id, this.postText, this.todaysDataTime);
+      this.postService.createPost(params.get('idGroup'), this.tempStudent.id, this.postText, this.todaysDataTime).subscribe((newPost:Post)=>{
+        this.postArray.reverse();
+        this.postArray.push(newPost)
+        this.postArray.reverse();
+      });
     })
     this.postText = "";
-    window.location.reload();
+    //window.location.reload();
   }
 
 
-  
+  handleDeletePostFromArray(index: string)
+  {
+    this.postArray.splice(parseInt(index),1);
+  }
+
   povecaj(e)
   {
     e.target.style.height = "0px";

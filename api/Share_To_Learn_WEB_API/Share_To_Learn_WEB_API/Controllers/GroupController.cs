@@ -165,7 +165,11 @@ namespace Share_To_Learn_WEB_API.Controllers
         [Route("student/{studentId}/groups")]
         public async Task<ActionResult> GetStudentGroups(int studentId)
         {
-            var result = await _repository.GetStudentGroups(studentId);
+            IEnumerable<GroupDTO> result = await _repository.GetStudentGroups(studentId);
+            foreach( GroupDTO res in result)
+            {
+                res.Group.GroupPicturePath = FileManagerService.LoadImageFromFile(res.Group.GroupPicturePath);
+            }
             return Ok(result);
         }
 

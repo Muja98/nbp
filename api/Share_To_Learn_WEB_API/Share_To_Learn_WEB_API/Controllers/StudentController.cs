@@ -26,7 +26,7 @@ namespace Share_To_Learn_WEB_API.Controllers
         }
 
         [HttpGet()]
-        public async Task<ActionResult> GetFilteredStudents([FromQuery]string firstName, [FromQuery]string lastName, [FromQuery]bool orderByName, [FromQuery]bool descending , int from, int to, int user)
+        public async Task<ActionResult> GetFilteredStudents([FromQuery] string firstName, [FromQuery] string lastName, [FromQuery] bool orderByName, [FromQuery] bool descending, int from, int to, int user)
         {
             string userFilter = "(not ID(s1)=" + user + ") and ID(s2)=" + user;
             string whereFirstName = string.IsNullOrEmpty(firstName) ? "" : ("s1.FirstName=~\"(?i).*" + firstName + ".*\"");
@@ -41,7 +41,7 @@ namespace Share_To_Learn_WEB_API.Controllers
 
             string order = "";
             if (!orderByName)
-            { 
+            {
                 order += "ID(s1)";
                 if (descending)
                     order += " desc";
@@ -66,11 +66,11 @@ namespace Share_To_Learn_WEB_API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> CreateStudent([FromBody] StudentRegisterDTO newStudent)
         {
-           
+
             newStudent.Password = AuthentificationService.EncryptPassword(newStudent.Password);
             string base64Image = newStudent.Student.ProfilePicturePath;
             if (!string.IsNullOrEmpty(base64Image))
-            { 
+            {
                 string imageFileId = await _repository.getNextId(true);
                 newStudent.Student.ProfilePicturePath = FileManagerService.SaveImageToFile(base64Image, imageFileId);
             }
@@ -91,9 +91,9 @@ namespace Share_To_Learn_WEB_API.Controllers
         public async Task<ActionResult> LogUserIn([FromBody] AccountLogInDTO userCredentials)
         {
             string savedPwd = await _repository.GetPassword(userCredentials.Email);
-            if (savedPwd!=null)
+            if (savedPwd != null)
             {
-                if(AuthentificationService.IsPasswordCorrect(savedPwd, userCredentials.Password))
+                if (AuthentificationService.IsPasswordCorrect(savedPwd, userCredentials.Password))
                 {
                     StudentDTO student = await _repository.StudentExists(userCredentials.Email);
                     student.Student.ProfilePicturePath = FileManagerService.LoadImageFromFile(student.Student.ProfilePicturePath);
@@ -111,7 +111,7 @@ namespace Share_To_Learn_WEB_API.Controllers
         public async Task<ActionResult> UpdateStudent(int studentId, [FromBody] Student updatedStudent)
         {
             bool res = await _repository.StudentExists(studentId);
-   
+
             if (!res)
                 return BadRequest("Student doesnt exist!");
             string imageFileId = await _repository.getNextId(true);
@@ -145,12 +145,12 @@ namespace Share_To_Learn_WEB_API.Controllers
         [Route("friendship/sender/{senderId}/receiver/{receiverId}/request/{requestId}")]
         public async Task<ActionResult> AcceptFriendRequest(int senderId, int receiverId, string requestId)
         {
-            await _repository.DeleteFriendRequest(receiverId, requestId);
+            await _repository.DeleteFriendRequest(receiverId, requestId,senderId);
 
             bool res1 = await _repository.StudentExists(senderId);
             bool res2 = await _repository.StudentExists(receiverId);
 
-            if(res1&&res2)
+            if (res1 && res2)
             {
                 await _repository.AddFriend(senderId, receiverId);
                 return Ok();
@@ -239,6 +239,7 @@ namespace Share_To_Learn_WEB_API.Controllers
         public async Task<ActionResult> GetSpecificStudent(int studentId, int requesterId)
         {
             StudentDTO student = await _repository.GetSpecificStudent(studentId, requesterId);
+            student.Student.ProfilePicturePath = FileManagerService.LoadImageFromFile(student.Student.ProfilePicturePath);
             return Ok(student);
         }
 
@@ -249,7 +250,7 @@ namespace Share_To_Learn_WEB_API.Controllers
             await _repository.SendFriendRequest(senderId, receiverId, sender);
             return Ok();
         }
-        
+
         [HttpGet]
         [Route("friend_request/receiver/{receiverId}")]
         public async Task<ActionResult> GetFriendRequests(int receiverId)
@@ -259,11 +260,11 @@ namespace Share_To_Learn_WEB_API.Controllers
         }
 
         [HttpDelete]
-        [Route("friend_request/receiver/{receiverId}/request/{requestId}")]
-        public async Task<IActionResult> DeleteFriendRequest(int receiverId, string requestId)
+        [Route("friend_request/receiver/{receiverId}/request/{requestId}/sender/{senderId}")]
+        public async Task<IActionResult> DeleteFriendRequest(int receiverId, string requestId, int senderId)
         {
-            await _repository.DeleteFriendRequest(receiverId, requestId);
-            return Ok();
+            await _repository.DeleteFriendRequest(receiverId, requestId, senderId);
+            return Ok("request deleted succesfull!");
         }
 
         [HttpGet]

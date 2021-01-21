@@ -3,9 +3,10 @@ import { PostService } from './../../../Service/post.service';
 import { Post } from './../../../Model/post';
 import { Student } from './../../../Model/student';
 import { StudentService } from './../../../Service/student.service';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output } from '@angular/core';
 import { textChangeRangeIsUnchanged } from 'typescript';
 
+import { EventEmitter } from '@angular/core';
 @Component({
   selector: 'app-post',
   templateUrl: './post.component.html',
@@ -21,6 +22,8 @@ export class PostComponent implements OnInit {
   public comment:string;
   public profilePicture:string;
   @Input() post: Post;
+  @Input() index: number;
+  @Output() postID = new EventEmitter();
   
   ngOnInit(): void {
     this.tempStudent = this.authService.getStudentFromStorage();
@@ -46,9 +49,13 @@ export class PostComponent implements OnInit {
   handleAddNewComment()
   {
     if(this.comment === ""){return;}
-    this.postService.createComment(this.post.id, this.tempStudent.id, this.comment);
+    this.postService.createComment(this.post.id, this.tempStudent.id, this.comment).subscribe((newComment:Comment)=>{
+      this.commentArray.reverse();
+      this.commentArray.push(newComment);
+      this.commentArray.reverse();
+    })
     this.comment = "";
-    window.location.reload();
+    
   }
 
   handleDeleteComment(commentId:any, index)
@@ -83,7 +90,7 @@ export class PostComponent implements OnInit {
   handleDeletePost(id:any)
   {
     this.postService.deletePost(id);
-    window.location.reload();
+    this.postID.emit(this.index.toString())
   }
 
   povecaj(e)
