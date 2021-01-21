@@ -7,7 +7,7 @@
                         <div style="background-color: #17a2b8; " class="row justify-content-center align-items-center   rounded-top" >
                             <p  style="color: white; font-size: 20px; font-weight: 500; position: relative; top: 5px;">Level</p>
                         </div>
-                        <div *ngFor="let level of levelArray; index as i" (click)="handleGetLevel(level)" class="row border justify-content-center" style=" background-color: white; height: 45px; cursor: pointer;">
+                        <div *ngFor="let level of levelArray; index as i" (click)="handleGetLevel(level)" [class]="getSearchLevelClass(level)" style=" background-color: white; height: 45px; cursor: pointer;">
                             <p style="font-weight: 500; font-size: 20px; position: relative; top: 5px;">{{level}}</p>
                         </div>
                     </div>

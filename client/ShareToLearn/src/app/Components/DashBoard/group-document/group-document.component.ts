@@ -12,8 +12,8 @@ export class GroupDocumentComponent implements OnInit {
 
   constructor(private userService: StudentService, private documentService: DocumentService) { }
   //https://youtu.be/62D0vX9QeLg?t=112
-  public levelArray: Array<string> = ["Beginner","Intermediate","Advanced"];
-  public currentLevel: string = "";
+  public levelArray: Array<string> = ["Any","Beginner","Intermediate","Advanced"];
+  public currentLevel: string = "Any";
   public searchString: string = "";
   public documentArray: Array<Document> = [];
   public newDocument={
@@ -98,20 +98,34 @@ export class GroupDocumentComponent implements OnInit {
   handleClickSearch()
   {
     if(this.searchString==="" && this.currentLevel == "")
-    return;
+      return;
 
-    this.documentService.getDocuments(this.groupId, this.currentLevel, this.searchString).subscribe((documents:any)=>{
+    let searchLevel;
+    if(this.currentLevel == "Any")
+      searchLevel = "";
+    else
+      searchLevel = this.currentLevel;
+
+    this.documentService.getDocuments(this.groupId, searchLevel, this.searchString).subscribe((documents:any)=>{
       this.documentArray = [];
       this.documentArray = documents;
   })
     this.searchString = "";
-    this.currentLevel = "";
+    //this.currentLevel = "";
   } 
 
   ngOnInit(): void {
-      this.documentService.getDocuments(this.groupId, this.currentLevel, this.searchString).subscribe((documents:any)=>{
+      this.documentService.getDocuments(this.groupId, "", this.searchString).subscribe((documents:any)=>{
           this.documentArray = documents;
       })
+  }
+
+  getSearchLevelClass(level:string): string {
+    let classString:string = "row border justify-content-center";
+    if(this.currentLevel == level) {
+      classString += " selected";
+    }
+    return classString;
   }
 
 }
