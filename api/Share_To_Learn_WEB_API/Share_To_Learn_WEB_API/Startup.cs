@@ -16,6 +16,8 @@ using Share_To_Learn_WEB_API.RedisConnection;
 using Share_To_Learn_WEB_API.Services;
 using Share_To_Learn_WEB_API.HubConfig;
 using Microsoft.AspNetCore.SignalR;
+using Share_To_Learn_WEB_API.Services.RepositoryContracts;
+using Share_To_Learn_WEB_API.Services.RepositoryServices;
 
 namespace Share_To_Learn_WEB_API
 {
@@ -37,6 +39,9 @@ namespace Share_To_Learn_WEB_API
             services.AddSingleton<IGraphClient>(neo4jClient);
             services.AddSingleton<IRedisConnectionBuilder, RedisConnectionBuilder>();
             services.AddScoped<ISTLRepository, STLRepository>();
+            services.AddScoped<IMessageRepository, MessageRepository>();
+            services.AddScoped<IDocumentRepository, DocumentRepository>();
+            services.AddScoped<IPostRepository, PostRepository>();
             services.AddMvc().AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.WriteIndented = true;
