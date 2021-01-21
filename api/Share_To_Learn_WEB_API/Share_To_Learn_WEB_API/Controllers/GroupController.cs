@@ -214,15 +214,16 @@ namespace Share_To_Learn_WEB_API.Controllers
 
         public async Task<ActionResult> deleteGroup(int groupId)
         {
-            //string patha = await _repository.GetGroupImage(groupId);
-           // FileManagerService.deleteFile(patha);
-            
-            IEnumerable<string> paths = await _documentrepository.GetDocumentsPaths(groupId);
-           
-            //foreach(string path in paths)
-              //  FileManagerService.deleteFile(path);
+            string patha = await _repository.GetGroupImage(groupId);
+            FileManagerService.deleteFile(patha);
 
-            //await _repository.DeleteGroup(groupId);
+            IEnumerable<string> paths = await _documentrepository.GetDocumentsPaths(groupId);
+
+            foreach (string path in paths)
+                FileManagerService.deleteFile(path);
+
+            await _repository.DeleteGroup(groupId);
+
             return Ok();
         }
     }

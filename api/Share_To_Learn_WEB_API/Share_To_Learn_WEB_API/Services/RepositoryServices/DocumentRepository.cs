@@ -87,9 +87,9 @@ namespace Share_To_Learn_WEB_API.Services.RepositoryServices
                         .Match("(doc:Document),(gr:Group),(gr)-[:CONTAINS]->(doc)")
                         .Where("ID(gr) = $groupId")
                         .WithParam("groupId", groupId)
-                        .Return<IEnumerable<string>>("doc.DocumentPath")
+                        .Return<string>("doc.DocumentPath")
                         .ResultsAsync;
-            return (IEnumerable<string>)res;
+            return res;
         
         }
     }
