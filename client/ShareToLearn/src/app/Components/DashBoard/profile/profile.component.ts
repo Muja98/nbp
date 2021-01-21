@@ -30,6 +30,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   
   handleSetStudent():void
   {
+    debugger
     this.tempStudent = this.studentService.getStudentFromStorage();
     this.student.student.firstName = this.tempStudent.firstName;
     if(this.student.student.firstName === this.tempStudent.lastName)
@@ -42,11 +43,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.dateOfBirth = new Date(this.student.student.dateOfBirth);
 
     if(this.student.student.profilePicturePath && !String(this.student.student.profilePicturePath).includes("data:image")
-        && !String(this.student.student.profilePicturePath).includes("assets/profileDefault.png")) {
+        && !String(this.student.student.profilePicturePath).includes("assets/profileDefault.png") && this.student.student.profilePicturePath.length > 0) {
       this.imgSrc = 
         'data:image/png;base64,' + this.student.student.profilePicturePath;
     }
-    else if(!this.student.student.profilePicturePath) {
+    else if(!this.student.student.profilePicturePath || this.student.student.profilePicturePath.length <= 0) {
       this.imgSrc = 
         "assets/profileDefault.png";
     }
@@ -191,6 +192,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   
   ngOnInit(): void {
+    debugger
     this.sub = this.route.params.subscribe(params => {
       this.studentId = +params['studentId'];
       if(Number.isNaN(this.studentId)) {
@@ -202,6 +204,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.pomStudent.student.lastName = this.student.student.lastName;
         this.pomStudent.student.email = this.student.student.email;
         this.pomStudent.student.dateOfBirth = this.student.student.dateOfBirth;
+        //this.imgSrc = 'data:image/png;base64,' + this.student.student.profilePicturePath;
+       // this.pomStudent.student.profilePicturePath = this.student.student.profilePicturePath;
+
       }
       else {
         let id = this.studentService.getStudentFromStorage().id;
@@ -210,7 +215,17 @@ export class ProfileComponent implements OnInit, OnDestroy {
         });
         this.studentService.getSpecificStudent(this.studentId, parseInt(this.studentService.getStudentFromStorage()['id'])).subscribe(
           result => {
+
             this.student = result;
+            if(this.student.student.profilePicturePath && !String(this.student.student.profilePicturePath).includes("data:image")
+            && !String(this.student.student.profilePicturePath).includes("assets/profileDefault.png") && this.student.student.profilePicturePath.length > 0) {
+              this.imgSrc = 
+              'data:image/png;base64,' + this.student.student.profilePicturePath;
+            }
+            else if(!this.student.student.profilePicturePath || this.student.student.profilePicturePath.length <= 0) {
+              this.imgSrc = 
+                "assets/profileDefault.png";
+            }
 
             this.FriendRequestSendsArray.forEach((el:any)=>{
               if(el===result.id)
@@ -219,7 +234,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
               }
                 
             })
-            this.imgSrc = 'data:image/png;base64,' + this.student.student.profilePicturePath;
+            //this.imgSrc = 'data:image/png;base64,' + this.student.student.profilePicturePath;
             this.dateOfBirth = new Date(this.student.student.dateOfBirth);
           }
         )
