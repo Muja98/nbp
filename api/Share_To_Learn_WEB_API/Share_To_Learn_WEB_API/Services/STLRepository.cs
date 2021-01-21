@@ -789,6 +789,18 @@ namespace Share_To_Learn_WEB_API.Services
 
             //Dodatna funkcija
             await redisDB.SetAddAsync("friend:" + senderId + ":request", receiverId);
+
+            // objekat za notifikaciju
+            FriendRequestNotificationDTO message = new FriendRequestNotificationDTO
+            { 
+                ReceiverId = receiverId,
+                RequestDTO = new RequestDTO { Id = messageId, Request = sender}
+            };
+
+            //Push notifikacija
+            var jsonMessage = JsonSerializer.Serialize(message);
+            ISubscriber chatPubSub = _redisConnection.GetSubscriber();
+            await chatPubSub.PublishAsync("friendship.requests", jsonMessage);
         }
 
         public async Task<IEnumerable<int>> GetFriendRequestSends(int senderId)

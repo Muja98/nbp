@@ -1,7 +1,7 @@
 export class FriendRequest {
     id:string = "";
     request:any = {
-        id: "",
+        id: 0,
         firstName: "",
         lastName:"",
         email: "",

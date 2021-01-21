@@ -40,10 +40,9 @@ namespace Share_To_Learn_WEB_API.RedisConnection
                                 Message deserializedMessage = JsonSerializer.Deserialize<Message>(message.Message);
                                 int biggerId = deserializedMessage.SenderId > deserializedMessage.ReceiverId ? deserializedMessage.SenderId : deserializedMessage.ReceiverId;
                                 int smallerId = deserializedMessage.SenderId < deserializedMessage.ReceiverId ? deserializedMessage.SenderId : deserializedMessage.ReceiverId;
-                                string groupName = $"messages:{deserializedMessage.ReceiverId}:chat";
+                                string groupName = $"channel:{deserializedMessage.ReceiverId}";
                                 _ = _hub.Clients.Group(groupName).SendAsync("ReceiveMessage", deserializedMessage);
                             });
-
 
                             var subPatternChannel = new RedisChannel("__keyevent@0__:*", RedisChannel.PatternMode.Pattern);
                             redisPubSub.Subscribe(subPatternChannel).OnMessage(message =>
@@ -84,7 +83,14 @@ namespace Share_To_Learn_WEB_API.RedisConnection
                                     }
                                     
                                 }
-                                
+                            });
+
+                            redisPubSub.Subscribe("friendship.requests").OnMessage(message =>
+                            {
+                                FriendRequestNotificationDTO deserializedMessage = JsonSerializer.Deserialize<FriendRequestNotificationDTO>(message.Message);
+                                string groupName = $"channel:{deserializedMessage.ReceiverId}";
+                                _ = _hub.Clients.Group(groupName).SendAsync("ReceiveFriendRequests", deserializedMessage);
+                                //string groupName = $"requests:{deserializedMessage.ReceiverId}:friendship";
                             });
                         }
                     }

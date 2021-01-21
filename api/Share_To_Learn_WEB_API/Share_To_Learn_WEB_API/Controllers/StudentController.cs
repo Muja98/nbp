@@ -248,7 +248,7 @@ namespace Share_To_Learn_WEB_API.Controllers
         public async Task<ActionResult> SendFriendRequest(int senderId, int receiverId, [FromBody] Request sender)
         {
             await _repository.SendFriendRequest(senderId, receiverId, sender);
-            return Ok("request successfuly sent");
+            return Ok();
         }
 
         [HttpGet]

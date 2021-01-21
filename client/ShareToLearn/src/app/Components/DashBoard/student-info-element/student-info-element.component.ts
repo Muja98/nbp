@@ -71,7 +71,7 @@ export class StudentInfoElementComponent implements OnInit {
     let currentUser = this.studentService.getStudentFromStorage();
 
     var request = new FriendRequest();
-    request.request.id = currentUser.id;
+    request.request.id = parseInt(currentUser.id);
     request.request.firstName = currentUser.firstName;
     request.request.lastName = currentUser.lastName;
     request.request.email = currentUser.email;
