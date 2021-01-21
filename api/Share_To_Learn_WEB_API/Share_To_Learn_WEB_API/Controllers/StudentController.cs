@@ -172,7 +172,7 @@ namespace Share_To_Learn_WEB_API.Controllers
                 return Ok();
             }
             else
-                return BadRequest("Student doesnt exist!");
+                return BadRequest();
         }
 
         [HttpGet]

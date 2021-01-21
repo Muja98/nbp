@@ -36,6 +36,7 @@ export class SearchUsersComponent implements OnInit {
 
 
   ngOnInit(): void {
+    debugger
     this.userId = JSON.parse(localStorage.getItem('user'))['id'];
     this.page = 1;
     this.previousPage = 1;
@@ -109,7 +110,8 @@ export class SearchUsersComponent implements OnInit {
   }
 
   private getUsers(params:any, append:boolean):void {
-    this.studentService.getFilteredStudents(params).subscribe(
+    debugger
+      this.studentService.getFilteredStudents(params).subscribe(
       result => {
         this.users = append ? this.users.concat(result) : result
         const startInd = (this.page - 1) * this.perPage;
@@ -125,6 +127,7 @@ export class SearchUsersComponent implements OnInit {
   }
 
   private getIdsStudentsInChatWith() {
+    debugger
     this.messageService.getIdsStudentsInChatWith(parseInt(this.userId)).subscribe(
       result => this.inChatWith = result
     )

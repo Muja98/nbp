@@ -38,9 +38,18 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.student.student.lastName = this.tempStudent.lastName
     this.student.student.email = this.tempStudent.email;
     this.student.student.profilePicturePath = this.tempStudent.profilePicturePath;
-    this.imgSrc = 'data:image/png;base64,' + this.tempStudent.profilePicturePath;
     this.student.student.dateOfBirth = this.tempStudent.dateOfBirth;
     this.dateOfBirth = new Date(this.student.student.dateOfBirth);
+
+    if(this.student.student.profilePicturePath && !String(this.student.student.profilePicturePath).includes("data:image")
+        && !String(this.student.student.profilePicturePath).includes("assets/profileDefault.png")) {
+      this.imgSrc = 
+        'data:image/png;base64,' + this.student.student.profilePicturePath;
+    }
+    else if(!this.student.student.profilePicturePath) {
+      this.imgSrc = 
+        "assets/profileDefault.png";
+    }
     
     //TODO:Get student from API
   }
