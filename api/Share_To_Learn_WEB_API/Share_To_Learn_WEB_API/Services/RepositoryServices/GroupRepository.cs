@@ -132,11 +132,24 @@ namespace Share_To_Learn_WEB_API.Services.RepositoryServices
                  .ExecuteWithoutResultsAsync();
 
             await _client.Cypher
-                .Match(" (gr:Group),(ps:Post),(dc:Document)," +
-                "(ps)-[:BELONG]->(gr),(gr) -[:CONTAINS]->(dc)")
+                .Match("(gr:Group),(ps:Post),(ps)-[:BELONG]->(gr)")
                 .Where("ID(gr) = $groupId")
                 .WithParam("groupId", groupId)
-                .DetachDelete("gr,ps,dc")
+                .DetachDelete("ps")
+                .ExecuteWithoutResultsAsync();
+
+            await _client.Cypher
+                .Match(" (gr:Group), (dc:Document), (gr)-[:CONTAINS]->(dc)")
+                .Where("ID(gr) = $groupId")
+                .WithParam("groupId", groupId)
+                .DetachDelete("dc")
+                .ExecuteWithoutResultsAsync();
+
+            await _client.Cypher
+                .Match(" (gr:Group)")
+                .Where("ID(gr) = $groupId")
+                .WithParam("groupId", groupId)
+                .DetachDelete("gr")
                 .ExecuteWithoutResultsAsync();
         }
 
