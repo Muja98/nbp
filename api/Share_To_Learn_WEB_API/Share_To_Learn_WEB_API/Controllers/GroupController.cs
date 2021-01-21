@@ -20,11 +20,10 @@ namespace Share_To_Learn_WEB_API.Controllers
     {
         private readonly IConnectionMultiplexer _redisConnection;
         private readonly IDocumentRepository _documentrepository;
-        public GroupController(ISTLRepository repository, IRedisConnectionBuilder builder, IDocumentRepository documentrepository)
         private readonly IGroupRepository _repository;
         private readonly ISharedRepository _sharedRepository;
 
-        public GroupController(IGroupRepository repository, ISharedRepository sharedRepository, IRedisConnectionBuilder builder)
+        public GroupController(IGroupRepository repository, ISharedRepository sharedRepository, IRedisConnectionBuilder builder, IDocumentRepository documentrepository)
         {
             _documentrepository = documentrepository;
             _repository = repository;
@@ -215,19 +214,15 @@ namespace Share_To_Learn_WEB_API.Controllers
 
         public async Task<ActionResult> deleteGroup(int groupId)
         {
-            string path = await _repository.GetGroupImage(groupId);
-            FileManagerService.deleteFile(path);
+            //string patha = await _repository.GetGroupImage(groupId);
+           // FileManagerService.deleteFile(patha);
             
-            IEnumerable<DocumentDTO> documents = await _documentrepository.GetDocuments(groupId, "");
+            IEnumerable<string> paths = await _documentrepository.GetDocumentsPaths(groupId);
            
-            foreach(DocumentDTO document in documents)
-            {
+            //foreach(string path in paths)
+              //  FileManagerService.deleteFile(path);
 
-            }
-               // _repository.GetDocumentsPath(documentId)
-
-            // _repository.GetDocumentsPath(documentId);
-            await _repository.DeleteGroup(groupId);
+            //await _repository.DeleteGroup(groupId);
             return Ok();
         }
     }
