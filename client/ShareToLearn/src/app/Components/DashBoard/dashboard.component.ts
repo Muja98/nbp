@@ -85,18 +85,13 @@ export class DashboardComponent implements OnInit {
           console.log(err)
         })
         console.log(channelName);
-        // const channelName1 = "requests:" + this.userId +":friendship";
-        // console.log(channelName1);
-        // this._hubConnection.invoke("JoinRoom", channelName1).catch((err)=>{
-        //   console.log(err)
-        // })
       })
       .catch(err => console.log('Error while establishing connection :('));
    
     this._hubConnection.on('ReceiveMessage', (newMessage:any) => {
     
       if(this.router.url != "/dashboard/messanger") {
-        this.toastr.info("New message from " + newMessage['sender'], "mess");    
+        this.toastr.info(newMessage['content'], "New message from " + newMessage['sender']);    
       }
     });
 
@@ -105,7 +100,7 @@ export class DashboardComponent implements OnInit {
       debugger
       var request:FriendRequest = newRequest['requestDTO'];
       this.friend_requests.push(request);
-      this.toastr.info("You have new friend request!", "mes"); 
+      this.toastr.info("You have a new friend request!"); 
     });
 
     

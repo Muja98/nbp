@@ -13,6 +13,7 @@ namespace Share_To_Learn_WEB_API.Services.RepositoryContracts
         Task<IEnumerable<MessageDTO>> ReceiveMessage(int senderId, int receiverId, string from, int count);
         Task StartConversation(ConversationDTO participants);
         Task SetTimeToLiveForStream(int senderId, int receiverId);
+        Task<int> GetTimeToLiveForStream(int senderId, int receiverId);
         Task<IEnumerable<StudentDTO>> GetStudentsInChatWith(int studentId);
         Task<IEnumerable<int>> GetIdsStudentsInChatWith(int studentId);
         Task DeleteConversation(int biggerId, int smallerId);
