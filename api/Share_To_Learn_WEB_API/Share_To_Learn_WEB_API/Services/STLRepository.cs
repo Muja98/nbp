@@ -500,7 +500,7 @@ namespace Share_To_Learn_WEB_API.Services
                 .ResultsAsync;
 
             var countOfMembers = await _client.Cypher
-                .Match("(st:Student)-[:Member]-> (g:Group)")
+                .Match("(st:Student)-[:MEMBER]-> (g:Group)")
                 .Where("ID(g) = $groupId")
                 .WithParam("groupId", groupId)
                 .Return<int>("count(distinct st)")
