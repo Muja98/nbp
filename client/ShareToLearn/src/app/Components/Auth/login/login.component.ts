@@ -25,10 +25,17 @@ export class LoginComponent implements OnInit {
 
   handleDashboardRedirect():void
   {
-    //Svi podaci kad uneses nesto u input se sistematski upisuju u promenljive
-    //ovde se zove servise, a u folder Service se nalazi sama implementacija
-    this.service.loginStudent(this.email,this.password);
-    //this.router.navigate(['/dashboard/main'])
+    this.service.loginStudent(this.email,this.password).subscribe(result => {
+      if(result['body']['value'] == "Wrong password")
+        alert("Wrong password!")
+      else if (result['body']['value'] == "Non-existent email")
+        alert("There is no account registered under the entered email!")
+      else {
+        var token:any = { accessToken: result['body']['value'] }
+        this.service.geStudentFromToken(token)
+        this.router.navigate(['/dashboard/main'])
+      }
+    });
   }
 
 }

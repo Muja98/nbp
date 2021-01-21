@@ -28,31 +28,33 @@ export class StudentService {
       ProfilePicturePath : Studente.student.profilePicturePath
     }
 
-    this.http.post(URL + '/api/student',{Student, Password}, {observe: 'response'} ).subscribe( 
-      response => {
-        //mozda prepraviti na backend-u da se vraca 200 i kad se unese vec postojeci mail, samo sa nekom porukom o tome
-        if(response['status'] == 200) {
-          var token:any = { accessToken: response['body']['value'] }
-          this.geStudentFromToken(token)
-          this.router.navigate(['/dashboard/main'])
-        }
-      }
-    )
+    return this.http.post(URL + '/api/student',{Student, Password});
+    // .subscribe( 
+    //   response => {
+    //     //mozda prepraviti na backend-u da se vraca 200 i kad se unese vec postojeci mail, samo sa nekom porukom o tome
+    //     if(response['status'] == 200) {
+    //       var token:any = { accessToken: response['body']['value'] }
+    //       this.geStudentFromToken(token)
+    //       this.router.navigate(['/dashboard/main'])
+    //     }
+    //   }
+    // )
   }
 
   loginStudent(email:string, password:string)
   {
-    this.http.post(URL + '/api/student/login', {Email: email, Password: password}, {observe: 'response'}).subscribe(
-      response => {
-        console.log(response)
-        //mozda prepraviti na backend-u da se vraca 200 i kad se unese nepostojeci mail ili pogresna sifra, samo sa nekom porukom o tome
-        if(response['status'] == 200) {
-          var token:any = { accessToken: response['body']['value'] }
-          this.geStudentFromToken(token)
-          this.router.navigate(['/dashboard/main'])
-        }
-      }
-    )
+    return this.http.post(URL + '/api/student/login', {Email: email, Password: password}, {observe: 'response'})
+    // .subscribe(
+    //   response => {
+    //     console.log(response)
+    //     //mozda prepraviti na backend-u da se vraca 200 i kad se unese nepostojeci mail ili pogresna sifra, samo sa nekom porukom o tome
+    //     if(response['status'] == 200) {
+    //       var token:any = { accessToken: response['body']['value'] }
+    //       this.geStudentFromToken(token)
+    //       this.router.navigate(['/dashboard/main'])
+    //     }
+    //   }
+    // )
   }
 
   logoutStudent()
@@ -60,7 +62,7 @@ export class StudentService {
     localStorage.removeItem('user');
   }
 
-  geStudentFromToken(token:any)
+  public geStudentFromToken(token:any)
   {
     const helper = new JwtHelperService()
     const decodedToken = helper.decodeToken(token['accessToken'])

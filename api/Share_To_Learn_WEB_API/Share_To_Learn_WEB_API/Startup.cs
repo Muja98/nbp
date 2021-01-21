@@ -38,7 +38,6 @@ namespace Share_To_Learn_WEB_API
             neo4jClient.ConnectAsync();
             services.AddSingleton<IGraphClient>(neo4jClient);
             services.AddSingleton<IRedisConnectionBuilder, RedisConnectionBuilder>();
-            services.AddScoped<ISTLRepository, STLRepository>();
             services.AddScoped<IMessageRepository, MessageRepository>();
             services.AddScoped<IDocumentRepository, DocumentRepository>();
             services.AddScoped<IPostRepository, PostRepository>();

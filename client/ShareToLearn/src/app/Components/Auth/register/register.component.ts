@@ -52,12 +52,19 @@ export class RegisterComponent implements OnInit {
 
   handleDashboardRedirect():void
   {
-  if(this.password===this.rpassword)
-  {
-    this.service.addNewStudent(this.user,this.password);
-    this.router.navigate(['/dashboard/main'])
-  }
-  else alert("Password don't match!")
+    if(this.password===this.rpassword)
+    {
+      this.service.addNewStudent(this.user,this.password).subscribe(result => {
+        if(result['value'] == "Email taken")
+          alert("An account with this email already exists")
+        else {
+          var token:any = { accessToken: result['value'] }
+          this.service.geStudentFromToken(token)
+          this.router.navigate(['/dashboard/main'])
+        }
+      })
+    }
+    else alert("Password don't match!")
    
    
   }
