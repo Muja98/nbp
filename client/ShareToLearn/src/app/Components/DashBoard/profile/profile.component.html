@@ -55,11 +55,12 @@
 
                             <div *ngIf="frinedRequestFlag" style="width: auto;">
                                 <button 
-                                type="button" disabled *ngIf="!student.isFriend"
-                                class="btn btn-outline-primary" style="margin-top: 10px; margin-left: 10px">
-                                Friend request sent
-                            </button>
-                            <div class="row" *ngIf="canChatWith() && student.isFriend" style="margin-top: 10px;">
+                                    type="button" disabled *ngIf="!student.isFriend"
+                                    class="btn btn-outline-primary" style="margin-top: 10px; margin-left: 10px">
+                                    Friend request sent
+                                </button>
+                            </div>
+                            <div class="row" *ngIf="canChat && student.isFriend" style="margin-top: 10px;">
                                 <div class="col">
                                     <div ngbDropdown class="d-inline-block dropend">
                                         <button class="btn btn-outline-primary" id="dropdownStartChat" ngbDropdownToggle>Start chat</button>
@@ -83,7 +84,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         
                     </div> 
                     <div class="row pt-5" *ngIf="edit">

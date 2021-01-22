@@ -25,6 +25,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   public firstMessage:string;
   public FriendRequestSendsArray:number[];
   public frinedRequestFlag:boolean = false;
+  public canChat:boolean;
   constructor(private studentService:StudentService,private router:Router, private route:ActivatedRoute, private messageService:MessageService) {
     
    }
@@ -182,13 +183,19 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   public canChatWith(): boolean {
-    return this.inChatWith.includes(this.studentId);
+    if(this.inChatWith.includes(this.studentId))
+      return false;
+    return true;
   }
 
   private getIdsStudentsInChatWith() {
-    this.messageService.getIdsStudentsInChatWith(parseInt(this.studentService.getStudentFromStorage()['id'])).subscribe(
-      result => this.inChatWith = result
-    )
+    this.messageService.getIdsStudentsInChatWith(parseInt(this.studentService.getStudentFromStorage()['id'])).subscribe(result => {
+      this.inChatWith = result
+      if(this.inChatWith.includes(this.studentId))
+        this.canChat = false;
+      else
+        this.canChat = true;
+    })
   }
 
   
