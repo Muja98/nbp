@@ -65,7 +65,7 @@ namespace Share_To_Learn_WEB_API.Services
                              select file).Count();
         }
 
-        public static void deleteFile(string filePath)
+        public static void DeleteFile(string filePath)
         {
             File.Delete(filePath);
         }

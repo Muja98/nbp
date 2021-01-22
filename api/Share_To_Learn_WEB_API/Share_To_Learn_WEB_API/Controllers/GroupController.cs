@@ -212,11 +212,11 @@ namespace Share_To_Learn_WEB_API.Controllers
         [HttpDelete]
         [Route ("{groupId}")]
 
-        public async Task<ActionResult> deleteGroup(int groupId)
+        public async Task<ActionResult> DeleteGroup(int groupId)
         {
             string patha = await _repository.GetGroupImage(groupId);
             if(!string.IsNullOrEmpty(patha))
-                FileManagerService.deleteFile(patha);
+                FileManagerService.DeleteFile(patha);
 
             IEnumerable<string> paths = await _documentrepository.GetDocumentsPaths(groupId);
             
@@ -225,7 +225,7 @@ namespace Share_To_Learn_WEB_API.Controllers
                 foreach (string path in paths) 
                 { 
                     if(!string.IsNullOrEmpty(path))
-                        FileManagerService.deleteFile(path);
+                        FileManagerService.DeleteFile(path);
                 }
             }
 

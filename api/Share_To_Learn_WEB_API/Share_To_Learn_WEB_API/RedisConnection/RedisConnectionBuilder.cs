@@ -38,8 +38,6 @@ namespace Share_To_Learn_WEB_API.RedisConnection
                             redisPubSub.Subscribe("chat.messages").OnMessage(message =>
                             {
                                 Message deserializedMessage = JsonSerializer.Deserialize<Message>(message.Message);
-                                int biggerId = deserializedMessage.SenderId > deserializedMessage.ReceiverId ? deserializedMessage.SenderId : deserializedMessage.ReceiverId;
-                                int smallerId = deserializedMessage.SenderId < deserializedMessage.ReceiverId ? deserializedMessage.SenderId : deserializedMessage.ReceiverId;
                                 string groupName = $"channel:{deserializedMessage.ReceiverId}";
                                 _ = _hub.Clients.Group(groupName).SendAsync("ReceiveMessage", deserializedMessage);
                             });
@@ -90,7 +88,6 @@ namespace Share_To_Learn_WEB_API.RedisConnection
                                 FriendRequestNotificationDTO deserializedMessage = JsonSerializer.Deserialize<FriendRequestNotificationDTO>(message.Message);
                                 string groupName = $"channel:{deserializedMessage.ReceiverId}";
                                 _ = _hub.Clients.Group(groupName).SendAsync("ReceiveFriendRequests", deserializedMessage);
-                                //string groupName = $"requests:{deserializedMessage.ReceiverId}:friendship";
                             });
                         }
                     }
